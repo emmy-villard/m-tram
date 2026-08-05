@@ -12,4 +12,4 @@ services:
     ports:
       - ${POSTGRES_PORT}:5432
     volumes:
-        - ./docker-entrypoint-initdb.d/init.sql:/docker-entrypoint-initdb.d/init.sql
+        - ../sql/init.sql:/docker-entrypoint-initdb.d/init.sql

@@ -6,7 +6,7 @@ def raw_to_pandas_trr(response_dict_ttr):
         k,
         datetime.fromtimestamp(value[0]["time"] / 1000),
         value[0]["nsv_id"]
-    ] for k, value in response_dict_ttr.items()]
+    ] for k, value in response_dict_ttr.items() if value[0]["nsv_id"] != 0]
 
     dataframe_trr = pd.DataFrame(data,
         columns=("trr_id", "trr_time", "trr_nsv_id")

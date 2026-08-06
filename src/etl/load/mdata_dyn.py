@@ -1,7 +1,7 @@
 from sqlalchemy import MetaData, PrimaryKeyConstraint
 from sqlalchemy import Table, Column, Integer, Text, select, TIMESTAMP
 from sqlalchemy.dialects.postgresql import insert
-from .engine import engine
+from db_connection.engine import engine
 
 def load_table(dataframe, table_name):
     with engine.connect() as conn:

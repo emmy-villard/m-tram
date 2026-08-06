@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=83.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mtram"
+version = "0.0.1"
+requires-python = ">=3.12.3"
+authors = [
+  {name = "Emmy VILLARD", email = "emmy.villard.pro@proton.me"},
+]
+license = "MIT"
+
+[project.urls]
+"Live Demo" = "https://github.com/emmy-villard/m-tram"
+Repository = "https://github.com/emmy-villard/m-tram"

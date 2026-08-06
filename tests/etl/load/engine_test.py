@@ -1,5 +1,5 @@
 from unittest.mock import patch
-from etl.load.engine import url, engine
+from db_connection.engine import url, engine
 from sqlalchemy import Engine
 import os
 

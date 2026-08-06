@@ -1,6 +1,6 @@
-from extract.trr import fetch_trr
-from transform.trr import raw_to_pandas_trr
-from load.mdata_dyn import load_table
+from etl.extract.trr import fetch_trr
+from etl.transform.trr import raw_to_pandas_trr
+from etl.load.mdata_dyn import load_table
 
 def etl_trr():
     raw_data = fetch_trr()

@@ -8,4 +8,5 @@ echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
 echo "POSTGRES_PORT=$POSTGRES_PORT" >> .env
 echo "POSTGRES_DB=$POSTGRES_DB" >> .env
 
+python3 -m pip install -e .
 source scripts/dev/entrypoint.sh

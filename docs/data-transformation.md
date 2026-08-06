@@ -1,4 +1,4 @@
-## Data Transformation - Explanatory Document
+# Data Transformation - Explanatory Document
 This document outlines the logic behind the transformations and cleansing applied to the data. For each table in the database, I will explain:
 1. the source(s)
 2. the transformations applied

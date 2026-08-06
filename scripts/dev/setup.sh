@@ -8,4 +8,4 @@ echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
 echo "POSTGRES_PORT=$POSTGRES_PORT" >> .env
 echo "POSTGRES_DB=$POSTGRES_DB" >> .env
 
-source scripts/entrypoint.sh
+source scripts/dev/entrypoint.sh

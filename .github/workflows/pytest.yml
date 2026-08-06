@@ -12,6 +12,6 @@ jobs:
       - uses: actions/setup-python@v7
       - run: pip3 install -r requirements/dev.txt
       - run: |
-          source scripts/setup.sh
+          source scripts/dev/setup.sh
           pytest
           pytest tests/etl_integration_test.py

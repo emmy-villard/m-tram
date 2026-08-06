@@ -12,7 +12,7 @@ def test_empty_dataframe():
 
 def test_full_dataframe():
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    with open(dir_path + "/test_data/trr.json") as file:
+    with open(dir_path + "/../etl_test_data/trr.json") as file:
         raw_data = json.load(file)
         dataframe = raw_to_pandas_trr(raw_data)
         for k, v in raw_data.items():

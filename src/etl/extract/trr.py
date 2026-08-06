@@ -1,5 +1,4 @@
 import requests
-import pandas as pd
 
 def fetch_trr():
     url_ttr = "https://data.mobilites-m.fr/api/dyn/trr/json"

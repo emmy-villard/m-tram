@@ -13,4 +13,4 @@ This document outlines the logic behind the transformations and cleansing applie
 3. row with an nsv_id of 0 are removed because they do not provide any information.
 4. I assume that none of the three columns is empty or missing.
 5. We end up with a database that tracks how these dynamic data points have changed over time. This historical data is not available anywhere else, making this database the only historical record of traffic trends in the Grenoble area.
-6. The exclusion of rows where nsv_id = 0 is tested in the [tests/etl](../tests/etl/) directory, in the transform_{type}_test.py files.
+6. The exclusion of rows where nsv_id = 0 is tested in the [tests/etl](../tests/etl/transform/) directory, in the transform_{type}_test.py files.

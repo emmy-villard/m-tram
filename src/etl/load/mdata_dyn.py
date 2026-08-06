@@ -1,5 +1,5 @@
 from sqlalchemy import MetaData, PrimaryKeyConstraint
-from sqlalchemy import Table, Column, Integer, Text, select
+from sqlalchemy import Table, Column, Integer, Text, select, TIMESTAMP
 from sqlalchemy.dialects.postgresql import insert
 from .engine import engine
 
@@ -18,16 +18,16 @@ def getTables(table_name):
     table = Table(
         table_name,
         MetaData(),
-        Column(f"{table_name}_id", Integer),
-        Column(f"{table_name}_time", Text),
+        Column(f"{table_name}_id", Text),
+        Column(f"{table_name}_time", TIMESTAMP),
         Column(f"{table_name}_nsv_id", Integer),
         PrimaryKeyConstraint(f"{table_name}_id", f"{table_name}_time"),
     )
     new_table_data = Table(
         f"new_{table_name}_data",
         MetaData(),
-        Column(f"{table_name}_id", Integer),
-        Column(f"{table_name}_time", Text),
+        Column(f"{table_name}_id", Text),
+        Column(f"{table_name}_time", TIMESTAMP),
         Column(f"{table_name}_nsv_id", Integer),
         PrimaryKeyConstraint(f"{table_name}_id", f"{table_name}_time"),
     )

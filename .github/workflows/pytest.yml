@@ -12,7 +12,6 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12.3' 
-      - run: pip3 install -r requirements/dev.txt
       - run: |
           source scripts/dev/setup.sh
           pytest

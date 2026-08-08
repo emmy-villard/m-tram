@@ -2,4 +2,6 @@
 pythonpath = ["src"]
 testpaths = [
     "tests/etl",
+    "tests/orm",
+    "tests/db_connection",
 ]

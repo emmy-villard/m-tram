@@ -1,6 +1,6 @@
-from extract.ligne import fetch_ligne
-from transform.ligne import raw_to_pandas_ligne
-from load.mdata_dyn import load_table
+from etl.extract.ligne import fetch_ligne
+from etl.transform.ligne import raw_to_pandas_ligne
+from etl.load.mdata_dyn import load_table
 
 def etl_ligne():
     raw_data = fetch_ligne()

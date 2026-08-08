@@ -4,7 +4,7 @@ from etl.extract.trr import fetch_trr
 from etl.transform.trr import raw_to_pandas_trr
 from etl.load.mdata_dyn import load_table
 
-from etl.load.engine import engine
+from db_connection.engine import engine
 from sqlalchemy import text
 from datetime import datetime
 import os, json

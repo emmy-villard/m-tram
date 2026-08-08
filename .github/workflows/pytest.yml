@@ -10,7 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
-      - run: pip3 install -r requirements/dev.txt
+        with:
+          python-version: '3.12.3' 
       - run: |
           source scripts/dev/setup.sh
           pytest

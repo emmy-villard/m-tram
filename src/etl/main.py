@@ -1,6 +1,10 @@
-from etl_trr import etl_trr
-from etl_ligne import etl_ligne
+from etl.etl_trr import etl_trr
+from etl.etl_ligne import etl_ligne
 
-if __name__ == "__main__":
+
+def main():
     etl_trr()
     etl_ligne()
+
+if __name__ == "__main__":
+    main()

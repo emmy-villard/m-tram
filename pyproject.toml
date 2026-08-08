@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=83.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mtram"
+version = "0.0.1"
+requires-python = ">=3.12.3"
+authors = [
+  {name = "Emmy VILLARD", email = "emmy.villard.pro@proton.me"},
+]
+license = "MIT"
+readme = "README.md"
+dependencies = [
+  "numpy>=2.5.1",
+  "pandas>=3.0.5",
+  "requests>=2.34.2",
+  "SQLAlchemy>=2.0.51",
+  "postgres>=4.0",
+  "psycopg2-binary>=2.9.12",
+  "pytest>=9.1.1",
+  "ipykernel>=7.3.0",
+]
+
+[project.urls]
+"Live Demo" = "https://github.com/emmy-villard/m-tram"
+Repository = "https://github.com/emmy-villard/m-tram"
+

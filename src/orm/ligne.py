@@ -10,7 +10,7 @@ class Ligne(Base):
     pk = PrimaryKeyConstraint(ligne_id, ligne_time)
 
     def __repr__(self) -> str:
-        return f"ligne(ligne_id={self.ligne_id}, ligne_time={self.ligne_time}, ligne_nsv_id={self.ligne__nsv_id})"
+        return f"ligne(ligne_id={self.ligne_id}, ligne_time={self.ligne_time}, ligne_nsv_id={self.ligne_nsv_id})"
 
 class NewLigneData(Base):
     __tablename__ = "new_ligne_data"
@@ -21,4 +21,4 @@ class NewLigneData(Base):
     pk = PrimaryKeyConstraint(ligne_id, ligne_time)
 
     def __repr__(self) -> str:
-        return f"new_ligne_data(ligne_id={self.ligne_id}, ligne_time={self.ligne_time}, ligne__nsv_id={self.ligne__nsv_id})"
+        return f"new_ligne_data(ligne_id={self.ligne_id}, ligne_time={self.ligne_time}, ligne__nsv_id={self.ligne_nsv_id})"

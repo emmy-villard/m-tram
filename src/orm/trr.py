@@ -10,7 +10,7 @@ class Trr(Base):
     pk = PrimaryKeyConstraint(trr_id, trr_time)
 
     def __repr__(self) -> str:
-        return f"trr(trr_id={self.trr_id}, trr_time={self.trr_time}, trr_nsv_id={self.trr__nsv_id})"
+        return f"trr(trr_id={self.trr_id}, trr_time={self.trr_time}, trr_nsv_id={self.trr_nsv_id})"
 
 class NewTrrData(Base):
     __tablename__ = "new_trr_data"
@@ -21,4 +21,4 @@ class NewTrrData(Base):
     pk = PrimaryKeyConstraint(trr_id, trr_time)
 
     def __repr__(self) -> str:
-        return f"new_trr_data(trr_id={self.trr_id}, trr_time={self.trr_time}, trr__nsv_id={self.trr__nsv_id})"
+        return f"new_trr_data(trr_id={self.trr_id}, trr_time={self.trr_time}, trr__nsv_id={self.trr_nsv_id})"

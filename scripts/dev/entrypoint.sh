@@ -3,4 +3,4 @@
 docker compose -f dev_tools/docker-compose-local-db.yml --env-file .env down -v
 docker compose -f dev_tools/docker-compose-local-db.yml --env-file .env up -d --force-recreate
 
-source scripts/dev/setup_env_var.sh
+source scripts/setup_env_var.sh

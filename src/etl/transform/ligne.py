@@ -2,6 +2,19 @@ import pandas as pd
 from datetime import datetime
 
 def raw_to_pandas_ligne(response_dict):
+    """
+    Transforms raw "ligne" data into clean pandas DataFrame
+
+    Parameters
+    ----------
+    response_dict : dictionary
+        Raw json ligne data
+
+    Returns
+    -------
+    pandas.DataFrame
+        Transformed data
+    """
     data = [[
         k,
         datetime.fromtimestamp(value["time"] / 1000),

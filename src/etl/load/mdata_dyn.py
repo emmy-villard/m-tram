@@ -5,6 +5,17 @@ from db_connection.engine import engine
 from sqlalchemy.orm import Session
 
 def load_table(dataframe, orm_class, new_data_orm_class):
+    """
+    Load dynamic MData data into the database
+
+    Parameters
+    ----------
+    dataframe : pandas.DataFrame
+        Clean data, ready for insertion
+
+    Returns
+    -------
+    """
     table = orm_class.__table__
     new_table_data = new_data_orm_class.__table__
     with Session(engine) as session:

@@ -2,6 +2,19 @@ import pandas as pd
 from datetime import datetime
 
 def raw_to_pandas_trr(response_dict_ttr):
+    """
+    Transforms raw "trr" data into clean pandas DataFrame
+
+    Parameters
+    ----------
+    response_dict : dictionary
+        Raw json trr data
+
+    Returns
+    -------
+    pandas.DataFrame
+        Transformed data
+    """
     data = [[
         k,
         datetime.fromtimestamp(value[0]["time"] / 1000),

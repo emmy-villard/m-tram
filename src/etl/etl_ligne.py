@@ -4,6 +4,15 @@ from etl.load.mdata_dyn import load_table
 from orm.ligne import Ligne, NewLigneData
 
 def etl_ligne():
+    """
+    Launches ETL procedure for data "ligne"
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    """
     raw_data = fetch_ligne()
     dataframe = raw_to_pandas_ligne(raw_data)
     load_table(dataframe, Ligne, NewLigneData)

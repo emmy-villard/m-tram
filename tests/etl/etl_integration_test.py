@@ -5,11 +5,25 @@ from etl.extract.trr import fetch_trr
 from etl.transform.trr import raw_to_pandas_trr
 from orm.trr import Trr, NewTrrData
 from etl.load.mdata_dyn import load_table
-from db_connection.engine import engine
 from sqlalchemy import text
 from datetime import datetime
 import os, json
 from sqlalchemy.orm import Session
+from orm.base import Base
+from db_connection.test_engine import engine
+import pytest
+
+
+"""
+Setup the database
+"""
+@pytest.fixture(scope="session", autouse=True)
+def setup_database():
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
+    yield
+    Base.metadata.drop_all(engine)
+    engine.dispose()
 
 """
 To be run on a temporary and brand new database setup
@@ -24,7 +38,7 @@ def test_tables_created():
 def test_integration_ligne():
     raw_data = fetch_ligne()
     dataframe = raw_to_pandas_ligne(raw_data)
-    load_table(dataframe, Ligne, NewLigneData)
+    load_table(dataframe, engine, Ligne, NewLigneData)
     with Session(engine) as session:
         result = session.execute(text("SELECT * FROM ligne;")).all()
         assert len(result) != 0
@@ -40,7 +54,7 @@ def test_integration_ligne():
 def test_integration_trr():
     raw_data = fetch_trr()
     dataframe = raw_to_pandas_trr(raw_data)
-    load_table(dataframe, Trr, NewTrrData)
+    load_table(dataframe, engine, Trr, NewTrrData)
     with Session(engine) as session:
         result = session.execute(text("SELECT * FROM trr;")).all()
         assert len(result) != 0

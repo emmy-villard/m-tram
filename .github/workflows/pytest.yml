@@ -15,4 +15,3 @@ jobs:
       - run: |
           source scripts/dev/setup.sh
           pytest
-          pytest tests/etl_integration_test.py

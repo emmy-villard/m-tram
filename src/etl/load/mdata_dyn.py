@@ -1,10 +1,9 @@
 from sqlalchemy import MetaData, PrimaryKeyConstraint
 from sqlalchemy import Table, Column, Integer, Text, select, TIMESTAMP
 from sqlalchemy.dialects.postgresql import insert
-from db_connection.engine import engine
 from sqlalchemy.orm import Session
 
-def load_table(dataframe, orm_class, new_data_orm_class):
+def load_table(dataframe, engine, orm_class, new_data_orm_class):
     """
     Load dynamic MData data into the database
 
@@ -12,6 +11,9 @@ def load_table(dataframe, orm_class, new_data_orm_class):
     ----------
     dataframe : pandas.DataFrame
         Clean data, ready for insertion
+    engine : sqlalchemy.Engine
+    orm_class
+    new_data_orm_class
 
     Returns
     -------

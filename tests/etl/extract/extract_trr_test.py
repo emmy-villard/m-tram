@@ -15,8 +15,8 @@ def test_requests_get_called():
         mock_get.assert_called_with(url_trr)
 
 def test_returned_value():
-    with patch("requests.Response") as mock_Response:
-        with patch("requests.get", return_value=mock_Response) as mock_get:
-            with patch("requests.Response.json", return_value=returned_data):
-                assert returned_data == fetch_trr()
-                assert returned_data != {}
+    with patch("requests.Response") as mock_Response, \
+    patch("requests.get", return_value=mock_Response) as mock_get, \
+    patch("requests.Response.json", return_value=returned_data):
+        assert returned_data == fetch_trr()
+        assert returned_data != {}

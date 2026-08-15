@@ -22,6 +22,9 @@ dependencies = [
   "ipykernel>=7.3.0",
 ]
 
+[project.optional-dependencies]
+test_coverage = ["pytest-cov"]
+
 [project.urls]
 "Live Demo" = "https://github.com/emmy-villard/m-tram"
 Repository = "https://github.com/emmy-villard/m-tram"

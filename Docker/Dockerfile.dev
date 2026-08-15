@@ -1,5 +1,5 @@
 FROM python:3.15.0rc1-trixie
-WORKDIR /
+WORKDIR /etl
 COPY pyproject.toml .
 RUN pip install .
 COPY src/db_connection src/db_connection

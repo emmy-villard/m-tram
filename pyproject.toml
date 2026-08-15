@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test_coverage = ["pytest-cov"]
+test_coverage = ["pytest-cov>=7.1.0"]
 
 [project.urls]
 "Live Demo" = "https://github.com/emmy-villard/m-tram"

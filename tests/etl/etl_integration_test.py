@@ -1,10 +1,11 @@
-from etl.extract.ligne import fetch_ligne
+from etl.extract.fetch_api import fetch_api
+from etl.extract.api_url import url_ligne, url_ttr
 from etl.transform.ligne import raw_to_pandas_ligne
-from orm.ligne import Ligne, NewLigneData
-from etl.extract.trr import fetch_trr
 from etl.transform.trr import raw_to_pandas_trr
+from orm.ligne import Ligne, NewLigneData
 from orm.trr import Trr, NewTrrData
 from etl.load.mdata_dyn import load_table
+
 from sqlalchemy import text
 from datetime import datetime
 import os, json
@@ -36,7 +37,7 @@ def test_tables_created():
         session.execute(text("SELECT * FROM new_trr_data;")).all()
 
 def test_integration_ligne():
-    raw_data = fetch_ligne()
+    raw_data = fetch_api(url_ligne)
     dataframe = raw_to_pandas_ligne(raw_data)
     load_table(dataframe, engine, Ligne, NewLigneData)
     with Session(engine) as session:
@@ -52,7 +53,7 @@ def test_integration_ligne():
 
 
 def test_integration_trr():
-    raw_data = fetch_trr()
+    raw_data = fetch_api(url_ttr)
     dataframe = raw_to_pandas_trr(raw_data)
     load_table(dataframe, engine, Trr, NewTrrData)
     with Session(engine) as session:

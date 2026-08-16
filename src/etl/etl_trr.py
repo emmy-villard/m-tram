@@ -1,4 +1,5 @@
-from etl.extract.trr import fetch_trr
+from etl.extract.api_url import url_ttr
+from etl.extract.fetch_api import fetch_api
 from etl.transform.trr import raw_to_pandas_trr
 from etl.load.mdata_dyn import load_table
 from orm.trr import Trr, NewTrrData
@@ -14,7 +15,7 @@ def etl_trr():
     Returns
     -------
     """
-    raw_data = fetch_trr()
+    raw_data = fetch_api(url_ttr)
     dataframe = raw_to_pandas_trr(raw_data)
     load_table(dataframe, engine, Trr, NewTrrData)
 

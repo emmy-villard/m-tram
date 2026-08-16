@@ -5,23 +5,23 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "mtram"
 version = "0.0.1"
-requires-python = ">=3.12.3"
+requires-python = ">=3.10"
 authors = [
   {name = "Emmy VILLARD", email = "emmy.villard.pro@proton.me"},
 ]
 license = "MIT"
 readme = "README.md"
 dependencies = [
-  "numpy>=2.5.1",
-  "pandas>=3.0.5",
-  "requests>=2.34.2",
-  "SQLAlchemy>=2.0.51",
-  "postgres>=4.0",
-  "psycopg2-binary>=2.9.12",
-  "pytest>=9.1.1",
-  "ipykernel>=7.3.0",
-  "pydantic>=2.13.4",
-  "apache-airflow[celery]>=3.3.1",
+  "numpy==2.2.6",
+  "pandas==2.3.3",
+  "requests==2.34.2",
+  "SQLAlchemy==2.0.51",
+  "postgres==4.0",
+  "psycopg2-binary==2.9.12",
+  "pytest==9.1.1",
+  "ipykernel==7.3.0",
+  "pydantic==2.13.4",
+  "apache-airflow[celery]==3.3.1",
 ]
 
 [project.optional-dependencies]

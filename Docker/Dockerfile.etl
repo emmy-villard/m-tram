@@ -1,7 +1,9 @@
-FROM python:3.15.0rc1-trixie
+FROM python:3.10-trixie
+RUN pip install --upgrade pip
 WORKDIR /etl
 COPY pyproject.toml .
-RUN pip install .
+COPY constraints.txt .
+RUN pip install . --constraint constraints.txt
 COPY src/db_connection src/db_connection
 COPY src/orm src/orm
 COPY src/etl src/etl

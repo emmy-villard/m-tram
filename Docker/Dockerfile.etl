@@ -1,9 +1,0 @@
-FROM python:3.12-trixie
-RUN pip install --upgrade pip
-WORKDIR /etl
-COPY pyproject.toml .
-RUN pip install .
-COPY src/db_connection src/db_connection
-COPY src/orm src/orm
-COPY src/etl src/etl
-RUN pip install .

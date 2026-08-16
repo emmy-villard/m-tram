@@ -1,1 +1,1 @@
-docker build -f Docker/Dockerfile.etl -t mtram-etl:0.1 .
+docker build -f Docker/Dockerfile.etl -t mtram-etl:0.0.1 .

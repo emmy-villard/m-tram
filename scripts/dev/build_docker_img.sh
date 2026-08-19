@@ -1,1 +1,0 @@
-docker build . -t mtram:0.0.1

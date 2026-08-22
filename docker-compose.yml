@@ -59,8 +59,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - ${POSTGRES_PORT}:5432
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       start_period: 2s
@@ -77,8 +75,6 @@ services:
       POSTGRES_USER: ${POSTGRES_TEST_USER}
       POSTGRES_PORT: ${POSTGRES_TEST_PORT}
       POSTGRES_DB: ${POSTGRES_TEST_DB}
-    ports:
-      - ${POSTGRES_TEST_PORT}:5432
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       start_period: 2s

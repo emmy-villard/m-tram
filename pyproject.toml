@@ -23,6 +23,9 @@ dependencies = [
   "pydantic==2.13.4",
 ]
 
+[tool.setuptools.packages.find]
+where = ["src"]
+
 [project.optional-dependencies]
 test_coverage = ["pytest-cov"]
 

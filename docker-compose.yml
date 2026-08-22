@@ -86,6 +86,17 @@ services:
       retries: 50
       timeout: 10s
 
+  db-init:
+    <<: *airflow-common
+    command: python -m db_connection.init_db
+    environment:
+      <<: *airflow-common-env
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+    depends_on:
+      db:
+        condition: service_healthy
+
   redis:
     # Redis is limited to 7.2-bookworm due to licencing change
     # https://redis.io/blog/redis-adopts-dual-source-available-licensing/

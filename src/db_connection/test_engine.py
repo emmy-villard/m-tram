@@ -8,7 +8,7 @@ SQLAlchemy test url
 url = URL.create(
     drivername="postgresql+psycopg2",
     username=get_env_var('POSTGRES_TEST_USER'),
-    host="localhost",
+    host=get_env_var('POSTGRES_TEST_HOST'),
     port=get_env_var('POSTGRES_TEST_PORT'),
     database=get_env_var('POSTGRES_TEST_DB'),
     password=get_env_var('POSTGRES_TEST_PASSWORD'),

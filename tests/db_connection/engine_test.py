@@ -8,9 +8,4 @@ def test_engine_type():
     assert type(engine) == Engine
 
 def test_URL_values():
-    assert url.drivername == "postgresql+psycopg2"
-    assert url.host == "localhost"
-    assert url.username == os.getenv('POSTGRES_USER')
-    assert url.port == int(os.getenv('POSTGRES_PORT'))
-    assert url.database == os.getenv('POSTGRES_DB')
-    assert url.password == os.getenv('POSTGRES_PASSWORD')
+    assert url == os.getenv('DATABASE__SQL_ALCHEMY_CONN')

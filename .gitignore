@@ -4,5 +4,3 @@ __pycache__
 *.egg-info
 *PR.md
 .coverage
-logs
-airflow.cfg

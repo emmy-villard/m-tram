@@ -8,12 +8,8 @@ Data sources → Airflow → Python ETL → PostgreSQL → FastAPI → dashboard
 ## Installation
 
 ### Complete setup (initial launch)
-- ``python3 -m venv .venv``
-- ``source .venv/bin/activate``
-- ``pip3 install -r requirements/prod.txt``
-- ``source scripts/dev/setup.sh``
+- ``source scripts/generate_export.env.sh``
+- ``./scripts/docker-compose.sh``
 
 ### Subsequent launches:
-- ``source scripts/dev/setup.sh``
-
-
+- ``./scripts/docker-compose.sh``

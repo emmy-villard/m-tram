@@ -24,6 +24,7 @@ dev = [
   "ipykernel==7.3.0",
   "pydantic==2.13.4",
   "pytest-cov==7.1.0",
+  "apache-airflow[celery]==3.3.1"
 ]
 prod = [
   "requests==2.34.2",

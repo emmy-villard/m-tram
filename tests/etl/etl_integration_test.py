@@ -1,5 +1,5 @@
 from etl.extract.fetch_api import fetch_api
-from etl.extract.api_url import url_ligne, url_ttr
+from etl.extract.api_url import url_ligne, url_trr
 from etl.transform.ligne import raw_to_pandas_ligne
 from etl.transform.trr import raw_to_pandas_trr
 from orm.ligne import Ligne, NewLigneData
@@ -53,7 +53,7 @@ def test_integration_ligne():
 
 
 def test_integration_trr():
-    raw_data = fetch_api(url_ttr)
+    raw_data = fetch_api(url_trr)
     dataframe = raw_to_pandas_trr(raw_data)
     load_table(dataframe, engine, Trr, NewTrrData)
     with Session(engine) as session:

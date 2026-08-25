@@ -1,5 +1,7 @@
-from sqlalchemy import Column, Text, TIMESTAMP, Integer, PrimaryKeyConstraint
+from sqlalchemy import Text, TIMESTAMP, Integer
+from sqlalchemy.orm import Mapped, mapped_column
 from orm.base import Base
+from datetime import datetime
 
 class Ligne(Base):
     """
@@ -8,19 +10,18 @@ class Ligne(Base):
     Properties
     ----------
     
-    ligne_id : sqlalchemy.Column(sqlalchemy.Text)
+    ligne_id : sqlalchemy.mapped_column(sqlalchemy.Text)
         tram line
-    ligne_id : sqlalchemy.Column(sqlalchemy.TIMESTAMP)
+    ligne_id : sqlalchemy.mapped_column(sqlalchemy.TIMESTAMP)
         report timestamp
-    ligne_nsv_id : sqlalchemy.Column(sqlalchemy.Integer)
+    ligne_nsv_id : sqlalchemy.mapped_column(sqlalchemy.Integer)
         traffic condition
     """
     __tablename__ = "ligne"
 
-    ligne_id = Column(Text)
-    ligne_time = Column(TIMESTAMP)
-    ligne_nsv_id = Column(Integer)
-    pk = PrimaryKeyConstraint(ligne_id, ligne_time)
+    ligne_id: Mapped[str] = mapped_column(Text, primary_key=True)
+    ligne_time: Mapped[datetime] = mapped_column(TIMESTAMP, primary_key=True)
+    ligne_nsv_id: Mapped[int] = mapped_column(Integer)
 
     def __repr__(self) -> str:
         return f"ligne(ligne_id={self.ligne_id}, ligne_time={self.ligne_time}, ligne_nsv_id={self.ligne_nsv_id})"
@@ -32,19 +33,18 @@ class NewLigneData(Base):
     Properties
     ----------
     
-    ligne_id : sqlalchemy.Column(sqlalchemy.Text)
+    ligne_id : sqlalchemy.mapped_column(sqlalchemy.Text)
         tram line
-    ligne_id : sqlalchemy.Column(sqlalchemy.TIMESTAMP)
+    ligne_id : sqlalchemy.mapped_column(sqlalchemy.TIMESTAMP)
         report timestamp
-    ligne_nsv_id : sqlalchemy.Column(sqlalchemy.Integer)
+    ligne_nsv_id : sqlalchemy.mapped_column(sqlalchemy.Integer)
         traffic condition
     """
     __tablename__ = "new_ligne_data"
 
-    ligne_id = Column(Text)
-    ligne_time = Column(TIMESTAMP)
-    ligne_nsv_id = Column(Integer)
-    pk = PrimaryKeyConstraint(ligne_id, ligne_time)
+    ligne_id: Mapped[str] = mapped_column(Text, primary_key=True)
+    ligne_time: Mapped[datetime] = mapped_column(TIMESTAMP, primary_key=True)
+    ligne_nsv_id: Mapped[str] = mapped_column(Integer)
 
     def __repr__(self) -> str:
         return f"new_ligne_data(ligne_id={self.ligne_id}, ligne_time={self.ligne_time}, ligne__nsv_id={self.ligne_nsv_id})"

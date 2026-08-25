@@ -1,5 +1,8 @@
-from sqlalchemy import Column, Text, TIMESTAMP, Integer, PrimaryKeyConstraint
+from sqlalchemy import Text, TIMESTAMP, Integer
+from sqlalchemy.orm import Mapped, mapped_column
 from orm.base import Base
+from datetime import datetime
+
 
 class Trr(Base):
     """
@@ -17,10 +20,9 @@ class Trr(Base):
     """
     __tablename__ = "trr"
 
-    trr_id = Column(Text)
-    trr_time = Column(TIMESTAMP)
-    trr_nsv_id = Column(Integer)
-    pk = PrimaryKeyConstraint(trr_id, trr_time)
+    trr_id: Mapped[str] = mapped_column(Text, primary_key=True)
+    trr_time: Mapped[datetime] = mapped_column(TIMESTAMP, primary_key=True)
+    trr_nsv_id: Mapped[int] = mapped_column(Integer)
 
     def __repr__(self) -> str:
         return f"trr(trr_id={self.trr_id}, trr_time={self.trr_time}, trr_nsv_id={self.trr_nsv_id})"
@@ -41,10 +43,9 @@ class NewTrrData(Base):
     """
     __tablename__ = "new_trr_data"
 
-    trr_id = Column(Text)
-    trr_time = Column(TIMESTAMP)
-    trr_nsv_id = Column(Integer)
-    pk = PrimaryKeyConstraint(trr_id, trr_time)
+    trr_id: Mapped[str] = mapped_column(Text, primary_key=True)
+    trr_time: Mapped[datetime] = mapped_column(TIMESTAMP, primary_key=True)
+    trr_nsv_id: Mapped[int] = mapped_column(Integer)
 
     def __repr__(self) -> str:
         return f"new_trr_data(trr_id={self.trr_id}, trr_time={self.trr_time}, trr__nsv_id={self.trr_nsv_id})"

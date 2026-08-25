@@ -4,6 +4,7 @@ This document provides a complete list of the data sources used, along with thei
 ## Dynamic MData
 These data from [MData](https://data.mobilites-m.fr/donnees) are freely available under the [ODbL licence](https://spdx.org/licenses/ODbL-1.0.html#licenseText).
 
+
 ### Urls
 - trr : https://data.mobilites-m.fr/api/dyn/trr/json
 - ligne : https://data.mobilites-m.fr/api/dyn/ligne/json
@@ -17,3 +18,6 @@ The two named fields are "time" (date in milliseconds) and "nsv_id," which repre
 - 2 : Slow traffic
 - 3 : Traffic jam / congestion
 - 4 : Closed
+
+### Refresh Frequency
+Data is updated every 6 minutes, and lost if not saved on a database.

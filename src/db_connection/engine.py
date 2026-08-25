@@ -1,22 +1,10 @@
-from sqlalchemy import URL, create_engine
-import os
-
-"""
-File for the engine Singleton
-"""
-
+from sqlalchemy import create_engine
+from db_connection.util import get_env_var
 
 """
 SQLAlchemy database url
 """
-url = URL.create(
-    drivername="postgresql+psycopg2",
-    username=os.getenv('POSTGRES_USER'),
-    host="localhost",
-    port=os.getenv('POSTGRES_PORT'),
-    database=os.getenv('POSTGRES_DB'),
-    password=os.getenv('POSTGRES_PASSWORD'),
-)
+url = get_env_var("DATABASE__SQL_ALCHEMY_CONN")
 
 """
 SQLAlchemy database engine

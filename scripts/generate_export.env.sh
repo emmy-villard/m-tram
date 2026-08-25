@@ -31,7 +31,7 @@ write_variables() {
     ENV_FILE_PATH=".env"
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN="postgresql+psycopg2://$AIRFLOW_USER:$AIRFLOW_PASSWORD@airflow_metadata_db/$AIRFLOW_DB"
     AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql+psycopg2://$AIRFLOW_USER:$AIRFLOW_PASSWORD@airflow_metadata_db/$AIRFLOW_DB
-    AIRFLOW_IMAGE_NAME="tutorial-mtram-based-airflow:latest"
+    AIRFLOW_IMAGE_NAME="mtram-airflow:latest"
     FERNET_KEY=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 264)
     AIRFLOW__API_AUTH__JWT_SECRET=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 264)
     AIRFLOW__API_AUTH__JWT_ISSUER=airflow_$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16)

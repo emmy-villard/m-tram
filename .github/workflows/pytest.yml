@@ -14,5 +14,5 @@ jobs:
           python-version: '3.12.3'
       - run : pip3 install -e .[dev]
       - run: |
-          source scripts/tests/setup-local-env.sh
+          source scripts/tests/setup-test-env.sh
           pytest

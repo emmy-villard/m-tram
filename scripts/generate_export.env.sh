@@ -3,7 +3,7 @@ write_variables() {
     POSTGRES_USER=app
     POSTGRES_PASSWORD=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 32)
     POSTGRES_DB=api_db
-    DATABASE__SQL_ALCHEMY_CONN="postgresql+psycopg2://$POSTGRES_USER:$POSTGRES_PASSWORD@airflow_metadata_db/$POSTGRES_DB"
+    DATABASE__SQL_ALCHEMY_CONN="postgresql+psycopg2://$POSTGRES_USER:$POSTGRES_PASSWORD@db/$POSTGRES_DB"
     echo "POSTGRES_USER=$POSTGRES_USER" > .env
     echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
     echo "POSTGRES_DB=$POSTGRES_DB" >> .env

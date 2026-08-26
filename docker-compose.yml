@@ -15,8 +15,8 @@ x-airflow-common:
     AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'false'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
-    BASE_URL: ${BASE_URL}
-    AIRFLOW__CORE__EXECUTION_API_SERVER_URL: '${BASE_URL}/execution/'
+    BASE_URL: ${APISERVER_URL}
+    AIRFLOW__CORE__EXECUTION_API_SERVER_URL: '${APISERVER_URL}/execution/'
     AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW__API_AUTH__JWT_SECRET}
     AIRFLOW__API_AUTH__JWT_ISSUER: ${AIRFLOW__API_AUTH__JWT_ISSUER}
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
@@ -67,23 +67,6 @@ services:
       retries: 50
       timeout: 10s
 
-  test_db:
-    image: postgres:18
-    restart: always
-    shm_size: 128mb
-    environment:
-      POSTGRES_PASSWORD: ${POSTGRES_TEST_PASSWORD}
-      POSTGRES_USER: ${POSTGRES_TEST_USER}
-      POSTGRES_DB: ${POSTGRES_TEST_DB}
-    ports:
-      - "${POSTGRES_TEST_PORT}:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
-      start_period: 2s
-      interval: 0.5s
-      retries: 50
-      timeout: 10s
-
   db-init:
     <<: *airflow-common
     command: python -m db_connection.init_db
@@ -113,7 +96,7 @@ services:
     <<: *airflow-common
     command: api-server
     ports:
-      - "${AIRFLOW_APISERVER_PORT}:8080"
+      - "${AIRFLOW_APISERVER_EXTERNAL_PORTORT}:8080"
     healthcheck:
       test: ["CMD", "curl", "--fail",
         "http://localhost:8080/api/v2/monitor/health"
@@ -325,4 +308,3 @@ services:
 volumes:
   airflow_metadata_db-volume:
   db-volume:
-

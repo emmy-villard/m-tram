@@ -3,35 +3,23 @@ write_variables() {
     POSTGRES_USER=app
     POSTGRES_PASSWORD=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 32)
     POSTGRES_DB=api_db
-    DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://$POSTGRES_USER:$POSTGRES_PASSWORD@db/$POSTGRES_DB
+    DATABASE__SQL_ALCHEMY_CONN="postgresql+psycopg2://$POSTGRES_USER:$POSTGRES_PASSWORD@db/$POSTGRES_DB"
     echo "POSTGRES_USER=$POSTGRES_USER" > .env
     echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
     echo "POSTGRES_DB=$POSTGRES_DB" >> .env
     echo "DATABASE__SQL_ALCHEMY_CONN=$DATABASE__SQL_ALCHEMY_CONN" >> .env
 
-    # Test db variables
-    POSTGRES_TEST_USER=test
-    POSTGRES_TEST_PASSWORD=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 32)
-    POSTGRES_TEST_PORT=54320
-    POSTGRES_TEST_HOST=localhost
-    POSTGRES_TEST_DB=test_db
-    echo "POSTGRES_TEST_USER=$POSTGRES_TEST_USER" >> .env
-    echo "POSTGRES_TEST_PASSWORD=$POSTGRES_TEST_PASSWORD" >> .env
-    echo "POSTGRES_TEST_PORT=$POSTGRES_TEST_PORT" >> .env
-    echo "POSTGRES_TEST_HOST=$POSTGRES_TEST_HOST" >> .env
-    echo "POSTGRES_TEST_DB=$POSTGRES_TEST_DB" >> .env
-
     # Airflow variables
     AIRFLOW_USER=airflow
     AIRFLOW_PASSWORD=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 32)
     AIRFLOW_DB=airflow
-    AIRFLOW_APISERVER_PORT=8081
-    BASE_URL="http://airflow-apiserver:8080"
+    AIRFLOW_APISERVER_EXTERNAL_PORT=8080
+    APISERVER_URL="http://airflow-apiserver:8080"
     AIRFLOW_PROJ_DIR=./airflow
     ENV_FILE_PATH=".env"
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN="postgresql+psycopg2://$AIRFLOW_USER:$AIRFLOW_PASSWORD@airflow_metadata_db/$AIRFLOW_DB"
     AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql+psycopg2://$AIRFLOW_USER:$AIRFLOW_PASSWORD@airflow_metadata_db/$AIRFLOW_DB
-    AIRFLOW_IMAGE_NAME="tutorial-mtram-based-airflow:latest"
+    AIRFLOW_IMAGE_NAME="mtram-airflow:latest"
     FERNET_KEY=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 264)
     AIRFLOW__API_AUTH__JWT_SECRET=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 264)
     AIRFLOW__API_AUTH__JWT_ISSUER=airflow_$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16)
@@ -41,8 +29,8 @@ write_variables() {
     echo "AIRFLOW_USER=$AIRFLOW_USER" >> .env
     echo "AIRFLOW_PASSWORD=$AIRFLOW_PASSWORD" >> .env
     echo "AIRFLOW_DB=$AIRFLOW_DB" >> .env
-    echo "AIRFLOW_APISERVER_PORT=$AIRFLOW_APISERVER_PORT" >> .env
-    echo "BASE_URL=$BASE_URL" >> .env
+    echo "AIRFLOW_APISERVER_EXTERNAL_PORT=$AIRFLOW_APISERVER_EXTERNAL_PORT" >> .env
+    echo "APISERVER_URL=$APISERVER_URL" >> .env
     echo "AIRFLOW_PROJ_DIR=$AIRFLOW_PROJ_DIR" >> .env
     echo "ENV_FILE_PATH=$ENV_FILE_PATH" >> .env
     echo "AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=$AIRFLOW__DATABASE__SQL_ALCHEMY_CONN" >> .env
@@ -69,4 +57,3 @@ else
 fi
 
 export_variables
-chmod 440 .env

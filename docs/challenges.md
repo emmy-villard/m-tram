@@ -22,3 +22,6 @@ Integrating the two ETL pipelines into Airflow required more than just writing t
 
 ## Making Pipeline Execution Observable
 Once the pipelines were running, it was difficult to tell whether an API request had succeeded or whether data had actually been inserted into PostgreSQL. I added execution logs for API URLs and response codes, as well as the number of rows inserted during loading. This made silent failures, empty responses, and conflicts during database loading easier to investigate.
+
+## Launching the app
+A docker-compose that launched with no issues on my local machine started breaking in my VPS. The API server started up slowly, and then the workers eventually failed without completing a single task. I solved this problem by upgrading my VPS server, which didn't have enough capacity to run Airflow properly.

@@ -15,7 +15,7 @@ jobs:
       - run : pip3 install .[dev]
       - run: ./run_tests.sh
   
-  integration-airflow-tests:
+  airflow-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

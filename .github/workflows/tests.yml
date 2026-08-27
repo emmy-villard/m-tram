@@ -17,8 +17,6 @@ jobs:
   
   integration-airflow-tests:
     runs-on: ubuntu-latest
-    variables:
-      - docker_exec: "d "
     steps:
       - uses: actions/checkout@v7
       - run: ./scripts/generate_export.env.sh

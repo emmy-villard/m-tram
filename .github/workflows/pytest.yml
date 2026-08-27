@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  unit-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -16,3 +16,14 @@ jobs:
       - run: |
           source scripts/tests/setup-test-env.sh
           pytest
+  
+  integration-airflow-tests:
+    runs-on: ubuntu-latest
+    variables:
+      - docker_exec: "d "
+    steps:
+      - uses: actions/checkout@v7
+      - run: ./scripts/generate_export.env.sh
+      - run: ./scripts/docker-compose.sh
+      - run: ./tests/airflow/dag_tests.sh
+

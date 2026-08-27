@@ -1,4 +1,4 @@
-from airflow.sdk import dag, task, chain
+from airflow.sdk import dag, task
 from datetime import datetime, timedelta
 
 from etl.extract.api_url import url_ligne

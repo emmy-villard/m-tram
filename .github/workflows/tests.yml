@@ -1,0 +1,25 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12.3'
+      - run : pip3 install .[dev]
+      - run: ./scripts/tests/run_tests.sh
+  
+  airflow-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: ./scripts/generate_export.env.sh
+      - run: ./scripts/docker-compose.sh
+      - run: ./tests/airflow/dag_tests.sh
+

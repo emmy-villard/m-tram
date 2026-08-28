@@ -7,6 +7,7 @@ from etl.transform.trr import raw_to_pandas_trr
 from etl.load.mdata_dyn import load_table
 from db_connection.engine import engine
 from orm.trr import Trr, NewTrrData
+from etl.validation_schemas.trr import check_trr_data
 
 @dag(
     schedule="*/5 * * * *",
@@ -34,7 +35,7 @@ def etl_trr():
     
     @task
     def load_trr(dataframe):
-        return load_table(dataframe, engine, Trr, NewTrrData)
+        return load_table(dataframe, engine, Trr, NewTrrData, check_trr_data)
 
     raw_data = extract_trr()
     dataframe = transform_trr(raw_data)

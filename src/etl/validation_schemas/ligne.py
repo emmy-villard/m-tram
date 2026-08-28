@@ -4,7 +4,7 @@ from typing import List
 from pandas import DataFrame
 
 class LigneSchema(BaseModel):
-    ligne_id: str #TODO in set of values. Refreshed periodically
+    ligne_id: str
     ligne_time: datetime
     ligne_nsv_id: int = Field(ge=1, le=4)
 

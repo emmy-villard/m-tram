@@ -26,6 +26,7 @@ dev = [
   "pytest-cov==7.1.0",
   "apache-airflow[celery]==3.3.1",
   "pydantic==2.13.4",
+  "alembic=1.19.1",
 ]
 prod = [
   "requests==2.34.2",
@@ -33,6 +34,7 @@ prod = [
   "postgres==4.0",
   "psycopg2-binary==2.9.12",
   "pydantic==2.13.4",
+  "alembic=1.19.1",
 ]
 
 [tool.setuptools.packages.find]

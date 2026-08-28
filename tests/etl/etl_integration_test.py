@@ -5,14 +5,16 @@ from etl.transform.trr import raw_to_pandas_trr
 from orm.ligne import Ligne, NewLigneData
 from orm.trr import Trr, NewTrrData
 from etl.load.mdata_dyn import load_table
+from etl.validation_schemas.ligne import check_ligne_data
+from etl.validation_schemas.trr import check_trr_data
 
 from sqlalchemy import text
 from datetime import datetime
-import os, json
 from sqlalchemy.orm import Session
 from orm.base import Base
 from db_connection.test_engine import engine
 import pytest
+
 
 
 """
@@ -29,6 +31,7 @@ def setup_database():
 """
 To be run on a temporary and brand new database setup
 """
+
 def test_tables_created():
     with Session(engine) as session:
         session.execute(text("SELECT * FROM ligne;")).all()
@@ -39,7 +42,7 @@ def test_tables_created():
 def test_integration_ligne():
     raw_data = fetch_api(url_ligne)
     dataframe = raw_to_pandas_ligne(raw_data)
-    load_table(dataframe, engine, Ligne, NewLigneData)
+    load_table(dataframe, engine, Ligne, NewLigneData, check_ligne_data)
     with Session(engine) as session:
         result = session.execute(text("SELECT * FROM ligne;")).all()
         assert len(result) != 0
@@ -51,11 +54,10 @@ def test_integration_ligne():
             else:
                 assert k not in dataframe.index
 
-
 def test_integration_trr():
     raw_data = fetch_api(url_trr)
     dataframe = raw_to_pandas_trr(raw_data)
-    load_table(dataframe, engine, Trr, NewTrrData)
+    load_table(dataframe, engine, Trr, NewTrrData, check_trr_data)
     with Session(engine) as session:
         result = session.execute(text("SELECT * FROM trr;")).all()
         assert len(result) != 0

@@ -10,7 +10,6 @@ def raw_data():
     with open(dir_path + "/../etl_test_data/ligne.json") as file:
         return json.load(file)
 
-
 def test_empty_dataframe():
     dataframe = raw_to_pandas_ligne({})
     assert dataframe.index.name == "ligne_id"

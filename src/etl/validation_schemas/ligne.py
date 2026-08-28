@@ -1,4 +1,4 @@
-from pydantic import BaseModel, TypeAdapter
+from pydantic import BaseModel, TypeAdapter, Field
 from datetime import datetime
 from typing import List
 from pandas import DataFrame
@@ -6,7 +6,7 @@ from pandas import DataFrame
 class LigneSchema(BaseModel):
     ligne_id: str
     ligne_time: datetime
-    ligne_nsv_id: int
+    ligne_nsv_id: int = Field(ge=1, le=4)
 
 def check_ligne_data(dataframe: DataFrame):
     data = dataframe.reset_index().to_dict('records')

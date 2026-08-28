@@ -1,6 +1,8 @@
 # DataBase Table Schemas
 This document provides a complete list of the database table schemas.
 
+The schema updates are tracked with alchemy. Since the test_database keeps the same structure as the app database, we use the test database to track migrations.
+
 ## Dynamic MData
 ### trr and new_trr_data (staging table)
 - trr_id : TEXT

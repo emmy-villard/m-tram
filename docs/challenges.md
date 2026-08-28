@@ -15,13 +15,10 @@ I had to ensure that the installations were reproducible—whether they were Pyt
 ## Docker Compose
 I had to adapt the YAML template provided by Airflow by defining variables that I generate automatically in `.env`. Several details required careful adjustment: project paths, internal and external ports, the database connection variable expected by Airflow, and the distinction between the application database and the test database.
 
-I also had to make sure that all volumes were properly mounted and secure the installations to prevent losing my database during application updates. This led to adding a persistent database volume, ignoring generated Airflow logs, and protecting the generated `.env` file from being overwritten accidentally.
+I also had to make sure that all volumes were properly mounted and secure the installations to prevent losing my database during application updates. This led to adding a persistent database volume and protecting the generated `.env` file from being overwritten accidentally.
 
 ## Orchestrating the ETL with Airflow
-Integrating the two ETL pipelines into Airflow required more than just writing the DAGs. I first had to create the Airflow project structure, configure the Docker services, resolve the dependencies needed to parse the DAG files, and make the application available at the expected internal port. Only after these pieces were aligned could I implement the `etl_ligne` and `etl_trr` DAGs.
-
-## Making Pipeline Execution Observable
-Once the pipelines were running, it was difficult to tell whether an API request had succeeded or whether data had actually been inserted into PostgreSQL. I added execution logs for API URLs and response codes, as well as the number of rows inserted during loading. This made silent failures, empty responses, and conflicts during database loading easier to investigate.
+Integrating the two ETL pipelines into Airflow required more than just writing the DAGs. I first had to create the Airflow project structure, configure the Docker services, resolve the dependencies needed to parse the DAG files, and make the application available at the expected internal port. Only after these pieces were aligned could I implement the DAGs. I then added airflow dag tests to ensure they actually write in the database, and keep doing it with every push.
 
 ## Launching the app
 A docker-compose that launched with no issues on my local machine started breaking in my VPS. The API server started up slowly, and then the workers eventually failed without completing a single task. I solved this problem by upgrading my VPS server, which didn't have enough capacity to run Airflow properly.

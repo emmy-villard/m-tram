@@ -1,5 +1,5 @@
 from etl.transform.trr import raw_to_pandas_trr
-import pandas as pd
+import numpy as np
 import os, json
 from datetime import datetime
 import pytest
@@ -27,3 +27,37 @@ def test_full_dataframe(raw_data):
             assert v['nsv_id'] == dataframe.loc[k]['trr_nsv_id']
         else:
             assert k not in dataframe.index
+
+def test_no_null_nsv_id():
+    raw_data = {
+        "N0_001": [
+            {
+                "nsv_id": 0,
+                "time": 1785931245023
+            }
+        ],
+        "N0_521": [
+            {
+                "nsv_id": 2,
+                "time": 1785931250024
+            }
+        ],
+        "N0_522": [
+            {
+                "nsv_id": 0,
+                "time": 1785931250024
+            }
+        ],
+    }
+    raw_data_no_null_nsv_id = {
+        "N0_521": [
+            {
+                "nsv_id": 2,
+                "time": 1785931250024
+            }
+        ],
+    }
+    dataframe = raw_to_pandas_trr(raw_data)
+    dataframe_result = raw_to_pandas_trr(raw_data_no_null_nsv_id)
+    assert np.all(dataframe["trr_nsv_id"] != 0)
+    assert dataframe.equals(dataframe_result)

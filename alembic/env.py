@@ -11,7 +11,7 @@ from db_connection.util import get_env_var
 config = context.config
 
 # setting up database url
-database_url = get_env_var("TEST_DATABASE__SQL_ALCHEMY_CONN")
+database_url = get_env_var("DATABASE__SQL_ALCHEMY_CONN")
 config.set_main_option("sqlalchemy.url", database_url)
 
 # Interpret the config file for Python logging.

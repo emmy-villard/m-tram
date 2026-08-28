@@ -2,13 +2,22 @@ from etl.load.mdata_dyn import load_table
 from unittest.mock import patch, MagicMock
 import pandas as pd
 from orm.trr import Trr, NewTrrData
-from etl.validation_schemas.trr import check_trr_data
+import pytest
 
-def test_load_table():
+@pytest.fixture
+def mock_check():
+    return MagicMock()
+
+def test_load_table(mock_check):
     with patch("etl.load.mdata_dyn.Session", new_callable=MagicMock) as mock_session, \
     patch("pandas.DataFrame.to_sql") as mock_sql:
         mock_sess = mock_session.return_value.__enter__.return_value
-        load_table(pd.DataFrame([]), (), Trr, NewTrrData, check_trr_data)
+        load_table(pd.DataFrame([]), (), Trr, NewTrrData, mock_check)
         mock_sess.execute.assert_called()
         mock_sess.commit.assert_called()
+        mock_check.assert_called()
         mock_sql.assert_called()
+
+
+
+

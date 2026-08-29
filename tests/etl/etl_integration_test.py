@@ -1,4 +1,4 @@
-from etl.extract.fetch_api import fetch_api
+from etl.extract.fetch_mdata_api import fetch_mdata_api
 from etl.extract.api_url import url_ligne, url_trr
 from etl.transform.ligne import raw_to_pandas_ligne
 from etl.transform.trr import raw_to_pandas_trr
@@ -40,7 +40,7 @@ def test_tables_created():
         session.execute(text("SELECT * FROM new_trr_data;")).all()
 
 def test_integration_ligne():
-    raw_data = fetch_api(url_ligne)
+    raw_data = fetch_mdata_api(url_ligne)
     dataframe = raw_to_pandas_ligne(raw_data)
     load_table(dataframe, engine, Ligne, NewLigneData, check_ligne_data)
     with Session(engine) as session:
@@ -55,7 +55,7 @@ def test_integration_ligne():
                 assert k not in dataframe.index
 
 def test_integration_trr():
-    raw_data = fetch_api(url_trr)
+    raw_data = fetch_mdata_api(url_trr)
     dataframe = raw_to_pandas_trr(raw_data)
     load_table(dataframe, engine, Trr, NewTrrData, check_trr_data)
     with Session(engine) as session:

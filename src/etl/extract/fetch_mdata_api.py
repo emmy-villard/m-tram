@@ -2,7 +2,7 @@ import requests
 import logging
 
 logger = logging.getLogger(__name__)
-def fetch_api(url):
+def fetch_mdata_api(url):
     """
     Get raw json dynamic data from open APIs
 

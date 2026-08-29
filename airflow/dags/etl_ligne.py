@@ -2,7 +2,7 @@ from airflow.sdk import dag, task
 from datetime import datetime, timedelta
 
 from etl.extract.api_url import url_ligne
-from etl.extract.fetch_api import fetch_api
+from etl.extract.fetch_mdata_api import fetch_mdata_api
 from etl.transform.ligne import raw_to_pandas_ligne
 from etl.load.mdata_dyn import load_table
 from db_connection.engine import engine
@@ -27,7 +27,7 @@ def etl_ligne():
     """
     @task
     def extract_ligne():
-        return fetch_api(url_ligne)
+        return fetch_mdata_api(url_ligne)
     
     @task
     def transform_ligne(raw_data):

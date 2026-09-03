@@ -1,5 +1,5 @@
 from datetime import datetime
-from urllib.parse import urlencode, urlparse, urlunparse, parse_qsl
+from etl.extract.url_util import date_format, update_url_params
 
 """
 URLs of APIs endpoints
@@ -22,7 +22,7 @@ def url_openapi_meteo(day: datetime):
         url to fetch
     """
     url = "https://archive-api.open-meteo.com/v1/archive"
-    date_str = day.strftime('%Y-%m-%d')
+    date_str = day.strftime(date_format())
     lat_grenoble, long_grenoble = '45.17', '5.72'
     data_requested = 'temperature_2m,apparent_temperature,' \
         'relativehumidity_2m,precipitation,rain,snowfall,weathercode,' \
@@ -35,9 +35,4 @@ def url_openapi_meteo(day: datetime):
         'hourly': data_requested,
         'timezone': 'Europe/Paris',
     }
-
-    url_parts = list(urlparse(url))
-    query = dict(parse_qsl(url_parts[4]))
-    query.update(params)
-    url_parts[4] = urlencode(query)
-    return urlunparse(url_parts)
+    return update_url_params(url, params)

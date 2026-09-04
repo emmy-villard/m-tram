@@ -12,6 +12,7 @@ write_variables() {
     echo "POSTGRES_TEST_HOST=$POSTGRES_TEST_HOST" >> .env.test
     echo "POSTGRES_TEST_DB=$POSTGRES_TEST_DB" >> .env.test
     echo "TEST_DATABASE__SQL_ALCHEMY_CONN=$TEST_DATABASE__SQL_ALCHEMY_CONN" >> .env.test
+    echo "DATABASE__SQL_ALCHEMY_CONN=$TEST_DATABASE__SQL_ALCHEMY_CONN" >> .env.test
 }
 
 export_variables() {

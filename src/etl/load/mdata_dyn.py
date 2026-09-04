@@ -1,10 +1,9 @@
-from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 import logging
 
 logger = logging.getLogger(__name__)
-def load_table(dataframe, engine, orm_class, new_data_orm_class, data_checker):
+def load_table(dataframe, engine, orm_class, data_converter):
     """
     Load dynamic MData data into the database
 
@@ -14,22 +13,24 @@ def load_table(dataframe, engine, orm_class, new_data_orm_class, data_checker):
         Clean data, ready for insertion
     engine : sqlalchemy.Engine
     orm_class
-    new_data_orm_class
+    data_converter : callable
+        Takes the dataframe and returns a list of Pydantic model
+        instances validating/converting the data before insert.
 
     Returns
     -------
     """
     table = orm_class.__table__
-    new_table_data = new_data_orm_class.__table__
-    data_checker(dataframe)
+    validated_rows = data_converter(dataframe)
+    print(f"ROWS: {validated_rows}")
+    rows_to_insert = [row.model_dump() for row in validated_rows]
+
+    if not rows_to_insert:
+        logger.info("Inserted lines: 0")
+        return
+
     with Session(engine) as session:
-        dataframe.to_sql(f"new_{table.name}_data", engine, if_exists="replace")
-        cols = [c.name for c in orm_class.__table__.columns]
-        lines_with_data = select(new_table_data).where(
-            new_table_data.c[f"{table.name}_nsv_id"] != 0
-        )
-        #TODO: should not transform data here! Can remove "new_data" tables?
-        insert_new_lines = insert(table).from_select(cols, lines_with_data)
+        insert_new_lines = insert(table).values(rows_to_insert)
         upsert_new_lines = insert_new_lines.on_conflict_do_nothing()
         result_proxy = session.execute(upsert_new_lines)
         session.commit()

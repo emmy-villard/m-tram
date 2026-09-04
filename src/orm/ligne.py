@@ -25,26 +25,3 @@ class Ligne(Base):
 
     def __repr__(self) -> str:
         return f"ligne(ligne_id={self.ligne_id}, ligne_time={self.ligne_time}, ligne_nsv_id={self.ligne_nsv_id})"
-
-class NewLigneData(Base):
-    """
-    Class definition of table : "new_ligne_data". Used for temporary storage
-
-    Properties
-    ----------
-    
-    ligne_id : sqlalchemy.mapped_column(sqlalchemy.Text)
-        tram line
-    ligne_id : sqlalchemy.mapped_column(sqlalchemy.TIMESTAMP)
-        report timestamp
-    ligne_nsv_id : sqlalchemy.mapped_column(sqlalchemy.Integer)
-        traffic condition
-    """
-    __tablename__ = "new_ligne_data"
-
-    ligne_id: Mapped[str] = mapped_column(Text, primary_key=True)
-    ligne_time: Mapped[datetime] = mapped_column(TIMESTAMP, primary_key=True)
-    ligne_nsv_id: Mapped[str] = mapped_column(Integer)
-
-    def __repr__(self) -> str:
-        return f"new_ligne_data(ligne_id={self.ligne_id}, ligne_time={self.ligne_time}, ligne__nsv_id={self.ligne_nsv_id})"

@@ -6,8 +6,8 @@ from etl.extract.fetch_api import fetch_api
 from etl.transform.ligne import raw_to_pandas_ligne
 from etl.load.mdata_dyn import load_table
 from db_connection.engine import engine
-from orm.ligne import Ligne, NewLigneData
-from etl.validation_schemas.ligne import check_ligne_data
+from orm.ligne import Ligne
+from etl.validation_schemas.ligne import convert_ligne_data
 
 @dag(
     schedule="*/5 * * * *",
@@ -35,7 +35,7 @@ def etl_ligne():
     
     @task
     def load_ligne(dataframe):
-        return load_table(dataframe, engine, Ligne, NewLigneData, check_ligne_data)
+        return load_table(dataframe, engine, Ligne, convert_ligne_data)
 
     raw_data = extract_ligne()
     dataframe = transform_ligne(raw_data)

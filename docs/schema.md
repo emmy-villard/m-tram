@@ -4,13 +4,13 @@ This document provides a complete list of the database table schemas.
 The schema updates are tracked with alchemy. Since the test_database keeps the same structure as the app database, we use the test database to track migrations.
 
 ## Dynamic MData
-### trr and new_trr_data (staging table)
+### trr
 - trr_id : TEXT
 - trr_time : TIMESTAMP
 - trr_nsv_id : INT between 1 and 4 included
 - Primary key : trr_id, trr_time
 
-### ligne and new_ligne_data (staging table)
+### ligne
 - ligne_id : TEXT
 - ligne_time : TIMESTAMP
 - ligne_nsv_id : INT between 1 and 4 included

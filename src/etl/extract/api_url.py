@@ -27,6 +27,10 @@ def url_openapi_meteo(
         url to fetch
     """
     url = "https://archive-api.open-meteo.com/v1/archive"
+    if not start_date:
+        start_date = datetime.now() - timedelta(days=1)
+    if not end_date:
+        end_date = datetime.now() - timedelta(days=1)
     if ((end_date - start_date).days < 0):
         raise ValueError("start_date must be before end_date")
     start_date_str = start_date.strftime(date_format())

@@ -38,13 +38,3 @@ def process_meteo_data(key, data):
     if (key=="time"):
         return str_to_datetime(data)
     return data
-
-
-"""
-#TODO: remove below (integration test)
-from etl.extract.fetch_api import fetch_api
-from etl.extract.api_url import url_openapi_meteo
-
-response_dict_ttr = fetch_api(url_openapi_meteo(datetime.now()))
-print(raw_to_pandas_meteo(response_dict_ttr))
-"""

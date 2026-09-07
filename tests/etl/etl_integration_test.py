@@ -1,12 +1,15 @@
 from etl.extract.fetch_api import fetch_api
-from etl.extract.api_url import url_ligne, url_trr
+from etl.extract.api_url import url_ligne, url_trr, url_openapi_meteo
 from etl.transform.ligne import raw_to_pandas_ligne
 from etl.transform.trr import raw_to_pandas_trr
+from etl.transform.meteo import raw_to_pandas_meteo, process_meteo_data
 from orm.ligne import Ligne
 from orm.trr import Trr
+from orm.openmeteo import OpenMeto
 from etl.load.save_in_db import load_table
 from etl.validation_schemas.ligne import convert_ligne_data
 from etl.validation_schemas.trr import convert_trr_data
+from etl.validation_schemas.openmeteo import convert_openmeteo_data
 
 from unittest.mock import patch, MagicMock
 from sqlalchemy import text
@@ -16,6 +19,7 @@ from orm.base import Base
 from db_connection.test_engine import engine
 import pytest
 import pandas as pd
+import numpy as np
 
 """
 Setup the database
@@ -45,37 +49,59 @@ def test_tables_created():
     with Session(engine) as session:
         session.execute(text("SELECT * FROM ligne;")).all()
         session.execute(text("SELECT * FROM trr;")).all()
+        session.execute(text("SELECT * FROM openmeteo;")).all()
 
 def test_integration_ligne():
     raw_data = fetch_api(url_ligne)
     dataframe = raw_to_pandas_ligne(raw_data)
+    for k, v in raw_data.items():
+        if(v['nsv_id']):
+            assert datetime.fromtimestamp(v['time'] / 1000) == dataframe.loc[k]['ligne_time']
+            assert v['nsv_id'] == dataframe.loc[k]['ligne_nsv_id']
+        else:
+            assert k not in dataframe.index
     load_table(dataframe, engine, Ligne, convert_ligne_data)
     with Session(engine) as session:
         result = session.execute(text("SELECT * FROM ligne;")).all()
         assert len(result) != 0
         assert len(result) <= len(raw_data)
-        for k, v in raw_data.items():
-            if(v['nsv_id']):
-                assert datetime.fromtimestamp(v['time'] / 1000) == dataframe.loc[k]['ligne_time']
-                assert v['nsv_id'] == dataframe.loc[k]['ligne_nsv_id']
-            else:
-                assert k not in dataframe.index
+        dataframe = dataframe.reset_index()
+        result_df = pd.DataFrame(list(result), columns=dataframe.columns)
+        assert result_df.equals(dataframe)
 
 def test_integration_trr():
     raw_data = fetch_api(url_trr)
     dataframe = raw_to_pandas_trr(raw_data)
+    for k, v in raw_data.items():
+        v = v[0]
+        if(v['nsv_id']):
+            assert datetime.fromtimestamp(v['time'] / 1000) == dataframe.loc[k]['trr_time']
+            assert v['nsv_id'] == dataframe.loc[k]['trr_nsv_id']
+        else:
+            assert k not in dataframe.index
     load_table(dataframe, engine, Trr, convert_trr_data)
     with Session(engine) as session:
         result = session.execute(text("SELECT * FROM trr;")).all()
         assert len(result) != 0
         assert len(result) <= len(raw_data)
-        for k, v in raw_data.items():
-            v = v[0]
-            if(v['nsv_id']):
-                assert datetime.fromtimestamp(v['time'] / 1000) == dataframe.loc[k]['trr_time']
-                assert v['nsv_id'] == dataframe.loc[k]['trr_nsv_id']
-            else:
-                assert k not in dataframe.index
+        dataframe = dataframe.reset_index()
+        result_df = pd.DataFrame(list(result), columns=dataframe.columns)
+        assert result_df.equals(dataframe)
+
+
+def test_integration_openmeteo():
+    raw_data = fetch_api(url_openapi_meteo())
+    dataframe = raw_to_pandas_meteo(raw_data).reset_index()
+    for k, v in raw_data["hourly"].items():
+        values = np.asarray([process_meteo_data(k, val) for val in v])
+        assert np.all(np.equal(dataframe[k].values, values))
+    load_table(dataframe, engine, OpenMeto, convert_openmeteo_data)
+    with Session(engine) as session:
+        result = session.execute(text("SELECT * FROM openmeteo;")).all()
+        assert len(result) != 0
+        assert len(result) == len(raw_data["hourly"]["time"])
+        result_df = pd.DataFrame(list(result), columns=dataframe.columns)
+        assert result_df.equals(dataframe)
 
 @pytest.mark.parametrize("data", [[], [0, 0, 0]])
 def test_not_load_unvalid_table(mock_converter, dataframe, data):

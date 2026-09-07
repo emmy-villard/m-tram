@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from etl.extract.api_url import url_trr
 from etl.extract.fetch_api import fetch_api
 from etl.transform.trr import raw_to_pandas_trr
-from etl.load.mdata_dyn import load_table
+from etl.load.save_in_db import load_table
 from db_connection.engine import engine
 from orm.trr import Trr
 from etl.validation_schemas.trr import convert_trr_data

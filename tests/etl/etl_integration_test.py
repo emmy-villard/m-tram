@@ -4,7 +4,7 @@ from etl.transform.ligne import raw_to_pandas_ligne
 from etl.transform.trr import raw_to_pandas_trr
 from orm.ligne import Ligne
 from orm.trr import Trr
-from etl.load.mdata_dyn import load_table
+from etl.load.save_in_db import load_table
 from etl.validation_schemas.ligne import convert_ligne_data
 from etl.validation_schemas.trr import convert_trr_data
 
@@ -79,7 +79,7 @@ def test_integration_trr():
 
 @pytest.mark.parametrize("data", [[], [0, 0, 0]])
 def test_not_load_unvalid_table(mock_converter, dataframe, data):
-    with patch("etl.load.mdata_dyn.Session", new_callable=MagicMock) as mock_session, \
+    with patch("etl.load.save_in_db.Session", new_callable=MagicMock) as mock_session, \
     patch("pandas.DataFrame.to_sql") as mock_sql:
         mock_sess = mock_session.return_value.__enter__.return_value
         load_table(pd.DataFrame(data), (), Trr, mock_converter)

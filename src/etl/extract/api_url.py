@@ -7,14 +7,19 @@ URLs of APIs endpoints
 url_ligne = "https://data.mobilites-m.fr/api/dyn/ligne/json"
 url_trr = "https://data.mobilites-m.fr/api/dyn/trr/json"
 
-def url_openapi_meteo(day: datetime):
+def url_openapi_meteo(
+    start_date: datetime=datetime.now(),
+    end_date: datetime=datetime.now()
+):
     """
     Return fetch URL of a given day for the Open Meteo API
 
     Parameters
     ----------
-    day : datetime
-        Datetime of the day to fetch.
+    start_date : datetime
+        Datetime of the first day to fetch.
+    end_date : datetime
+        Datetime of the last day to fetch.
 
     Returns
     -------
@@ -22,7 +27,10 @@ def url_openapi_meteo(day: datetime):
         url to fetch
     """
     url = "https://archive-api.open-meteo.com/v1/archive"
-    date_str = day.strftime(date_format())
+    if ((end_date - start_date).days < 0):
+        raise ValueError("start_date must be before end_date")
+    start_date_str = start_date.strftime(date_format())
+    end_date_str = end_date.strftime(date_format())
     lat_grenoble, long_grenoble = '45.17', '5.72'
     data_requested = 'temperature_2m,apparent_temperature,' \
         'relativehumidity_2m,precipitation,rain,snowfall,weathercode,' \
@@ -30,8 +38,8 @@ def url_openapi_meteo(day: datetime):
     params = {
         'latitude': lat_grenoble,
         'longitude': long_grenoble,
-        'start_date': date_str,
-        'end_date': date_str,
+        'start_date': start_date_str,
+        'end_date': end_date_str,
         'hourly': data_requested,
         'timezone': 'Europe/Paris',
     }

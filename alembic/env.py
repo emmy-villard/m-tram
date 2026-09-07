@@ -24,6 +24,7 @@ if config.config_file_name is not None:
 from orm.base import Base
 from orm.ligne import Ligne
 from orm.trr import Trr
+from orm.openmeteo import OpenMeto
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

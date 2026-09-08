@@ -13,6 +13,9 @@ write_variables() {
     echo "POSTGRES_TEST_DB=$POSTGRES_TEST_DB" >> .env.test
     echo "TEST_DATABASE__SQL_ALCHEMY_CONN=$TEST_DATABASE__SQL_ALCHEMY_CONN" >> .env.test
     echo "DATABASE__SQL_ALCHEMY_CONN=$TEST_DATABASE__SQL_ALCHEMY_CONN" >> .env.test
+ 
+    #Secrets
+    echo "ATMO_API_KEY=" >> .env.test
 }
 
 export_variables() {
@@ -21,5 +24,11 @@ export_variables() {
     set +a
 }
 
-write_variables
+if [ -e .env.test ]
+then
+	printf '%s\n' 'Error: .env.test already exists; not overwritten' >&2
+else
+    write_variables
+fi
+
 export_variables

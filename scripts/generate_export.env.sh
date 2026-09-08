@@ -41,6 +41,9 @@ write_variables() {
     echo "AIRFLOW__API_AUTH__JWT_ISSUER=$AIRFLOW__API_AUTH__JWT_ISSUER" >> .env
     echo "_AIRFLOW_WWW_USER_USERNAME=$_AIRFLOW_WWW_USER_USERNAME" >> .env
     echo "_AIRFLOW_WWW_USER_PASSWORD=$_AIRFLOW_WWW_USER_PASSWORD" >> .env
+
+    #Secrets
+    echo "ATMO_API_KEY=" >> .env
 }
 
 export_variables() {

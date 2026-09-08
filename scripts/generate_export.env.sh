@@ -43,7 +43,7 @@ write_variables() {
     echo "_AIRFLOW_WWW_USER_PASSWORD=$_AIRFLOW_WWW_USER_PASSWORD" >> .env
 
     #Secrets
-    echo "ATMO_API_KEY=" >> .env
+    echo "ATMO_API_KEY=${ATMO_API_KEY}" >> .env
 }
 
 export_variables() {

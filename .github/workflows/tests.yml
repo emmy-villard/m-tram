@@ -6,6 +6,8 @@ on:
 
 jobs:
   unit-tests:
+    env:
+      ATMO_API_KEY: ${{ secrets.ATMO_API_KEY }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -16,6 +18,8 @@ jobs:
       - run: ./scripts/tests/run_tests.sh
   
   airflow-tests:
+    env:
+      ATMO_API_KEY: ${{ secrets.ATMO_API_KEY }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

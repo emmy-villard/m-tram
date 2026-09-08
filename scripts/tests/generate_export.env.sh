@@ -15,7 +15,7 @@ write_variables() {
     echo "DATABASE__SQL_ALCHEMY_CONN=$TEST_DATABASE__SQL_ALCHEMY_CONN" >> .env.test
  
     #Secrets
-    echo "ATMO_API_KEY=" >> .env.test
+    echo "ATMO_API_KEY=${ATMO_API_KEY}" >> .env.test
 }
 
 export_variables() {

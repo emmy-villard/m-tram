@@ -1,5 +1,8 @@
 from etl.extract.fetch_api import fetch_api
-from etl.extract.api_url import url_ligne, url_trr, url_openapi_meteo
+from etl.extract.endpoint_url.mdata_ligne import get_url as get_url_ligne
+from etl.extract.endpoint_url.mdata_trr import get_url as get_url_trr
+from etl.extract.endpoint_url.openmeteo import get_url as get_url_openapi_meteo
+
 from etl.transform.ligne import raw_to_pandas_ligne
 from etl.transform.trr import raw_to_pandas_trr
 from etl.transform.meteo import raw_to_pandas_meteo, process_meteo_data
@@ -34,7 +37,7 @@ def setup_database():
 
 @pytest.fixture()
 def dataframe():
-    raw_data = fetch_api(url_trr)
+    raw_data = fetch_api(get_url_trr())
     dataframe = raw_to_pandas_trr(raw_data)
     return dataframe
 
@@ -52,7 +55,7 @@ def test_tables_created():
         session.execute(text("SELECT * FROM openmeteo;")).all()
 
 def test_integration_ligne():
-    raw_data = fetch_api(url_ligne)
+    raw_data = fetch_api(get_url_ligne())
     dataframe = raw_to_pandas_ligne(raw_data)
     for k, v in raw_data.items():
         if(v['nsv_id']):
@@ -70,7 +73,7 @@ def test_integration_ligne():
         assert result_df.equals(dataframe)
 
 def test_integration_trr():
-    raw_data = fetch_api(url_trr)
+    raw_data = fetch_api(get_url_trr())
     dataframe = raw_to_pandas_trr(raw_data)
     for k, v in raw_data.items():
         v = v[0]
@@ -88,9 +91,8 @@ def test_integration_trr():
         result_df = pd.DataFrame(list(result), columns=dataframe.columns)
         assert result_df.equals(dataframe)
 
-
 def test_integration_openmeteo():
-    raw_data = fetch_api(url_openapi_meteo())
+    raw_data = fetch_api(get_url_openapi_meteo())
     dataframe = raw_to_pandas_meteo(raw_data).reset_index()
     for k, v in raw_data["hourly"].items():
         values = np.asarray([process_meteo_data(k, val) for val in v])

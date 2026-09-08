@@ -2,7 +2,7 @@ from airflow.sdk import dag, task, get_current_context
 from datetime import datetime, timedelta
 import logging
 
-from etl.extract.api_url import url_openapi_meteo
+from etl.extract.endpoint_url.openmeteo import get_url
 from etl.extract.fetch_api import fetch_api
 from etl.transform.meteo import raw_to_pandas_meteo
 from etl.load.save_in_db import load_table
@@ -66,7 +66,7 @@ def etl_meteo():
     @task
     def extract_openmeteo(dates):
         start_date, end_date = dates["start_date"], dates["end_date"]
-        return fetch_api(url_openapi_meteo(start_date, end_date))
+        return fetch_api(get_url(start_date, end_date))
     
     @task
     def transform_openmeteo(raw_data):

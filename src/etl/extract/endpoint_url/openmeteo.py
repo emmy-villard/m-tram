@@ -1,13 +1,7 @@
 from datetime import datetime, timedelta
 from etl.extract.url_util import date_format, update_url_params
 
-"""
-URLs of APIs endpoints
-"""
-url_ligne = "https://data.mobilites-m.fr/api/dyn/ligne/json"
-url_trr = "https://data.mobilites-m.fr/api/dyn/trr/json"
-
-def url_openapi_meteo(
+def get_url(
     start_date: datetime=datetime.now() - timedelta(days=1),
     end_date: datetime=datetime.now() - timedelta(days=1)
 ):

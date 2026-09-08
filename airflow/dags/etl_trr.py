@@ -1,7 +1,7 @@
 from airflow.sdk import dag, task
 from datetime import datetime, timedelta
 
-from etl.extract.api_url import url_trr
+from etl.extract.endpoint_url.mdata_trr import get_url
 from etl.extract.fetch_api import fetch_api
 from etl.transform.trr import raw_to_pandas_trr
 from etl.load.save_in_db import load_table
@@ -27,7 +27,7 @@ def etl_trr():
     """
     @task
     def extract_trr():
-        return fetch_api(url_trr)
+        return fetch_api(get_url())
     
     @task
     def transform_trr(raw_data):

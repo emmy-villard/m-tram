@@ -1,11 +1,17 @@
-from etl.extract.api_url import url_openapi_meteo, date_format
+from etl.extract.endpoint_url.openmeteo import get_url, date_format
 from datetime import datetime, timedelta
 import pytest
 from urllib.parse import urlparse, parse_qsl
 from etl.extract.url_util import date_format
+import requests
+
+def test_is_valid_endpoint():
+    url = get_url()
+    response = requests.get(url)
+    assert response.status_code == 200
 
 def get_param(start_date, end_date, key):
-    url = url_openapi_meteo(start_date, end_date)
+    url = get_url(start_date, end_date)
     url_parts = list(urlparse(url))
     params = dict(parse_qsl(url_parts[4]))
     return datetime.strptime(params[key], date_format())

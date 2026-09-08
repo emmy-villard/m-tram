@@ -72,7 +72,7 @@ def etl_meteo():
     
     @task
     def load_openmeteo(dataframe):
-        return load_table(dataframe, engine, OpenMeto, convert_openmeteo_data)
+        load_table(dataframe, engine, OpenMeto, convert_openmeteo_data)
 
     dates = recover_dates()
     raw_data = extract_openmeteo(dates)

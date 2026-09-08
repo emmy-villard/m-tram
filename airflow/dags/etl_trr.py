@@ -35,7 +35,7 @@ def etl_trr():
     
     @task
     def load_trr(dataframe):
-        return load_table(dataframe, engine, Trr, convert_trr_data)
+        load_table(dataframe, engine, Trr, convert_trr_data)
 
     raw_data = extract_trr()
     dataframe = transform_trr(raw_data)

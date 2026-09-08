@@ -35,7 +35,7 @@ def etl_ligne():
     
     @task
     def load_ligne(dataframe):
-        return load_table(dataframe, engine, Ligne, convert_ligne_data)
+        load_table(dataframe, engine, Ligne, convert_ligne_data)
 
     raw_data = extract_ligne()
     dataframe = transform_ligne(raw_data)

@@ -1,5 +1,5 @@
-from sqlalchemy import URL, create_engine
-from db_connection.util import get_env_var
+from sqlalchemy import create_engine
+from util.env import get_env_var
 
 """
 SQLAlchemy test url

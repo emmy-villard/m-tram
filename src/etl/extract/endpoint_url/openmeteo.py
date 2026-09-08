@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
-from etl.extract.url_util import date_format, update_url_params
+from util.date import date_format
+from util.url import update_url_params
 
 def get_url(
     start_date: datetime=datetime.now() - timedelta(days=1),

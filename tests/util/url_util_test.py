@@ -1,4 +1,4 @@
-from etl.extract.url_util import update_url_params
+from util.url import update_url_params
 import pytest
 
 @pytest.fixture

@@ -9,9 +9,7 @@ from etl.load.save_in_db import load_table
 from db_connection.engine import engine
 from orm.openmeteo import OpenMeto
 from etl.validation_schemas.openmeteo import convert_openmeteo_data
-
-def _get_date_format():
-    return "%Y-%m-%d"
+from util.date import date_format
 
 @dag(
     schedule="0 12 * * *",
@@ -51,9 +49,9 @@ def etl_meteo():
         start_date_str = conf.get("start_date")
         end_date_str = conf.get("end_date")
         if start_date_str:
-            start_date = datetime.strptime(start_date_str, _get_date_format())
+            start_date = datetime.strptime(start_date_str, date_format())
         if end_date_str:
-            end_date = datetime.strptime(end_date_str, _get_date_format())
+            end_date = datetime.strptime(end_date_str, date_format())
 
         numdays = (end_date - start_date).days
         if numdays < 0:

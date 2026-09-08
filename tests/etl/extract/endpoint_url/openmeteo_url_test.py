@@ -2,7 +2,7 @@ from etl.extract.endpoint_url.openmeteo import get_url, date_format
 from datetime import datetime, timedelta
 import pytest
 from urllib.parse import urlparse, parse_qsl
-from etl.extract.url_util import date_format
+from util.date import date_format
 import requests
 
 def test_is_valid_endpoint():

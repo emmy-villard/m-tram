@@ -12,7 +12,7 @@ Otherwise, the script is all you need to launch a preconfigured project. Refer t
 
 ## Installation
 ### Requirements
-- 4GB RAM
+- 8GB RAM
 - On a linux machine
 
 ### Get api keys

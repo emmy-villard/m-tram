@@ -33,7 +33,7 @@ def test_requests_get_called(get_url):
     with patch("requests.get") as mock_get:
         url = get_url()
         fetch_api(url)
-        mock_get.assert_called_with(url)
+        mock_get.assert_called_with(url, timeout=30)
 
 @pytest.mark.parametrize(["returned_data", "get_url"], [
     (returned_data_ligne, get_url_ligne),
@@ -47,4 +47,4 @@ def test_returned_value(returned_data, get_url):
         url = get_url()
         assert returned_data == fetch_api(url)
         assert returned_data != {}
-        mock_get.assert_called_with(url)
+        mock_get.assert_called_with(url, timeout=30)

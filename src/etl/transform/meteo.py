@@ -1,7 +1,7 @@
 import pandas as pd
 from datetime import datetime
 
-def raw_to_pandas_meteo(response_dict_ttr):
+def raw_to_pandas_meteo(response_dict):
     """
     Transforms raw "openapi_meteo" data into clean pandas DataFrame
 
@@ -15,9 +15,9 @@ def raw_to_pandas_meteo(response_dict_ttr):
     pandas.DataFrame
         Transformed data
     """
-    if not response_dict_ttr:
+    if not response_dict:
         raise ValueError("empty openmeteo response")
-    data = response_dict_ttr["hourly"]
+    data = response_dict["hourly"]
     nhours = len(data["time"])
     useful_data = [
         [

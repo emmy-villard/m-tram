@@ -5,7 +5,7 @@ from etl.transform.ligne import raw_to_pandas_ligne
 from etl.load.save_in_db import load_table
 from db_connection.engine import engine
 from orm.ligne import Ligne as LigneOrmClass
-from etl.validation_schemas.ligne import convert_ligne_data
+from etl.validation_schemas.ligne import validate_ligne_data
 
 class Ligne(Data):
     @staticmethod
@@ -34,4 +34,4 @@ class Ligne(Data):
 
     @staticmethod
     def data_validator():
-        return convert_ligne_data
+        return validate_ligne_data

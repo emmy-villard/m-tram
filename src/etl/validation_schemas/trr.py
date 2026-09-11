@@ -1,6 +1,6 @@
 from pydantic import BaseModel, TypeAdapter, Field
 from datetime import datetime
-from typing import List
+from typing import List, Sequence
 from pandas import DataFrame
 
 class TrrSchema(BaseModel):
@@ -8,7 +8,10 @@ class TrrSchema(BaseModel):
     trr_time: datetime
     trr_nsv_id: int = Field(ge=1, le=4)
 
-def convert_trr_data(dataframe: DataFrame):
+def validate_trr_data(dataframe: DataFrame) -> Sequence[BaseModel]:
+    """
+    validates trr data and returns the data
+    """
     if dataframe.empty:
         raise ValueError("trr data cannot be empty")
 

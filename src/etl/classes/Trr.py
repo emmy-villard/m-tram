@@ -5,7 +5,7 @@ from etl.transform.trr import raw_to_pandas_trr
 from etl.load.save_in_db import load_table
 from db_connection.engine import engine
 from orm.trr import Trr as TrrOrmClass
-from etl.validation_schemas.trr import convert_trr_data
+from etl.validation_schemas.trr import validate_trr_data
 
 class Trr(Data):
     @staticmethod
@@ -34,4 +34,4 @@ class Trr(Data):
 
     @staticmethod
     def data_validator():
-        return convert_trr_data
+        return validate_trr_data

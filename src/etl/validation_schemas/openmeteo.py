@@ -1,6 +1,6 @@
 from pydantic import BaseModel, TypeAdapter, Field
 from datetime import datetime
-from typing import List, Literal
+from typing import List, Literal, Sequence
 from pandas import DataFrame
 
 class OpenMeteoSchema(BaseModel):
@@ -20,7 +20,10 @@ class OpenMeteoSchema(BaseModel):
     windspeed_10m: float = Field(ge=0)
     windgusts_10m: float = Field(ge=0)
 
-def convert_openmeteo_data(dataframe: DataFrame):
+def validate_openmeteo_data(dataframe: DataFrame) -> Sequence[BaseModel]:
+    """
+    validates openmeteo data and returns the data
+    """
     if dataframe.empty:
         raise ValueError("openmeteo data cannot be empty")
     

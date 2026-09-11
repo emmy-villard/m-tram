@@ -1,4 +1,4 @@
-from etl.validation_schemas.trr import convert_trr_data
+from etl.validation_schemas.trr import validate_trr_data
 from datetime import datetime, timedelta
 import os
 import pandas as pd
@@ -12,7 +12,7 @@ def to_trr_df(data):
 def test_validate_static_data():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     dataframe = pd.read_csv(dir_path + "/../etl_test_data/trr.csv")
-    convert_trr_data(dataframe)
+    validate_trr_data(dataframe)
 
 def test_value_error_duplicated_primary_key():
     datetime_value = datetime.now()
@@ -22,7 +22,7 @@ def test_value_error_duplicated_primary_key():
         ["id1", datetime_value, 1]
     ])
     with pytest.raises(ValueError):
-        convert_trr_data(dataframe)
+        validate_trr_data(dataframe)
 
 def test_no_errors_same_datetime_and_nsv_id():
     datetime_value = datetime.now()
@@ -30,7 +30,7 @@ def test_no_errors_same_datetime_and_nsv_id():
         ["id1", datetime_value, 1],
         ["id2", datetime_value, 1],
     ])
-    convert_trr_data(dataframe)
+    validate_trr_data(dataframe)
 
 def test_no_errors_same_id_and_nsv_id():
     datetime_value = datetime.now()
@@ -38,8 +38,8 @@ def test_no_errors_same_id_and_nsv_id():
         ["id1", datetime_value, 1],
         ["id1", datetime_value+timedelta(seconds=2), 1],
     ])
-    convert_trr_data(dataframe)
+    validate_trr_data(dataframe)
 
 def test_value_error_empty():
     with pytest.raises(ValueError):
-        convert_trr_data(pd.DataFrame())
+        validate_trr_data(pd.DataFrame())

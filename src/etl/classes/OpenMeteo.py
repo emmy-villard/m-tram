@@ -5,7 +5,7 @@ from etl.transform.meteo import raw_to_pandas_meteo
 from etl.load.save_in_db import load_table
 from db_connection.engine import engine
 from orm.openmeteo import OpenMeto as OpenMeteoOrmClass
-from etl.validation_schemas.openmeteo import convert_openmeteo_data
+from etl.validation_schemas.openmeteo import validate_openmeteo_data
 
 class OpenMeteo(Data):
     @staticmethod
@@ -34,4 +34,4 @@ class OpenMeteo(Data):
 
     @staticmethod
     def data_validator():
-        return convert_openmeteo_data
+        return validate_openmeteo_data

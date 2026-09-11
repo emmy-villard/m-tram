@@ -1,6 +1,6 @@
 from pydantic import BaseModel, TypeAdapter, Field
 from datetime import datetime
-from typing import List
+from typing import List, Sequence
 from pandas import DataFrame
 
 class LigneSchema(BaseModel):
@@ -8,7 +8,10 @@ class LigneSchema(BaseModel):
     ligne_time: datetime
     ligne_nsv_id: int = Field(ge=1, le=4)
 
-def convert_ligne_data(dataframe: DataFrame):
+def validate_ligne_data(dataframe: DataFrame) -> Sequence[BaseModel]:
+    """
+    validates ligne data and returns the data
+    """
     if dataframe.empty:
         raise ValueError("ligne data cannot be empty")
 

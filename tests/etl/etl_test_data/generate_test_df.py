@@ -2,6 +2,7 @@ import os, json
 from etl.transform.ligne import raw_to_pandas_ligne
 from etl.transform.trr import raw_to_pandas_trr
 from etl.transform.meteo import raw_to_pandas_meteo
+from etl.transform.atmo import raw_to_pandas_atmo
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -21,3 +22,7 @@ if __name__ == "__main__":
     raw_data = _get_data("openmeteo")
     dataframe = raw_to_pandas_meteo(raw_data)
     dataframe.to_csv(dir_path + "/openmeteo.csv")
+
+    raw_data = _get_data("atmo")
+    dataframe = raw_to_pandas_atmo(raw_data)
+    dataframe.to_csv(dir_path + "/atmo.csv")

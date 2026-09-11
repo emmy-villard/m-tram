@@ -30,7 +30,6 @@ def raw_to_pandas_atmo(response_dict):
         raise ValueError("empty openmeteo response")
     if not response_dict["success"]:
         raise ValueError("atmo api fetch failed")
-    print(len(response_dict["data"]))
     data = [
         [
             _str_to_datetime(day_data["date_echeance"]),

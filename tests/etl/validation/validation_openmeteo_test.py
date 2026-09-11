@@ -19,7 +19,7 @@ def to_openmeteo_df(data):
         "windspeed_10m",
         "windgusts_10m"
     ]
-    dataframe = pd.DataFrame(data, columns=columns).set_index("time")
+    dataframe = pd.DataFrame(data, columns=columns)
     return dataframe
 
 def test_validate_static_data():

@@ -28,7 +28,7 @@ def raw_to_pandas_meteo(response_dict):
     dataframe = pd.DataFrame(
         useful_data,
         columns=data.keys()
-    ).set_index("time")
+    )
     return dataframe
 
 def str_to_datetime(str):

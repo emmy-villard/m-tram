@@ -6,7 +6,7 @@ import pytest
 
 def to_ligne_df(data):
     columns = ["ligne_id", "ligne_time", "ligne_nsv_id"]
-    dataframe = pd.DataFrame(data, columns=columns).set_index("ligne_id")
+    dataframe = pd.DataFrame(data, columns=columns)
     return dataframe
 
 def test_validate_static_data():

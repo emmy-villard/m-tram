@@ -6,7 +6,7 @@ import pytest
 
 def to_trr_df(data):
     columns = ["trr_id", "trr_time", "trr_nsv_id"]
-    dataframe = pd.DataFrame(data, columns=columns).set_index("trr_id")
+    dataframe = pd.DataFrame(data, columns=columns)
     return dataframe
 
 def test_validate_static_data():

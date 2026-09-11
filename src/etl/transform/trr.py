@@ -23,6 +23,6 @@ def raw_to_pandas_trr(response_dict_ttr):
 
     dataframe_trr = pd.DataFrame(data,
         columns=("trr_id", "trr_time", "trr_nsv_id")
-    ).set_index("trr_id")
+    )
 
     return dataframe_trr

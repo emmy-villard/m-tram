@@ -52,8 +52,10 @@ def test_integration_ligne():
     dataframe = Ligne.raw_data_to_df(raw_data)
     for k, v in raw_data.items():
         if(v['nsv_id']):
-            assert datetime.fromtimestamp(v['time'] / 1000) == dataframe.loc[k]['ligne_time']
-            assert v['nsv_id'] == dataframe.loc[k]['ligne_nsv_id']
+            df =  dataframe.loc[dataframe['ligne_id'] == k]
+            assert datetime.fromtimestamp(v['time'] / 1000) == \
+                df['ligne_time'].values
+            assert v['nsv_id'] == df['ligne_nsv_id'].values
         else:
             assert k not in dataframe.index
     Ligne.load_table(dataframe, engine,
@@ -62,7 +64,6 @@ def test_integration_ligne():
         result = session.execute(text("SELECT * FROM ligne;")).all()
         assert len(result) != 0
         assert len(result) <= len(raw_data)
-        dataframe = dataframe.reset_index()
         result_df = pd.DataFrame(list(result), columns=dataframe.columns)
         assert result_df.equals(dataframe)
 
@@ -72,8 +73,10 @@ def test_integration_trr():
     for k, v in raw_data.items():
         v = v[0]
         if(v['nsv_id']):
-            assert datetime.fromtimestamp(v['time'] / 1000) == dataframe.loc[k]['trr_time']
-            assert v['nsv_id'] == dataframe.loc[k]['trr_nsv_id']
+            df =  dataframe.loc[dataframe['trr_id'] == k]
+            assert datetime.fromtimestamp(v['time'] / 1000) == \
+                df['trr_time'].values
+            assert v['nsv_id'] == df['trr_nsv_id'].values
         else:
             assert k not in dataframe.index
     Trr.load_table(dataframe, engine,
@@ -82,13 +85,12 @@ def test_integration_trr():
         result = session.execute(text("SELECT * FROM trr;")).all()
         assert len(result) != 0
         assert len(result) <= len(raw_data)
-        dataframe = dataframe.reset_index()
         result_df = pd.DataFrame(list(result), columns=dataframe.columns)
         assert result_df.equals(dataframe)
 
-def test_integration_openmeteo():
+def test_integration_openmeteo():   
     raw_data = OpenMeteo.fetch(OpenMeteo.get_url())
-    dataframe = OpenMeteo.raw_data_to_df(raw_data).reset_index()
+    dataframe = OpenMeteo.raw_data_to_df(raw_data)
     for k, v in raw_data["hourly"].items():
         values = np.asarray([process_meteo_data(k, val) for val in v])
         assert np.all(np.equal(dataframe[k].values, values))

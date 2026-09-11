@@ -27,9 +27,8 @@ def validate_openmeteo_data(dataframe: DataFrame) -> Sequence[BaseModel]:
     if dataframe.empty:
         raise ValueError("openmeteo data cannot be empty")
     
-    dataframe_with_id = dataframe.reset_index()
-    if dataframe_with_id.duplicated(subset=["time"]).any():
+    if dataframe.duplicated(subset=["time"]).any():
         raise ValueError("duplicate primary key : time must be unique")
     
-    records = dataframe_with_id.to_dict("records")
+    records = dataframe.to_dict("records")
     return TypeAdapter(List[OpenMeteoSchema]).validate_python(records)

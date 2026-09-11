@@ -23,6 +23,6 @@ def raw_to_pandas_ligne(response_dict):
 
     dataframe = pd.DataFrame(data,
         columns=("ligne_id", "ligne_time", "ligne_nsv_id")
-    ).set_index("ligne_id")
+    )
 
     return dataframe

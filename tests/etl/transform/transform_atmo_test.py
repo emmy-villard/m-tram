@@ -1,7 +1,5 @@
 from etl.transform.atmo import raw_to_pandas_atmo, _str_to_datetime, _is_value_mesured
-import numpy as np
 import os, json
-from datetime import datetime
 import pytest
 
 @pytest.fixture
@@ -17,6 +15,28 @@ def test_empty_dataframe_raises():
 def test_failed_fetch_raises():
     with pytest.raises(ValueError):
         raw_to_pandas_atmo({"success": False, "data": []})
+
+def test_unknown_type_valeur():
+    unvalid_data = {
+        "date_echeance": "2026-01-01",
+        "indice": 3,
+        "type_valeur": "réelle",
+        "sous_indices": [
+            {"indice": 1},
+            {"indice": 1},
+            {"indice": 1},
+            {"indice": 1},
+            {"indice": 1},
+        ],
+    }
+    unvalid_raw_data = {
+        "data": [unvalid_data],
+        "success": True
+    }
+    raw_to_pandas_atmo(unvalid_raw_data) # Assert doesn't throw for now
+    unvalid_data["type_valeur"] = "reelle"
+    with pytest.raises(ValueError):
+        raw_to_pandas_atmo(unvalid_raw_data)
 
 def test_full_dataframe(raw_data):
     dataframe = raw_to_pandas_atmo(raw_data)

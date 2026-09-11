@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 import logging
 
 logger = logging.getLogger(__name__)
-def load_table(dataframe, engine, orm_class, data_converter):
+def load_table(dataframe, engine, orm_class, data_validator):
     """
     Load dynamic MData data into the database
 
@@ -21,7 +21,7 @@ def load_table(dataframe, engine, orm_class, data_converter):
     -------
     """
     table = orm_class.__table__
-    validated_rows = data_converter(dataframe)
+    validated_rows = data_validator(dataframe)
     print(f"ROWS: {validated_rows}")
     rows_to_insert = [row.model_dump() for row in validated_rows]
 

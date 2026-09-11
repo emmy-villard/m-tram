@@ -5,4 +5,5 @@ def update_url_params(url, params):
     query = dict(parse_qsl(url_parts[4]))
     query.update(params)
     url_parts[4] = urlencode(query)
-    return urlunparse(url_parts)
+    final_url:str = urlunparse(url_parts)
+    return final_url

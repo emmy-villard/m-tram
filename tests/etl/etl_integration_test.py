@@ -1,18 +1,7 @@
-from etl.extract.fetch_api import fetch_api
-from etl.extract.endpoint_url.mdata_ligne import get_url as get_url_ligne
-from etl.extract.endpoint_url.mdata_trr import get_url as get_url_trr
-from etl.extract.endpoint_url.openmeteo import get_url as get_url_openapi_meteo
-
-from etl.transform.ligne import raw_to_pandas_ligne
-from etl.transform.trr import raw_to_pandas_trr
-from etl.transform.meteo import raw_to_pandas_meteo, process_meteo_data
-from orm.ligne import Ligne
-from orm.trr import Trr
-from orm.openmeteo import OpenMeto
-from etl.load.save_in_db import load_table
-from etl.validation_schemas.ligne import convert_ligne_data
-from etl.validation_schemas.trr import convert_trr_data
-from etl.validation_schemas.openmeteo import convert_openmeteo_data
+from etl.classes.Ligne import Ligne
+from etl.classes.Trr import Trr
+from etl.classes.OpenMeteo import OpenMeteo
+from etl.transform.meteo import process_meteo_data
 
 from unittest.mock import patch, MagicMock
 from sqlalchemy import text
@@ -37,8 +26,8 @@ def setup_database():
 
 @pytest.fixture()
 def dataframe():
-    raw_data = fetch_api(get_url_trr())
-    dataframe = raw_to_pandas_trr(raw_data)
+    raw_data = Trr.fetch(Trr.get_url())
+    dataframe = Trr.raw_data_to_df(raw_data)
     return dataframe
 
 @pytest.fixture
@@ -55,15 +44,15 @@ def test_tables_created():
         session.execute(text("SELECT * FROM openmeteo;")).all()
 
 def test_integration_ligne():
-    raw_data = fetch_api(get_url_ligne())
-    dataframe = raw_to_pandas_ligne(raw_data)
+    raw_data = Ligne.fetch(Ligne.get_url())
+    dataframe = Ligne.raw_data_to_df(raw_data)
     for k, v in raw_data.items():
         if(v['nsv_id']):
             assert datetime.fromtimestamp(v['time'] / 1000) == dataframe.loc[k]['ligne_time']
             assert v['nsv_id'] == dataframe.loc[k]['ligne_nsv_id']
         else:
             assert k not in dataframe.index
-    load_table(dataframe, engine, Ligne, convert_ligne_data)
+    Ligne.load_table(dataframe, engine, Ligne.orm_class(), Ligne.data_validator())
     with Session(engine) as session:
         result = session.execute(text("SELECT * FROM ligne;")).all()
         assert len(result) != 0
@@ -73,8 +62,8 @@ def test_integration_ligne():
         assert result_df.equals(dataframe)
 
 def test_integration_trr():
-    raw_data = fetch_api(get_url_trr())
-    dataframe = raw_to_pandas_trr(raw_data)
+    raw_data = Trr.fetch(Trr.get_url())
+    dataframe = Trr.raw_data_to_df(raw_data)
     for k, v in raw_data.items():
         v = v[0]
         if(v['nsv_id']):
@@ -82,7 +71,7 @@ def test_integration_trr():
             assert v['nsv_id'] == dataframe.loc[k]['trr_nsv_id']
         else:
             assert k not in dataframe.index
-    load_table(dataframe, engine, Trr, convert_trr_data)
+    Trr.load_table(dataframe, engine, Trr.orm_class(), Trr.data_validator())
     with Session(engine) as session:
         result = session.execute(text("SELECT * FROM trr;")).all()
         assert len(result) != 0
@@ -92,12 +81,12 @@ def test_integration_trr():
         assert result_df.equals(dataframe)
 
 def test_integration_openmeteo():
-    raw_data = fetch_api(get_url_openapi_meteo())
-    dataframe = raw_to_pandas_meteo(raw_data).reset_index()
+    raw_data = OpenMeteo.fetch(OpenMeteo.get_url())
+    dataframe = OpenMeteo.raw_data_to_df(raw_data).reset_index()
     for k, v in raw_data["hourly"].items():
         values = np.asarray([process_meteo_data(k, val) for val in v])
         assert np.all(np.equal(dataframe[k].values, values))
-    load_table(dataframe, engine, OpenMeto, convert_openmeteo_data)
+    OpenMeteo.load_table(dataframe, engine, OpenMeteo.orm_class(), OpenMeteo.data_validator())
     with Session(engine) as session:
         result = session.execute(text("SELECT * FROM openmeteo;")).all()
         assert len(result) != 0
@@ -110,5 +99,5 @@ def test_not_load_unvalid_table(mock_converter, dataframe, data):
     with patch("etl.load.save_in_db.Session", new_callable=MagicMock) as mock_session, \
     patch("pandas.DataFrame.to_sql") as mock_sql:
         mock_sess = mock_session.return_value.__enter__.return_value
-        load_table(pd.DataFrame(data), (), Trr, mock_converter)
+        Trr.load_table(pd.DataFrame(data), (), Trr.orm_class(), mock_converter)
         mock_sess.execute.assert_not_called()

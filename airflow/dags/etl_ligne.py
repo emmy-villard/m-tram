@@ -1,13 +1,6 @@
 from airflow.sdk import dag, task
 from datetime import datetime, timedelta
-
-from etl.extract.endpoint_url.mdata_ligne import get_url
-from etl.extract.fetch_api import fetch_api
-from etl.transform.ligne import raw_to_pandas_ligne
-from etl.load.save_in_db import load_table
-from db_connection.engine import engine
-from orm.ligne import Ligne
-from etl.validation_schemas.ligne import convert_ligne_data
+from etl.classes.Ligne import Ligne
 
 @dag(
     schedule="*/5 * * * *",
@@ -27,15 +20,19 @@ def etl_ligne():
     """
     @task
     def extract_ligne():
-        return fetch_api(get_url())
+        url = Ligne.get_url()
+        return Ligne.fetch(url)
     
     @task
     def transform_ligne(raw_data):
-        return raw_to_pandas_ligne(raw_data)
+        return Ligne.raw_data_to_df(raw_data)
     
     @task
     def load_ligne(dataframe):
-        load_table(dataframe, engine, Ligne, convert_ligne_data)
+        engine = Ligne.engine()
+        data_validator = Ligne.data_validator()
+        LigneOrmClass = Ligne.orm_class()
+        Ligne.load_table(dataframe, engine, LigneOrmClass, data_validator)
 
     raw_data = extract_ligne()
     dataframe = transform_ligne(raw_data)

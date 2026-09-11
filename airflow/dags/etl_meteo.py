@@ -2,13 +2,7 @@ from airflow.sdk import dag, task, get_current_context
 from datetime import datetime, timedelta
 import logging
 
-from etl.extract.endpoint_url.openmeteo import get_url
-from etl.extract.fetch_api import fetch_api
-from etl.transform.meteo import raw_to_pandas_meteo
-from etl.load.save_in_db import load_table
-from db_connection.engine import engine
-from orm.openmeteo import OpenMeto
-from etl.validation_schemas.openmeteo import convert_openmeteo_data
+from etl.classes.OpenMeteo import OpenMeteo
 from util.date import date_format
 
 @dag(
@@ -64,15 +58,19 @@ def etl_meteo():
     @task
     def extract_openmeteo(dates):
         start_date, end_date = dates["start_date"], dates["end_date"]
-        return fetch_api(get_url(start_date, end_date))
+        url = OpenMeteo.get_url(start_date, end_date)
+        return OpenMeteo.fetch(url)
     
     @task
     def transform_openmeteo(raw_data):
-        return raw_to_pandas_meteo(raw_data)
+        return OpenMeteo.raw_data_to_df(raw_data)
     
     @task
     def load_openmeteo(dataframe):
-        load_table(dataframe, engine, OpenMeto, convert_openmeteo_data)
+        engine = OpenMeteo.engine()
+        data_validator = OpenMeteo.data_validator()
+        OpenMeteoOrmClass = OpenMeteo.orm_class()
+        OpenMeteo.load_table(dataframe, engine, OpenMeteoOrmClass, data_validator)
 
     dates = recover_dates()
     raw_data = extract_openmeteo(dates)

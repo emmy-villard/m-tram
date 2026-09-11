@@ -52,9 +52,9 @@ def raw_to_pandas_atmo(response_dict):
 
 def _is_value_mesured(value_type:str) -> int:
     if value_type=="réelle":
-        return 1
+        return True
     if value_type=="prévision":
-        return 0
+        return False
     raise ValueError(f"Unknown value type in atmo json: {type}")
 
 def _str_to_datetime(str):

@@ -1,4 +1,4 @@
-from etl.extract.endpoint_url.openmeteo import get_url, date_format
+from etl.extract.endpoint_url.openmeteo import get_url
 from datetime import datetime, timedelta
 import pytest
 from urllib.parse import urlparse, parse_qsl

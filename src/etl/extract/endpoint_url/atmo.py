@@ -11,7 +11,12 @@ def get_url(
     params = {
         "api_token": get_api_key(),
     }
-    date_str = date.strftime(date_format())
+    date_str = ""
+    if date:
+        date_str = date.strftime(date_format())
+    else:
+        yesterday = datetime.now()-timedelta(days=1)
+        date_str = yesterday.strftime(date_format())
     if get_range_of_days:
         params["date_debut_echeance"] = date_str
     else:

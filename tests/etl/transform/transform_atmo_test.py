@@ -1,4 +1,5 @@
-from etl.transform.atmo import raw_to_pandas_atmo, _str_to_datetime, _is_value_mesured
+from etl.transform.atmo import raw_to_pandas_atmo, \
+    _str_to_datetime, _is_value_mesured
 import os, json
 import pytest
 

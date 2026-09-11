@@ -1,0 +1,763 @@
+{
+    "data": [
+        {
+            "echeance": -1,
+            "date_echeance": "2026-08-26",
+            "indice": 3,
+            "qualificatif": "Dégradé",
+            "couleur_html": "#f0e641",
+            "date_calcul": "2026-08-27",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "réelle",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 15.11199092865,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 6.2708334922791,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 116.80000305176,
+                    "indice": 3
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 35.624477386475,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 2.6612637042999,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": -1,
+            "date_echeance": "2026-08-27",
+            "indice": 5,
+            "qualificatif": "Très mauvais",
+            "couleur_html": "#960032",
+            "date_calcul": "2026-08-28",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "réelle",
+            "sous_indices": [
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 118.30000305176,
+                    "indice": 3
+                },
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 148.43333435059,
+                    "indice": 5
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 37.133331298828,
+                    "indice": 4
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 29.57232093811,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 21.04868888855,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "PM10"
+            ]
+        },
+        {
+            "echeance": -1,
+            "date_echeance": "2026-08-28",
+            "indice": 4,
+            "qualificatif": "Mauvais",
+            "couleur_html": "#ff5050",
+            "date_calcul": "2026-08-29",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "réelle",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 57.320831298828,
+                    "indice": 4
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 18.233333587646,
+                    "indice": 2
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 95.217079162598,
+                    "indice": 2
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 6.0374274253845,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 31.070903778076,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "PM10"
+            ]
+        },
+        {
+            "echeance": -1,
+            "date_echeance": "2026-08-29",
+            "indice": 2,
+            "qualificatif": "Moyen",
+            "couleur_html": "#50ccaa",
+            "date_calcul": "2026-08-30",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "réelle",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 4.8871183395386,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 30.144184112549,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 15.05583190918,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 9.1658954620361,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 96.699996948242,
+                    "indice": 2
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": -1,
+            "date_echeance": "2026-08-30",
+            "indice": 2,
+            "qualificatif": "Moyen",
+            "couleur_html": "#50ccaa",
+            "date_calcul": "2026-08-31",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "réelle",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 7.9752268791199,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 4.2250938415527,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 98.5,
+                    "indice": 2
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 31.742473602295,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 3.9997594356537,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": -1,
+            "date_echeance": "2026-08-31",
+            "indice": 2,
+            "qualificatif": "Moyen",
+            "couleur_html": "#50ccaa",
+            "date_calcul": "2026-09-01",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "réelle",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 9.3208332061768,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 3.9541666507721,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 97.289024353027,
+                    "indice": 2
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 33.893695831299,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 1.9579291343689,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": -1,
+            "date_echeance": "2026-09-01",
+            "indice": 3,
+            "qualificatif": "Dégradé",
+            "couleur_html": "#f0e641",
+            "date_calcul": "2026-09-02",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "réelle",
+            "sous_indices": [
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 2.3057551383972,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 9.4148902893066,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 3.6708333492279,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 101.59999847412,
+                    "indice": 3
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 29.904958724976,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": -1,
+            "date_echeance": "2026-09-02",
+            "indice": 3,
+            "qualificatif": "Dégradé",
+            "couleur_html": "#f0e641",
+            "date_calcul": "2026-09-03",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "réelle",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 13.625,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 4.8126039505005,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 122.59999847412,
+                    "indice": 3
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 30.281709671021,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 12.082434654236,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": -1,
+            "date_echeance": "2026-09-03",
+            "indice": 3,
+            "qualificatif": "Dégradé",
+            "couleur_html": "#f0e641",
+            "date_calcul": "2026-09-04",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "réelle",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 13.933333396912,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 5.3458333015442,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 128,
+                    "indice": 3
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 34.441856384277,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 1.0797066688538,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": 0,
+            "date_echeance": "2026-09-04",
+            "indice": 4,
+            "qualificatif": "Mauvais",
+            "couleur_html": "#ff5050",
+            "date_calcul": "2026-09-04",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "prévision",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 14.531252861023,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 6.5654230117798,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 133.36218261719,
+                    "indice": 4
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 34.301685333252,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 1.017836689949,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": -1,
+            "date_echeance": "2026-09-05",
+            "indice": 3,
+            "qualificatif": "Dégradé",
+            "couleur_html": "#f0e641",
+            "date_calcul": "2026-09-06",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "réelle",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 12.123498916626,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 4.41352891922,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 129.80000305176,
+                    "indice": 3
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 23.282520294189,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 1.9811890125275,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": -1,
+            "date_echeance": "2026-09-06",
+            "indice": 3,
+            "qualificatif": "Dégradé",
+            "couleur_html": "#f0e641",
+            "date_calcul": "2026-09-07",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "réelle",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 10.341667175293,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 3.8280465602875,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 115.59999847412,
+                    "indice": 3
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 52.154003143311,
+                    "indice": 2
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 2.7096838951111,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": -1,
+            "date_echeance": "2026-09-07",
+            "indice": 3,
+            "qualificatif": "Dégradé",
+            "couleur_html": "#f0e641",
+            "date_calcul": "2026-09-08",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "réelle",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 19.816665649414,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 7.8080987930298,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 129.69999694824,
+                    "indice": 3
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 60.022605895996,
+                    "indice": 2
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 3.0924913883209,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": -1,
+            "date_echeance": "2026-09-08",
+            "indice": 4,
+            "qualificatif": "Mauvais",
+            "couleur_html": "#ff5050",
+            "date_calcul": "2026-09-09",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "réelle",
+            "sous_indices": [
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 136,
+                    "indice": 4
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 11.143886566162,
+                    "indice": 2
+                },
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 28.599369049072,
+                    "indice": 2
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 40.75638961792,
+                    "indice": 2
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 2.4192554950714,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": -1,
+            "date_echeance": "2026-09-09",
+            "indice": 2,
+            "qualificatif": "Moyen",
+            "couleur_html": "#50ccaa",
+            "date_calcul": "2026-09-10",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "réelle",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 3.3775689601898,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 28.589332580566,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 1.9959208965302,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 6.9856576919556,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 80.536781311035,
+                    "indice": 2
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": 0,
+            "date_echeance": "2026-09-10",
+            "indice": 2,
+            "qualificatif": "Moyen",
+            "couleur_html": "#50ccaa",
+            "date_calcul": "2026-09-10",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "prévision",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 9.7892045974731,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 5.3984198570251,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 73.503761291504,
+                    "indice": 2
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 17.707618713379,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 0.4581518471241,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": 1,
+            "date_echeance": "2026-09-11",
+            "indice": 2,
+            "qualificatif": "Moyen",
+            "couleur_html": "#50ccaa",
+            "date_calcul": "2026-09-10",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "prévision",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 8.6294097900391,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 80.317230224609,
+                    "indice": 2
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 23.682960510254,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 1.609109044075,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 13.253435134888,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "O3"
+            ]
+        },
+        {
+            "echeance": 2,
+            "date_echeance": "2026-09-12",
+            "indice": 2,
+            "qualificatif": "Moyen",
+            "couleur_html": "#50ccaa",
+            "date_calcul": "2026-09-10",
+            "commune_insee": "38185",
+            "commune_nom": "Grenoble",
+            "type_valeur": "prévision",
+            "sous_indices": [
+                {
+                    "polluant_nom": "PM10",
+                    "concentration": 14.805751800537,
+                    "indice": 1
+                },
+                {
+                    "polluant_nom": "PM2.5",
+                    "concentration": 10.863381385803,
+                    "indice": 2
+                },
+                {
+                    "polluant_nom": "O3",
+                    "concentration": 79.824661254883,
+                    "indice": 2
+                },
+                {
+                    "polluant_nom": "NO2",
+                    "concentration": 84.603233337402,
+                    "indice": 2
+                },
+                {
+                    "polluant_nom": "SO2",
+                    "concentration": 1.1238825321198,
+                    "indice": 1
+                }
+            ],
+            "polluants_majoritaires": [
+                "PM2.5",
+                "O3",
+                "NO2"
+            ]
+        }
+    ],
+    "success": true,
+    "message": {
+        "code": 0,
+        "text": ""
+    },
+    "meta": {
+        "licence": "Atmo Auvergne-Rhone-Alpes (licence ODbL https://opendatacommons.org/licenses/odbl )",
+        "total": 18,
+        "per_page": 1000,
+        "current_page": 1,
+        "last_page": 1
+    },
+    "links": {
+        "relationships": {
+            "indice_definition": "https://api.atmo-aura.fr/api/v1/indices/atmo/definitions?api_token=354182f95acbbfb8d8c74b0876a680d8"
+        },
+        "prev": null,
+        "next": null
+    }
+}

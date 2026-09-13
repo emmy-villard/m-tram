@@ -1,5 +1,6 @@
 import pandas as pd
 from datetime import datetime
+import logging
 
 def raw_to_pandas_meteo(response_dict):
     """
@@ -19,12 +20,15 @@ def raw_to_pandas_meteo(response_dict):
         raise ValueError("empty openmeteo response")
     data = response_dict["hourly"]
     nhours = len(data["time"])
-    useful_data = [
-        [
-            process_meteo_data(key, data[key][hour]) for key in data.keys()
-        ]
-        for hour in range(nhours)
-    ]
+    useful_data = list()
+    for hour in range(nhours):
+        try:
+            useful_data.append([
+                process_meteo_data(key, data[key][hour]) for key in data.keys()
+            ])
+        except(KeyError, IndexError):
+            logging.info("Dropped line %s", hour)
+            continue
     dataframe = pd.DataFrame(
         useful_data,
         columns=data.keys()

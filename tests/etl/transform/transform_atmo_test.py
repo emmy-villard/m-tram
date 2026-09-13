@@ -39,6 +39,54 @@ def test_unknown_type_valeur():
     with pytest.raises(ValueError):
         raw_to_pandas_atmo(unvalid_raw_data)
 
+def test_invalid_lines_no_errors():
+    indice_missing = {
+        "date_echeance": "2026-01-01",
+        "type_valeur": "réelle",
+        "sous_indices": [
+            {"indice": 1},
+            {"indice": 1},
+            {"indice": 1},
+            {"indice": 1},
+            {"indice": 1},
+        ],
+    }
+    sous_indice_missing = {
+        "date_echeance": "2026-01-02",
+        "indice": 3,
+        "type_valeur": "prévision",
+        "sous_indices": [
+            {"indice": 1},
+            {"indice": 1},
+            {"indice": 1},
+            {"indice": 1},
+        ],
+    }
+    correct_data = {
+        "date_echeance": "2026-01-03",
+        "indice": 3,
+        "type_valeur": "prévision",
+        "sous_indices": [
+            {"indice": 1},
+            {"indice": 1},
+            {"indice": 1},
+            {"indice": 1},
+            {"indice": 1},
+        ],
+    }
+    unvalid_raw_data = {
+        "data": [indice_missing, sous_indice_missing, correct_data],
+        "success": True
+    }
+    valid_raw_data = {
+        "data": [correct_data],
+        "success": True
+    }
+    returned_df = raw_to_pandas_atmo(unvalid_raw_data) # Assert doesn't throw
+    assert not returned_df.empty
+    assert returned_df.equals(raw_to_pandas_atmo(valid_raw_data))
+
+
 def test_full_dataframe(raw_data):
     dataframe = raw_to_pandas_atmo(raw_data)
     assert len(dataframe.columns) == 8

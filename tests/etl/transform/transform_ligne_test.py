@@ -28,37 +28,27 @@ def test_full_dataframe(raw_data):
         else:
             assert k not in dataframe.index
 
-def test_no_null_nsv_id():
+def test_invalid_lines_no_errors():
     raw_data = {
         "BUL_BUL": {
-            "nsv_id": 1,
             "stops": [],
             "time": 1785929005998
         },
         "C38_ABR05": {
             "nsv_id": 0,
-            "stops": [],
             "time": 1785929005998
         },
         "C38_ABR06": {
             "nsv_id": 1,
-            "stops": [],
             "time": 1785929005998
         },
     }
     raw_data_no_null_nsv_id = {
-        "BUL_BUL": {
-            "nsv_id": 1,
-            "stops": [],
-            "time": 1785929005998
-        },
         "C38_ABR06": {
             "nsv_id": 1,
-            "stops": [],
             "time": 1785929005998
         },
     }
-    dataframe = raw_to_pandas_ligne(raw_data)
     dataframe_result = raw_to_pandas_ligne(raw_data_no_null_nsv_id)
-    assert np.all(dataframe["ligne_nsv_id"] != 0)
-    assert dataframe.equals(dataframe_result)
+    assert np.all(dataframe_result["ligne_nsv_id"] != 0)
+    assert dataframe_result.equals(raw_to_pandas_ligne(raw_data))

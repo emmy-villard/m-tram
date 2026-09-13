@@ -1,5 +1,6 @@
 import pandas as pd
 from datetime import datetime
+import logging
 
 def raw_to_pandas_atmo(response_dict):
     """
@@ -30,19 +31,22 @@ def raw_to_pandas_atmo(response_dict):
         raise ValueError("empty openmeteo response")
     if not response_dict["success"]:
         raise ValueError("atmo api fetch failed")
-    data = [
-        [
-            _str_to_datetime(day_data["date_echeance"]),
-            day_data["indice"],
-            _is_value_mesured(day_data["type_valeur"]),
-            day_data["sous_indices"][0]["indice"],
-            day_data["sous_indices"][1]["indice"],
-            day_data["sous_indices"][2]["indice"],
-            day_data["sous_indices"][3]["indice"],
-            day_data["sous_indices"][4]["indice"],
-
-        ] for day_data in response_dict["data"]
-    ]
+    data = []
+    for day_data in response_dict["data"]:
+        try:
+            data.append([
+                _str_to_datetime(day_data["date_echeance"]),
+                day_data["indice"],
+                _is_value_mesured(day_data["type_valeur"]),
+                day_data["sous_indices"][0]["indice"],
+                day_data["sous_indices"][1]["indice"],
+                day_data["sous_indices"][2]["indice"],
+                day_data["sous_indices"][3]["indice"],
+                day_data["sous_indices"][4]["indice"],
+            ])
+        except(IndexError, KeyError):
+            logging.info("Dropped line %s", day_data)
+            continue
     columns = ["time", "pollution_index", "is_value_mesured",
         "PM10_index", "PM2_5_index", "O3_index", "NO2_index", "SO2_index"
     ]

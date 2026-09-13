@@ -22,13 +22,13 @@ def etl_meteo():
     Extract, transform and load data from API to database
 
     Can be used in CLI to recover past data. CLI usage:
-    airflow dags trigger recover_past_data --conf '{"start_date":"2026-01-01", "end_date":"2026-01-07"}'
+    airflow dags trigger etl_meteo --conf '{"start_date":"2026-01-01", "end_date":"2026-01-07"}'
     date format: YYYY-MM-DD
     start_date and end_date both included
     """
 
     @task
-    def recover_dates():
+    def recover_args():
         ctx = get_current_context()
         dag_run = ctx.get("dag_run")
         if (not dag_run):
@@ -52,12 +52,11 @@ def etl_meteo():
             raise ValueError("start_date must be before end_date")
         
         logging.info("start_date=%s end_date=%s", start_date, end_date)
-
         return {"start_date": start_date, "end_date": end_date}
 
     @task
-    def extract_openmeteo(dates):
-        start_date, end_date = dates["start_date"], dates["end_date"]
+    def extract_openmeteo(args):
+        start_date, end_date = args["start_date"], args["end_date"]
         url = OpenMeteo.get_url(start_date, end_date)
         return OpenMeteo.fetch(url)
     
@@ -72,8 +71,8 @@ def etl_meteo():
         OpenMeteoOrmClass = OpenMeteo.orm_class()
         OpenMeteo.load_table(dataframe, engine, OpenMeteoOrmClass, data_validator)
 
-    dates = recover_dates()
-    raw_data = extract_openmeteo(dates)
+    args = recover_args()
+    raw_data = extract_openmeteo(args)
     dataframe = transform_openmeteo(raw_data)
     load_openmeteo(dataframe)
 

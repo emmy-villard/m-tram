@@ -9,8 +9,8 @@ from etl.validation_schemas.atmo import validate_atmo_data
 
 class Atmo(Data):
     @staticmethod
-    def get_url():
-        return atmo_url()
+    def get_url(*args):
+        return atmo_url(*args)
 
     @staticmethod
     def fetch(url):

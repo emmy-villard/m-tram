@@ -1,13 +1,7 @@
 from airflow.sdk import dag, task
 from datetime import datetime, timedelta
 
-from etl.extract.api_url import url_trr
-from etl.extract.fetch_api import fetch_api
-from etl.transform.trr import raw_to_pandas_trr
-from etl.load.mdata_dyn import load_table
-from db_connection.engine import engine
-from orm.trr import Trr, NewTrrData
-from etl.validation_schemas.trr import check_trr_data
+from etl.classes.Trr import Trr
 
 @dag(
     schedule="*/5 * * * *",
@@ -27,15 +21,19 @@ def etl_trr():
     """
     @task
     def extract_trr():
-        return fetch_api(url_trr)
+        url = Trr.get_url()
+        return Trr.fetch(url)
     
     @task
     def transform_trr(raw_data):
-        return raw_to_pandas_trr(raw_data)
+        return Trr.raw_data_to_df(raw_data)
     
     @task
     def load_trr(dataframe):
-        return load_table(dataframe, engine, Trr, NewTrrData, check_trr_data)
+        engine = Trr.engine()
+        data_validator = Trr.data_validator()
+        TrrOrmClass = Trr.orm_class()
+        Trr.load_table(dataframe, engine, TrrOrmClass, data_validator)
 
     raw_data = extract_trr()
     dataframe = transform_trr(raw_data)

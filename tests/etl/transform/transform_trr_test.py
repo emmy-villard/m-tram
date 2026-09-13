@@ -10,25 +10,26 @@ def raw_data():
     with open(dir_path + "/../etl_test_data/trr.json") as file:
         return json.load(file)
 
-
 def test_empty_dataframe():
     dataframe = raw_to_pandas_trr({})
-    assert dataframe.index.name == "trr_id"
-    assert len(dataframe.columns) == 2
+    assert len(dataframe.columns) == 3
     assert "trr_time" in dataframe.columns
     assert "trr_nsv_id" in dataframe.columns
+    assert "trr_id" in dataframe.columns
 
 def test_full_dataframe(raw_data):
     dataframe = raw_to_pandas_trr(raw_data)
     for k, v in raw_data.items():
         v = v[0]
         if(v['nsv_id']):
-            assert datetime.fromtimestamp(v['time'] / 1000) == dataframe.loc[k]['trr_time']
-            assert v['nsv_id'] == dataframe.loc[k]['trr_nsv_id']
+            df =  dataframe.loc[dataframe['trr_id'] == k]
+            assert datetime.fromtimestamp(v['time'] / 1000) == \
+                df['trr_time'].values
+            assert v['nsv_id'] == df['trr_nsv_id'].values
         else:
             assert k not in dataframe.index
 
-def test_no_null_nsv_id():
+def test_invalid_lines_no_errors():
     raw_data = {
         "N0_001": [
             {
@@ -44,8 +45,6 @@ def test_no_null_nsv_id():
         ],
         "N0_522": [
             {
-                "nsv_id": 0,
-                "time": 1785931250024
             }
         ],
     }
@@ -57,7 +56,6 @@ def test_no_null_nsv_id():
             }
         ],
     }
-    dataframe = raw_to_pandas_trr(raw_data)
     dataframe_result = raw_to_pandas_trr(raw_data_no_null_nsv_id)
-    assert np.all(dataframe["trr_nsv_id"] != 0)
-    assert dataframe.equals(dataframe_result)
+    assert np.all(dataframe_result["trr_nsv_id"] != 0)
+    assert dataframe_result.equals(raw_to_pandas_trr(raw_data))

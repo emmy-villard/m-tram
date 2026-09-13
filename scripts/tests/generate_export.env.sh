@@ -5,11 +5,17 @@ write_variables() {
     POSTGRES_TEST_PORT=54320
     POSTGRES_TEST_HOST=localhost
     POSTGRES_TEST_DB=test_db
-    echo "POSTGRES_TEST_USER=$POSTGRES_TEST_USER" >> .env.test
+    TEST_DATABASE__SQL_ALCHEMY_CONN="postgresql+psycopg2://$POSTGRES_TEST_USER:$POSTGRES_TEST_PASSWORD@$POSTGRES_TEST_HOST:$POSTGRES_TEST_PORT/$POSTGRES_TEST_DB"
+    echo "POSTGRES_TEST_USER=$POSTGRES_TEST_USER" > .env.test
     echo "POSTGRES_TEST_PASSWORD=$POSTGRES_TEST_PASSWORD" >> .env.test
     echo "POSTGRES_TEST_PORT=$POSTGRES_TEST_PORT" >> .env.test
     echo "POSTGRES_TEST_HOST=$POSTGRES_TEST_HOST" >> .env.test
     echo "POSTGRES_TEST_DB=$POSTGRES_TEST_DB" >> .env.test
+    echo "TEST_DATABASE__SQL_ALCHEMY_CONN=$TEST_DATABASE__SQL_ALCHEMY_CONN" >> .env.test
+    echo "DATABASE__SQL_ALCHEMY_CONN=$TEST_DATABASE__SQL_ALCHEMY_CONN" >> .env.test
+ 
+    #Secrets
+    echo "ATMO_API_KEY=${ATMO_API_KEY}" >> .env.test
 }
 
 export_variables() {
@@ -18,5 +24,11 @@ export_variables() {
     set +a
 }
 
-write_variables
+if [ -e .env.test ]
+then
+	printf '%s\n' 'Error: .env.test already exists; not overwritten' >&2
+else
+    write_variables
+fi
+
 export_variables

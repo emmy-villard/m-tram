@@ -69,11 +69,8 @@ services:
 
   db-init:
     <<: *airflow-common
-    command: python -m db_connection.init_db
-    environment:
-      <<: *airflow-common-env
-      POSTGRES_HOST: db
-      POSTGRES_PORT: 5432
+    entrypoint: /bin/bash
+    command: -c "alembic upgrade head"
     depends_on:
       db:
         condition: service_healthy

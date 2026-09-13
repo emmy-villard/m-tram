@@ -1,7 +1,8 @@
 import pandas as pd
 from datetime import datetime
+import logging
 
-def raw_to_pandas_trr(response_dict_ttr):
+def raw_to_pandas_trr(response_dict):
     """
     Transforms raw "trr" data into clean pandas DataFrame
 
@@ -15,14 +16,21 @@ def raw_to_pandas_trr(response_dict_ttr):
     pandas.DataFrame
         Transformed data
     """
-    data = [[
-        k,
-        datetime.fromtimestamp(value[0]["time"] / 1000),
-        value[0]["nsv_id"]
-    ] for k, value in response_dict_ttr.items() if value[0]["nsv_id"] != 0]
-
+    data = list()
+    for k, value in response_dict.items():
+        try:
+            value = value[0]
+            if value["nsv_id"] != 0:
+                data.append([
+                    k,
+                    datetime.fromtimestamp(value["time"] / 1000),
+                    value["nsv_id"]
+                ])
+        except(KeyError):
+            logging.info("Dropped line %s", value)
+            continue
     dataframe_trr = pd.DataFrame(data,
         columns=("trr_id", "trr_time", "trr_nsv_id")
-    ).set_index("trr_id")
+    )
 
     return dataframe_trr

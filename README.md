@@ -1,5 +1,8 @@
 # M-Tram
-A data engineering project from Grenoble's public APIs. The aim of this project is to monitor traffic trends in Grenoble for retrospective analysis.
+A data engineering project built from Grenoble's public APIs. The goal is to collect traffic, weather, and air-quality data in order to study how environmental conditions influence mobility patterns in the Grenoble area.
+
+## Project scope
+This repository is a first working version of a data collection pipeline portfolio project. It is not designed as a production-grade monitoring platform with full operational guarantees, but it demonstrates a complete ETL workflow from API ingestion to validated database storage.
 
 ## Architecture
 ### Pipeline structure :

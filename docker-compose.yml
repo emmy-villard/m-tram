@@ -38,6 +38,8 @@ x-airflow-common:
 
 services:
   fastapi-server:
+    env_file:
+      - ${ENV_FILE_PATH}
     build:
       context: .
       target: fastapi

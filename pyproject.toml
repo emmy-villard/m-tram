@@ -27,6 +27,7 @@ dev = [
   "apache-airflow[celery]==3.3.1",
   "pydantic==2.13.4",
   "alembic==1.19.1",
+  "fastapi==0.136.3",
 ]
 prod = [
   "requests==2.34.2",

@@ -29,7 +29,10 @@ dev = [
   "alembic==1.19.1",
   "fastapi==0.136.3",
 ]
-prod = [
+fastapi-backend-prod = [
+  "fastapi==0.136.3",
+]
+airflow-backend-prod = [
   "requests==2.34.2",
   "SQLAlchemy==2.0.51",
   "postgres==4.0",

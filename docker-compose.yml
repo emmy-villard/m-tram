@@ -1,6 +1,8 @@
 x-airflow-common:
   &airflow-common
-  build: .
+  build:
+    context: .
+    target: airflow
   image: ${AIRFLOW_IMAGE_NAME}
   env_file:
     - ${ENV_FILE_PATH}
@@ -35,6 +37,16 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+  fastapi-server:
+    build:
+      context: .
+      target: fastapi
+    image: ${FASTAPI_IMAGE}
+    ports:
+      - 80:80
+    depends_on:
+      - db
+
   airflow_metadata_db:
     image: postgres:16
     environment:

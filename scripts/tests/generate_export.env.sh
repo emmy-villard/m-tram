@@ -16,6 +16,10 @@ write_variables() {
  
     #Secrets
     echo "ATMO_API_KEY=${ATMO_API_KEY}" >> .env.test
+    
+    #FastAPI variables
+    FASTAPI_IMG="mtram-fastapi:latest"
+    echo "FASTAPI_IMAGE=$FASTAPI_IMAGE" >> .env.test
 }
 
 export_variables() {

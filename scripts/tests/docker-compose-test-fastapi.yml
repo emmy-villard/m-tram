@@ -1,7 +1,5 @@
 services:
   fastapi-server:
-    env_file:
-      - ../../.env.test
     image: fastapi_test
     build:
       context: ../..

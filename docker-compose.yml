@@ -123,8 +123,16 @@ services:
   airflow-apiserver:
     <<: *airflow-common
     command: api-server
+    networks:
+      - proxy_net
+      - airflow_net
     ports:
       - "${AIRFLOW_WEBUI_DEV_PORT}:8080"
+    environment:
+      <<: *airflow-common-env
+      VIRTUAL_HOST: m-tram.emmyvillard.fr
+      VIRTUAL_PORT: 8080
+      ACME_HOST: m-tram.emmyvillard.fr
     healthcheck:
       test: ["CMD", "curl", "--fail",
         "http://localhost:8080/api/v2/monitor/health"

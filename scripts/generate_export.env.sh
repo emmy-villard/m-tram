@@ -13,7 +13,8 @@ write_variables() {
     AIRFLOW_USER=airflow
     AIRFLOW_PASSWORD=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 32)
     AIRFLOW_DB=airflow
-    AIRFLOW_APISERVER_EXTERNAL_PORT=8080
+    AIRFLOW_WEBUI_DEV_PORT=8080
+    FASTAPI_DEV_PORT=8081
     APISERVER_URL="http://airflow-apiserver:8080"
     AIRFLOW_PROJ_DIR=./airflow
     ENV_FILE_PATH=".env"
@@ -25,11 +26,13 @@ write_variables() {
     AIRFLOW__API_AUTH__JWT_ISSUER=airflow_$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16)
     _AIRFLOW_WWW_USER_USERNAME=airflow_$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16)
     _AIRFLOW_WWW_USER_PASSWORD=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 32)
+    PROXY_NET_EXTERNAL=false
     echo "AIRFLOW_UID=$(id -u)" >> .env
     echo "AIRFLOW_USER=$AIRFLOW_USER" >> .env
     echo "AIRFLOW_PASSWORD=$AIRFLOW_PASSWORD" >> .env
     echo "AIRFLOW_DB=$AIRFLOW_DB" >> .env
-    echo "AIRFLOW_APISERVER_EXTERNAL_PORT=$AIRFLOW_APISERVER_EXTERNAL_PORT" >> .env
+    echo "AIRFLOW_WEBUI_DEV_PORT=$AIRFLOW_WEBUI_DEV_PORT" >> .env
+    echo "FASTAPI_DEV_PORT=$FASTAPI_DEV_PORT" >> .env
     echo "APISERVER_URL=$APISERVER_URL" >> .env
     echo "AIRFLOW_PROJ_DIR=$AIRFLOW_PROJ_DIR" >> .env
     echo "ENV_FILE_PATH=$ENV_FILE_PATH" >> .env
@@ -41,6 +44,7 @@ write_variables() {
     echo "AIRFLOW__API_AUTH__JWT_ISSUER=$AIRFLOW__API_AUTH__JWT_ISSUER" >> .env
     echo "_AIRFLOW_WWW_USER_USERNAME=$_AIRFLOW_WWW_USER_USERNAME" >> .env
     echo "_AIRFLOW_WWW_USER_PASSWORD=$_AIRFLOW_WWW_USER_PASSWORD" >> .env
+    echo "PROXY_NET_EXTERNAL=$PROXY_NET_EXTERNAL" >> .env
 
     #Secrets
     echo "ATMO_API_KEY=${ATMO_API_KEY}" >> .env

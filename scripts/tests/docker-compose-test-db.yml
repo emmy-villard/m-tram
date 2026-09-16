@@ -1,6 +1,8 @@
 services:
   test_db:
     image: postgres:18-alpine
+    env_file:
+      - ../../.env.test
     restart: always
     # set shared memory limit
     shm_size: 128mb

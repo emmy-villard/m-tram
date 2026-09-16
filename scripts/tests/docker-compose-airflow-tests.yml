@@ -1,13 +1,11 @@
 x-airflow-common:
   &airflow-common
   build:
-    context: .
+    context: ../..
     target: airflow
-  image: ${AIRFLOW_IMAGE_NAME}
-  networks:
-    - airflow_net
+  image: airflow_test
   env_file:
-    - ${ENV_FILE_PATH}
+    - ../../${ENV_FILE_PATH}
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -40,28 +38,19 @@ x-airflow-common:
 
 services:
   fastapi-server:
-    networks:
-      - proxy_net
-      - airflow_net
-    environment:
-      <<: *airflow-common-env
-      VIRTUAL_HOST: api.m-tram.emmyvillard.fr
-      VIRTUAL_PORT: 80
-      ACME_HOST: api.m-tram.emmyvillard.fr
     env_file:
-      - ${ENV_FILE_PATH}
+      - ../../${ENV_FILE_PATH}
     build:
-      context: .
+      context: ../..
       target: fastapi
     image: ${FASTAPI_IMAGE}
+    ports:
+      - 80:80
     depends_on:
-      db:
-        condition: service_healthy
+      - db
 
   airflow_metadata_db:
     image: postgres:16
-    networks:
-      - airflow_net
     environment:
       POSTGRES_USER: ${AIRFLOW_USER}
       POSTGRES_PASSWORD: ${AIRFLOW_PASSWORD}
@@ -79,8 +68,6 @@ services:
     image: postgres:18
     restart: always
     shm_size: 128mb
-    networks:
-      - airflow_net
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -106,8 +93,6 @@ services:
     # Redis is limited to 7.2-bookworm due to licencing change
     # https://redis.io/blog/redis-adopts-dual-source-available-licensing/
     image: redis:7.2-bookworm
-    networks:
-      - airflow_net
     expose:
       - 6379
     healthcheck:
@@ -121,6 +106,8 @@ services:
   airflow-apiserver:
     <<: *airflow-common
     command: api-server
+    ports:
+      - "${AIRFLOW_APISERVER_EXTERNAL_PORT}:8080"
     healthcheck:
       test: ["CMD", "curl", "--fail",
         "http://localhost:8080/api/v2/monitor/health"
@@ -310,11 +297,3 @@ services:
 volumes:
   airflow_metadata_db-volume:
   db-volume:
-
-networks:
-  proxy_net:
-    name: proxy_net
-    external: true
-  airflow_net:
-    name: airflow_net
-    external: false

@@ -16,3 +16,16 @@ services:
       interval: 0.5s
       retries: 20
       timeout: 10s
+
+  fastapi-server:
+    image: fastapi_test
+    build:
+      context: ../..
+      target: fastapi
+    environment:
+      DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_TEST_USER}:${POSTGRES_TEST_PASSWORD}@test_db:5432/${POSTGRES_TEST_DB}
+    depends_on:
+      test_db:
+        condition: service_healthy
+    ports:
+      - 8081:80

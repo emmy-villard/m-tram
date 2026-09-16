@@ -1,8 +1,0 @@
-services:
-  fastapi-server:
-    image: fastapi_test
-    build:
-      context: ../..
-      target: fastapi
-    ports:
-      - 80:80

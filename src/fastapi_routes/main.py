@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from fastapi_routes.raw import atmo, ligne, openmeteo, trr
-from fastapi_routes.util import count
+from fastapi_routes.requests import trr
+from fastapi_routes.requests import atmo, ligne, openmeteo
+from fastapi_routes.requests import count
 
 app = FastAPI()
 

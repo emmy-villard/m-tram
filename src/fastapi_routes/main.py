@@ -1,7 +1,13 @@
 from fastapi import FastAPI
 from fastapi_routes.raw import atmo, ligne, openmeteo, trr
+from fastapi_routes.util import count
 
 app = FastAPI()
+
+
+@app.get("/count")
+def get_count():
+    return count.get_data()
 
 @app.get("/raw/ligne")
 def get_raw_line():

@@ -4,5 +4,6 @@ from db_connection.engine import engine
 
 def get_data(table: type[DeclarativeBase]):
     with Session(engine) as session:
-        row_data = session.scalars(select(table)).all()
+        select_stmt = select(table)
+        row_data = session.execute(select_stmt).scalars().all()
         return row_data

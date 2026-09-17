@@ -5,9 +5,8 @@ Daily ETL pipeline that collects, validates and stores **139k+ rows/day** from t
 
 ## Architecture
 ![Schéma d’architecture](docs/img/architecture_schema.svg)
-[Le schéma d'architecture sera ajouté ici.]
 
-MData / Open-Meteo / ATMO AuRA → Airflow DAGs → extract → transform → validate → load → PostgreSQL → (planned) FastAPI
+MData / Open-Meteo / ATMO AuRA → Airflow DAGs → extract → transform → validate → load → PostgreSQL → FastAPI
 
 The ETL layer normalizes each API payload into pandas DataFrames, validates the resulting records with Pydantic schemas, and persists them through SQLAlchemy. The current workflows cover traffic (`trr` and `ligne`), weather (`openmeteo`), and air quality (`atmo`).
 
@@ -21,10 +20,14 @@ The ETL layer normalizes each API payload into pandas DataFrames, validates the 
 GitHub Actions runs the unit/integration tests and Airflow DAG tests on every push and pull request. The project is packaged and run with Docker Compose, which orchestrates PostgreSQL, Redis, the Airflow API server, scheduler, DAG processor, workers, and triggerer. The VPS deployment is operated with the repository's Docker Compose scripts.
 
 ## API
-A dedicated API will be implemented to expose the database through generic data-access endpoints. A dashboard may be added as a later step.
+The project includes a functional FastAPI V1 that provides simple read-only access to the stored data:
+- `/count` returns the number of records for each dataset.
+- `/raw/ligne`, `/raw/trr`, `/raw/atmo`, and `/raw/openmeteo` return the raw records for each dataset.
+
+More advanced data-access features and complex API functions are planned for the next PR.
 
 ## Scope
-This portfolio project runs daily ETL workflows that collect, validate, and archive Grenoble traffic, weather, and air-quality data. It is a working data pipeline, but it does not yet provide alerting, high availability, production monitoring, a custom data API, or a dashboard.
+This portfolio project runs daily ETL workflows that collect, validate, and archive Grenoble traffic, weather, and air-quality data. It is a working data pipeline with a simple API V1, but it does not yet provide alerting, high availability, production monitoring, or a dashboard.
 
 ## Project scope
 This repository is a first working version of a data collection pipeline portfolio project. It is not designed as a production-grade monitoring platform with full operational guarantees, but it demonstrates a complete ETL workflow from API ingestion to validated database storage.

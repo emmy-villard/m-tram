@@ -22,10 +22,10 @@ def get_raw_trr():
 
 @app.get("/raw/atmo")
 def get_raw_atmo():
-    return raw.get_data(OpenMeto)
+    return raw.get_data(Atmo)
 
 @app.get("/raw/openmeteo")
 def get_raw_openmeteo():
-    return raw.get_data(Atmo)
+    return raw.get_data(OpenMeto)
 
 

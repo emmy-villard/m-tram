@@ -2,13 +2,13 @@
 
 The API exposes the data collected by the ETL pipeline in read-only mode.
 
-## Routes
+# Routes
 
-### `GET /count`
+## `GET /count`
 
 Returns the number of rows available in each exposed table.
 
-Example response:
+Response example:
 
 ```json
 {
@@ -19,56 +19,24 @@ Example response:
 }
 ```
 
-### `GET /raw/ligne`
+## `GET /raw/{data}`
 
-Returns raw public transport line data.
+Returns the raw rows from the requested table.
 
-Returned fields:
+Path parameter:
+- `data`: name of the table to query.
 
-- `ligne_id`
-- `ligne_time`
-- `ligne_nsv_id`
+Available values:
+- `ligne`
+- `trr`
+- `openmeteo`
+- `atmo`
 
-### `GET /raw/trr`
+The response is a JSON array. Each item contains the columns of the selected
+table. See [schema.md](schema.md) for the columns returned by each table.
 
-Returns raw road traffic data.
+Example:
 
-Returned fields:
-
-- `trr_id`
-- `trr_time`
-- `trr_nsv_id`
-
-### `GET /raw/atmo`
-
-Returns atmospheric pollution measurements.
-
-Returned fields:
-
-- `time`
-- `pollution_index`
-- `is_value_mesured`
-- `PM10_index`
-- `PM2_5_index`
-- `O3_index`
-- `NO2_index`
-- `SO2_index`
-
-### `GET /raw/openmeteo`
-
-Returns Open-Meteo weather measurements.
-
-Returned fields:
-
-- `time`
-- `temperature_2m`
-- `apparent_temperature`
-- `relativehumidity_2m`
-- `precipitation`
-- `rain`
-- `snowfall`
-- `weathercode`
-- `pressure_msl`
-- `cloudcover`
-- `windspeed_10m`
-- `windgusts_10m`
+```http
+GET /raw/ligne
+```

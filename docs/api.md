@@ -4,7 +4,7 @@ The API exposes the data collected by the ETL pipeline in read-only mode.
 
 # Routes
 
-## [Get /](https://api.m-tram.emmyvillard.fr/)
+## [`Get /`](https://api.m-tram.emmyvillard.fr/)
 Returns this document
 
 ## [`GET /count`](https://api.m-tram.emmyvillard.fr/count)

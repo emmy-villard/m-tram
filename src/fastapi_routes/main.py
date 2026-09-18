@@ -14,14 +14,20 @@ app = FastAPI()
 
 @app.get("/", response_class=HTMLResponse)
 def get_api_doc():
-    api_doc_path = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)),
-        "docs", "api.md"
-    )
+    PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
+    api_doc_path = os.path.join(PROJECT_PATH, "docs", "api.md")
+    template_path = os.path.join(PROJECT_PATH, "templates", "api.html")
+    stylesheet_path = os.path.join(PROJECT_PATH, "templates", "api.css")
     with open(api_doc_path) as file:
-        content = file.read()
-        html = markdown(content)
-        return html
+        documentation = markdown(file.read(), extensions=["fenced_code"])
+    with open(template_path) as file:
+        template = file.read()
+    with open(stylesheet_path) as file:
+        stylesheet = file.read()
+    html = template.replace("{{ stylesheet }}", stylesheet).replace(
+        "{{ documentation }}", documentation
+    )
+    return html
 
 @app.get("/count")
 def get_count():

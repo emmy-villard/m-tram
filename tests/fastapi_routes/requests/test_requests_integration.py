@@ -91,8 +91,18 @@ def test_get_raw_data_atmo():
 
 def test_get_count():
     result = count.get_data()
-    assert result["ligne"] == len(_load_csv("ligne.csv"))
-    assert result["trr"] == len(_load_csv("trr.csv"))
-    assert result["openmeteo"] == len(_load_csv("openmeteo.csv"))
-    assert result["atmo"] == len(_load_csv("atmo.csv"))
+    ligne_len = len(_load_csv("ligne.csv"))
+    trr_len = len(_load_csv("trr.csv"))
+    openmeteo_len = len(_load_csv("openmeteo.csv"))
+    atmo_len = len(_load_csv("atmo.csv"))
+    assert ligne_len != 0
+    assert trr_len != 0
+    assert openmeteo_len != 0
+    assert atmo_len != 0
+    assert result["ligne"] == ligne_len
+    assert result["trr"] == trr_len
+    assert result["openmeteo"] == openmeteo_len
+    assert result["atmo"] == atmo_len
+    assert result["total"] == ligne_len + trr_len + openmeteo_len + atmo_len
+
 

@@ -11,10 +11,13 @@ from orm.atmo import Atmo
 def get_data(tables: Sequence[type[DeclarativeBase]] = [
     Ligne, Trr, OpenMeto, Atmo
 ]):
+    total = 0
     count = dict()
     with Session(engine) as session:
         for table in tables:
             select_stmt = select(func.count().label("count")).select_from(table)
             line_count = session.execute(select_stmt).scalar_one()
             count[table.__tablename__] = line_count
+            total += line_count
+    count["total"] = total
     return count

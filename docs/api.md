@@ -4,10 +4,10 @@ The API exposes the data collected by the ETL pipeline in read-only mode.
 
 # Routes
 
-## [`Get /`](https://api.m-tram.emmyvillard.fr/)
+## [`Get /`](#)
 Returns this document
 
-## [`GET /count`](https://api.m-tram.emmyvillard.fr/count)
+## [`GET /count`](count)
 
 Returns the number of rows available in each exposed table.
 
@@ -22,7 +22,7 @@ Response example:
 }
 ```
 
-## [`GET /raw/{data}`](https://api.m-tram.emmyvillard.fr/ligne)
+## [`GET /raw/{data}`](ligne)
 
 Returns the raw rows from the requested table.
 

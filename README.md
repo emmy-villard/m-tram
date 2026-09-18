@@ -6,7 +6,7 @@ Daily ETL pipeline that collects, validates and stores **139k+ rows/day** from t
 ## Architecture
 ![Schéma d’architecture](docs/img/architecture_schema.svg)
 
-MData / Open-Meteo / ATMO AuRA → Airflow DAGs → extract → transform → validate → load → PostgreSQL → FastAPI
+MData / Open-Meteo / ATMO AuRA → Airflow DAGs → extract → transform → validate → load → PostgreSQL → [FastAPI](docs/api.md)
 
 The ETL layer normalizes each API payload into pandas DataFrames, validates the resulting records with Pydantic schemas, and persists them through SQLAlchemy. The current workflows cover traffic (`trr` and `ligne`), weather (`openmeteo`), and air quality (`atmo`).
 

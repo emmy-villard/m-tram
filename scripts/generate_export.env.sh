@@ -50,7 +50,7 @@ write_variables() {
     echo "ATMO_API_KEY=${ATMO_API_KEY}" >> .env
 
     #FastAPI variables
-    FASTAPI_IMG="mtram-fastapi:latest"
+    FASTAPI_IMAGE="mtram-fastapi:latest"
     echo "FASTAPI_IMAGE=$FASTAPI_IMAGE" >> .env
 }
 

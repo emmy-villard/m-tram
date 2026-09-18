@@ -1,33 +1,21 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
-from fastapi_routes.requests import raw, count
+from fastapi_routes.requests import raw, count, markdown
 
 from orm.ligne import Ligne 
 from orm.trr import Trr
 from orm.openmeteo import OpenMeto
 from orm.atmo import Atmo
 
-import os
-from markdown import markdown
-
 app = FastAPI()
 
 @app.get("/", response_class=HTMLResponse)
 def get_api_doc():
-    PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
-    api_doc_path = os.path.join(PROJECT_PATH, "docs", "api.md")
-    template_path = os.path.join(PROJECT_PATH, "templates", "api.html")
-    stylesheet_path = os.path.join(PROJECT_PATH, "templates", "api.css")
-    with open(api_doc_path) as file:
-        documentation = markdown(file.read(), extensions=["fenced_code"])
-    with open(template_path) as file:
-        template = file.read()
-    with open(stylesheet_path) as file:
-        stylesheet = file.read()
-    html = template.replace("{{ stylesheet }}", stylesheet).replace(
-        "{{ documentation }}", documentation
-    )
-    return html
+    return markdown.get_doc("api.md")
+
+@app.get("/schema.md", response_class=HTMLResponse)
+def get_schema_doc():
+    return markdown.get_doc("schema.md")
 
 @app.get("/count")
 def get_count():

@@ -27,9 +27,11 @@ Response example:
 Returns the raw rows from the requested table.
 
 Path parameter:
+
 - `data`: name of the table to query.
 
 Available values:
+
 - `ligne`
 - `trr`
 - `openmeteo`

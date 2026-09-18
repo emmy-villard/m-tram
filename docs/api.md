@@ -22,7 +22,7 @@ Response example:
 }
 ```
 
-## [`GET /raw/{data}`](ligne)
+## [`GET /raw/{data}`](raw/ligne)
 
 Returns the raw rows from the requested table.
 

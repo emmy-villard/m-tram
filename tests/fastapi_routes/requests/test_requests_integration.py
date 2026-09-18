@@ -3,11 +3,6 @@ from etl.classes.Trr import Trr
 from etl.classes.OpenMeteo import OpenMeteo
 from etl.classes.Atmo import Atmo
 
-from orm.ligne import Ligne as LigneOrm
-from orm.trr import Trr as TrrOrm
-from orm.openmeteo import OpenMeto as OpenMeteoOrm
-from orm.atmo import Atmo as AtmoOrm
-
 from fastapi_routes.requests import raw, count
 from orm.base import Base
 from db_connection.test_engine import engine
@@ -46,7 +41,7 @@ def setup_database():
 
 def test_get_raw_data_ligne():
     expected = _load_csv("ligne.csv")
-    rows = raw.get_data(LigneOrm)
+    rows = raw.get_data("ligne")
     assert len(rows) == len(expected)
     result_df = pd.DataFrame(
         [(row.ligne_id, row.ligne_nsv_id) for row in rows],
@@ -58,7 +53,7 @@ def test_get_raw_data_ligne():
 
 def test_get_raw_data_trr():
     expected = _load_csv("trr.csv")
-    rows = raw.get_data(TrrOrm)
+    rows = raw.get_data("trr")
     assert len(rows) == len(expected)
     result_df = pd.DataFrame(
         [(row.trr_id, row.trr_nsv_id) for row in rows],
@@ -70,7 +65,7 @@ def test_get_raw_data_trr():
 
 def test_get_raw_data_openmeteo():
     expected = _load_csv("openmeteo.csv")
-    rows = raw.get_data(OpenMeteoOrm)
+    rows = raw.get_data("openmeteo")
     assert len(rows) == len(expected)
     result_df = pd.DataFrame(
         [(pd.Timestamp(row.time), row.temperature_2m) for row in rows],
@@ -83,7 +78,7 @@ def test_get_raw_data_openmeteo():
 
 def test_get_raw_data_atmo():
     expected = _load_csv("atmo.csv")
-    rows = raw.get_data(AtmoOrm)
+    rows = raw.get_data("atmo")
     assert len(rows) == len(expected)
     result_df = pd.DataFrame(
         [(pd.Timestamp(row.time), row.pollution_index) for row in rows],

@@ -27,10 +27,7 @@ The project includes a functional FastAPI V1 that provides simple read-only acce
 More advanced data-access features and complex API functions are planned for the next PR.
 
 ## Scope
-This portfolio project runs daily ETL workflows that collect, validate, and archive Grenoble traffic, weather, and air-quality data. It is a working data pipeline with a simple API V1, but it does not yet provide alerting, high availability, production monitoring, or a dashboard.
-
-## Project scope
-This repository is a first working version of a data collection pipeline portfolio project. It is not designed as a production-grade monitoring platform with full operational guarantees, but it demonstrates a complete ETL workflow from API ingestion to validated database storage.
+This portfolio project is a first working version of a daily ETL pipeline that collects, validates, and archives Grenoble traffic, weather, and air-quality data. It demonstrates a complete workflow from API ingestion to validated database storage through a simple FastAPI V1. It is not designed as a production-grade monitoring platform with full operational guarantees and does not yet provide alerting, data analysis, or a dashboard.
 
 ## Config
 The script [``scripts/generate_export.env.sh``](scripts/generate_export.env.sh) provides a basic configuration for your .env file, including random passwords. If you want to configure it further, feel free to modify the corresponding variables in the .env file.

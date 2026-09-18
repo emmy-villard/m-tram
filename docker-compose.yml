@@ -1,7 +1,11 @@
 x-airflow-common:
   &airflow-common
-  build: .
+  build:
+    context: .
+    target: airflow
   image: ${AIRFLOW_IMAGE_NAME}
+  networks:
+    - airflow_net
   env_file:
     - ${ENV_FILE_PATH}
   environment:
@@ -35,8 +39,31 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+  fastapi-server:
+    networks:
+      - proxy_net
+      - airflow_net
+    ports:
+      - ${FASTAPI_DEV_PORT}:80
+    environment:
+      <<: *airflow-common-env
+      VIRTUAL_HOST: api.m-tram.emmyvillard.fr
+      VIRTUAL_PORT: 80
+      ACME_HOST: api.m-tram.emmyvillard.fr
+    env_file:
+      - ${ENV_FILE_PATH}
+    build:
+      context: .
+      target: fastapi
+    image: ${FASTAPI_IMAGE}
+    depends_on:
+      db:
+        condition: service_healthy
+
   airflow_metadata_db:
     image: postgres:16
+    networks:
+      - airflow_net
     environment:
       POSTGRES_USER: ${AIRFLOW_USER}
       POSTGRES_PASSWORD: ${AIRFLOW_PASSWORD}
@@ -54,6 +81,8 @@ services:
     image: postgres:18
     restart: always
     shm_size: 128mb
+    networks:
+      - airflow_net
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -79,6 +108,8 @@ services:
     # Redis is limited to 7.2-bookworm due to licencing change
     # https://redis.io/blog/redis-adopts-dual-source-available-licensing/
     image: redis:7.2-bookworm
+    networks:
+      - airflow_net
     expose:
       - 6379
     healthcheck:
@@ -92,8 +123,16 @@ services:
   airflow-apiserver:
     <<: *airflow-common
     command: api-server
+    networks:
+      - proxy_net
+      - airflow_net
     ports:
-      - "${AIRFLOW_APISERVER_EXTERNAL_PORT}:8080"
+      - "${AIRFLOW_WEBUI_DEV_PORT}:8080"
+    environment:
+      <<: *airflow-common-env
+      VIRTUAL_HOST: m-tram.emmyvillard.fr
+      VIRTUAL_PORT: 8080
+      ACME_HOST: m-tram.emmyvillard.fr
     healthcheck:
       test: ["CMD", "curl", "--fail",
         "http://localhost:8080/api/v2/monitor/health"
@@ -280,28 +319,14 @@ services:
     depends_on:
       <<: *airflow-common-depends-on
 
-  # You can enable flower by adding "--profile flower" option e.g. docker-compose --profile flower up
-  # or by explicitly targeted on the command line e.g. docker-compose up flower.
-  # See: https://docs.docker.com/compose/profiles/
-  flower:
-    <<: *airflow-common
-    command: celery flower
-    profiles:
-      - flower
-    ports:
-      - "5555:5555"
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:5555/"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
-    restart: always
-    depends_on:
-      <<: *airflow-common-depends-on
-      airflow-init:
-        condition: service_completed_successfully
-
 volumes:
   airflow_metadata_db-volume:
   db-volume:
+
+networks:
+  proxy_net:
+    name: proxy_net
+    external: ${PROXY_NET_EXTERNAL}
+  airflow_net:
+    name: airflow_net
+    external: false

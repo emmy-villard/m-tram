@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "mtram"
 version = "0.0.1"
-requires-python = ">=3.12.3"
+requires-python = ">=3.11"
 authors = [
   {name = "Emmy VILLARD", email = "emmy.villard.pro@proton.me"},
 ]
@@ -27,8 +27,18 @@ dev = [
   "apache-airflow[celery]==3.3.1",
   "pydantic==2.13.4",
   "alembic==1.19.1",
+  "fastapi==0.136.3",
+  "markdown==3.10.3",
 ]
-prod = [
+fastapi-backend-prod = [
+  "fastapi==0.136.3",
+  "SQLAlchemy==2.0.51",
+  "postgres==4.0",
+  "psycopg2-binary==2.9.12",
+  "pydantic==2.13.4",
+  "markdown==3.10.3",
+]
+airflow-backend-prod = [
   "requests==2.34.2",
   "SQLAlchemy==2.0.51",
   "postgres==4.0",

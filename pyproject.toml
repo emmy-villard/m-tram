@@ -28,6 +28,7 @@ dev = [
   "pydantic==2.13.4",
   "alembic==1.19.1",
   "fastapi==0.136.3",
+  "markdown==3.10.3",
 ]
 fastapi-backend-prod = [
   "fastapi==0.136.3",
@@ -35,6 +36,7 @@ fastapi-backend-prod = [
   "postgres==4.0",
   "psycopg2-binary==2.9.12",
   "pydantic==2.13.4",
+  "markdown==3.10.3",
 ]
 airflow-backend-prod = [
   "requests==2.34.2",

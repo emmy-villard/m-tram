@@ -12,6 +12,10 @@ def get_api_doc():
 def get_schema_doc():
     return markdown.get_doc("schema.md")
 
+@app.get("/source.md", response_class=HTMLResponse)
+def get_source_doc():
+    return markdown.get_doc("source.md")
+
 @app.get("/count")
 def get_count():
     return count.get_data()

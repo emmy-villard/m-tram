@@ -4,7 +4,7 @@ Daily ETL pipeline that collects, validates and stores **139k+ rows/day** from t
 **Stack:** Airflow with Celery · Python · PostgreSQL · SQLAlchemy · Alembic · Pydantic · Docker Compose · GitHub Actions · pytest
 
 ## Live demo
-- [API requests](https://api.m-tram.emmyvillard.fr/count)
+- [API requests](https://api.m-tram.emmyvillard.fr)
 
 ## Architecture
 ![Schéma d’architecture](docs/img/architecture_schema.svg)

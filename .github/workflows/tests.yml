@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - run: ./scripts/generate_export.env.sh
+      - run: ./scripts/generate_env.sh
       - run: ./scripts/docker-compose.sh
       - run: ./tests/airflow/dag_tests.sh
 

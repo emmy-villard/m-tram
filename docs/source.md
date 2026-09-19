@@ -47,5 +47,15 @@ The project reads the ATMO API endpoint using the commune-specific location and 
 ### Data description
 The returned JSON includes a global pollution score and pollutant sub-indices for the main atmospheric indicators such as PM10, PM2.5, O3, NO2, and SO2. A boolean field distinguishes measured values from forecast values.
 
+### Pollution levels
+The global pollution score and each pollutant sub-index range from `1` to `6`:
+
+- `1`: good
+- `2`: fair
+- `3`: degraded
+- `4`: poor
+- `5`: very poor
+- `6`: extremely poor
+
 ### Reuse conditions
 ATMO data is retrieved through the public API and stored as a daily time series for analysis, with the project validating the response structure before inserting the rows into the database.

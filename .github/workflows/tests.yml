@@ -1,8 +1,5 @@
 name: Tests
 
-concurrency:
-  group: development
-
 on:
   push:
 
@@ -20,8 +17,6 @@ jobs:
       - run: ./scripts/tests/run_tests.sh
   
   airflow-tests:
-    environment:
-      name: development
     env:
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       AIRFLOW_PASSWORD: ${{ secrets.AIRFLOW_PASSWORD }}

@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  unit-tests:
+  unit-and-integration-tests:
     env:
       ATMO_API_KEY: ${{ secrets.ATMO_API_KEY }}
     runs-on: ubuntu-latest
@@ -18,11 +18,19 @@ jobs:
   
   airflow-tests:
     env:
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      AIRFLOW_PASSWORD: ${{ secrets.AIRFLOW_PASSWORD }}
+      FERNET_KEY: ${{ secrets.FERNET_KEY }}
+      AIRFLOW__API_AUTH__JWT_SECRET: ${{ secrets.AIRFLOW__API_AUTH__JWT_SECRET }}
+      AIRFLOW__API_AUTH__JWT_ISSUER: ${{ secrets.AIRFLOW__API_AUTH__JWT_ISSUER }}
+      _AIRFLOW_WWW_USER_USERNAME: ${{ secrets._AIRFLOW_WWW_USER_USERNAME }}
+      _AIRFLOW_WWW_USER_PASSWORD: ${{ secrets._AIRFLOW_WWW_USER_PASSWORD }}
       ATMO_API_KEY: ${{ secrets.ATMO_API_KEY }}
+      PROXY_NET_EXTERNAL: "false"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - run: ./scripts/generate_export.env.sh
+      - run: ./scripts/generate_env.sh
       - run: ./scripts/docker-compose.sh
       - run: ./tests/airflow/dag_tests.sh
 

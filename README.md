@@ -20,7 +20,11 @@ The ETL layer normalizes each API payload into pandas DataFrames, validates the 
 - Inserts use PostgreSQL conflict handling so records already present for the same primary key are not duplicated. Transform and task errors are available in the Airflow task logs under `airflow/logs/` and in the Airflow UI.
 
 ## Deployment
-GitHub Actions runs the unit/integration tests and Airflow DAG tests on every push and pull request. The project is packaged and run with Docker Compose, which orchestrates PostgreSQL, Redis, the Airflow API server, scheduler, DAG processor, workers, and triggerer. The VPS deployment is operated with the repository's Docker Compose scripts.
+GitHub Actions runs the unit/integration tests and Airflow DAG tests on every push and pull request. Each push to `main` that passes the checks is automatically deployed to the VPS, providing continuous deployment for the application.
+
+The project is packaged and run with Docker Compose, which orchestrates PostgreSQL, Redis, the Airflow API server, scheduler, DAG processor, workers, and triggerer. The deployment workflow connects to the VPS and updates the running services with the latest `main` revision.
+
+Deployment uses the GitHub Actions `production` environment and encrypted secrets for SSH access and application configuration. On each deployment, GitHub Actions connects to the VPS, pulls the latest `main` revision, regenerates the environment file, and restarts the Docker Compose services.
 
 ## API
 The project includes a functional FastAPI V1 that provides simple read-only access to the stored data:

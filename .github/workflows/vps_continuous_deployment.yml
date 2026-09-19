@@ -1,0 +1,51 @@
+name: Deployment
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    env:
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      AIRFLOW_PASSWORD: ${{ secrets.AIRFLOW_PASSWORD }}
+      FERNET_KEY: ${{ secrets.FERNET_KEY }}
+      AIRFLOW__API_AUTH__JWT_SECRET: ${{ secrets.AIRFLOW__API_AUTH__JWT_SECRET }}
+      AIRFLOW__API_AUTH__JWT_ISSUER: ${{ secrets.AIRFLOW__API_AUTH__JWT_ISSUER }}
+      _AIRFLOW_WWW_USER_USERNAME: ${{ secrets._AIRFLOW_WWW_USER_USERNAME }}
+      _AIRFLOW_WWW_USER_PASSWORD: ${{ secrets._AIRFLOW_WWW_USER_PASSWORD }}
+      ATMO_API_KEY: ${{ secrets.ATMO_API_KEY }}
+      PROXY_NET_EXTERNAL: "true"
+    steps:
+      - name: Deploy on VPS
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: >-
+            POSTGRES_PASSWORD,
+            AIRFLOW_PASSWORD,
+            FERNET_KEY,
+            AIRFLOW__API_AUTH__JWT_SECRET,
+            AIRFLOW__API_AUTH__JWT_ISSUER,
+            _AIRFLOW_WWW_USER_USERNAME,
+            _AIRFLOW_WWW_USER_PASSWORD,
+            ATMO_API_KEY,
+            PROXY_NET_EXTERNAL
+          script_stop: true
+          script: |
+            cd ~/projects/m-tram
+            git checkout main
+            git pull --ff-only origin main
+            ./scripts/generate_env.sh
+            ./scripts/docker-compose.sh

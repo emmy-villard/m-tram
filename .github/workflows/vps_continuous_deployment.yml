@@ -13,6 +13,7 @@ on:
 jobs:
   deployment:
     runs-on: ubuntu-latest
+    timeout-minutes: 35
     environment:
       name: production
     env:
@@ -32,6 +33,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 30m
           envs: >-
             POSTGRES_PASSWORD,
             AIRFLOW_PASSWORD,

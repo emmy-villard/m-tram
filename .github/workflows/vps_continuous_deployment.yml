@@ -26,6 +26,7 @@ jobs:
       _AIRFLOW_WWW_USER_PASSWORD: ${{ secrets._AIRFLOW_WWW_USER_PASSWORD }}
       ATMO_API_KEY: ${{ secrets.ATMO_API_KEY }}
       PROXY_NET_EXTERNAL: "true"
+      SSH_FILE_PATH: ${{ secrets.SSH_FILE_PATH }}
     steps:
       - name: Deploy on VPS
         uses: appleboy/ssh-action@v1.2.2
@@ -43,9 +44,14 @@ jobs:
             _AIRFLOW_WWW_USER_USERNAME,
             _AIRFLOW_WWW_USER_PASSWORD,
             ATMO_API_KEY,
-            PROXY_NET_EXTERNAL
+            PROXY_NET_EXTERNAL,
+            SSH_FILE_PATH
           script_stop: true
           script: |
+            if [ -z "$SSH_AUTH_SOCK" ]; then
+              eval "$(ssh-agent -s)"
+            fi
+            ssh-add "$SSH_FILE_PATH"
             cd ~/projects/m-tram
             git checkout main
             git pull --ff-only origin main

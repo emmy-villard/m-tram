@@ -4,8 +4,9 @@ The API exposes the data collected by the ETL pipeline in read-only mode.
 
 # Routes
 
-## [`Get /`](#)
-Returns this document
+## [`GET /`](/)
+
+Returns this API documentation, including the available read-only endpoints.
 
 ## [`GET /source.md`](source.md)
 

@@ -32,8 +32,6 @@ jobs:
       _AIRFLOW_WWW_USER_PASSWORD: ${{ secrets._AIRFLOW_WWW_USER_PASSWORD }}
       ATMO_API_KEY: ${{ secrets.ATMO_API_KEY }}
       PROXY_NET_EXTERNAL: "false"
-    env:
-      ATMO_API_KEY: ${{ secrets.ATMO_API_KEY }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

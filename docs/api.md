@@ -7,6 +7,10 @@ The API exposes the data collected by the ETL pipeline in read-only mode.
 ## [`Get /`](#)
 Returns this document
 
+## [`GET /source.md`](source.md)
+
+Returns the documentation for the ETL data sources and ATMO pollution levels.
+
 ## [`GET /count`](count)
 
 Returns the number of rows available in each exposed table.

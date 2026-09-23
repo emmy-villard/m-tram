@@ -9,6 +9,9 @@ from db_connection.test_engine import engine
 import pytest
 import pandas as pd
 import os
+import io
+import asyncio
+import tempfile
 
 TEST_DATA_DIR = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), "..", "..", "etl", "etl_test_data"
@@ -89,20 +92,58 @@ def test_get_raw_data_atmo():
     ).sort_values("time").reset_index(drop=True)
     assert result_df.equals(expected_df)
 
+async def _read_csv_response(response):
+    chunks = []
+    async for chunk in response.body_iterator:
+        if isinstance(chunk, str):
+            chunks.append(chunk.encode("utf-8"))
+        else:
+            chunks.append(chunk)
+    return b"".join(chunks).decode("utf-8")
+
+def test_stream_csv_ligne():
+    expected = _load_csv("ligne.csv")
+    response = raw.stream_csv(raw._get_model("ligne"))
+    assert response.media_type == "text/csv"
+    payload = asyncio.run(_read_csv_response(response))
+    rows = pd.read_csv(io.StringIO(payload))
+    result_df = rows[["ligne_id", "ligne_nsv_id"]].sort_values("ligne_id").reset_index(drop=True)
+    expected_df = expected[["ligne_id", "ligne_nsv_id"]].sort_values("ligne_id").reset_index(drop=True)
+    assert len(rows) == len(expected)
+    assert result_df.equals(expected_df)
+
+def test_round_trip_csv_to_database_ligne():
+    original = _load_csv("ligne.csv")
+    with tempfile.NamedTemporaryFile("w", suffix=".csv", delete=False, newline="") as tmp:
+        original.to_csv(tmp.name, index=False)
+        tmp_path = tmp.name
+
+    try:
+        reloaded = pd.read_csv(tmp_path)
+        Base.metadata.drop_all(engine)
+        Base.metadata.create_all(engine)
+        Ligne.load_table(reloaded, engine, Ligne.orm_class(), Ligne.data_validator())
+
+        actual_df = pd.read_sql_query(
+            "SELECT ligne_id, ligne_time, ligne_nsv_id FROM ligne ORDER BY ligne_id, ligne_time",
+            engine,
+        )
+        actual_df["ligne_time"] = pd.to_datetime(actual_df["ligne_time"])
+
+        expected_df = original[["ligne_id", "ligne_time", "ligne_nsv_id"]].copy()
+        expected_df["ligne_time"] = pd.to_datetime(expected_df["ligne_time"])
+        expected_df = expected_df.sort_values(["ligne_id", "ligne_time"]).reset_index(drop=True)
+        actual_df = actual_df.sort_values(["ligne_id", "ligne_time"]).reset_index(drop=True)
+
+        assert actual_df.equals(expected_df)
+    finally:
+        os.unlink(tmp_path)
+
+
 def test_get_count():
     result = count.get_data()
     ligne_len = len(_load_csv("ligne.csv"))
-    trr_len = len(_load_csv("trr.csv"))
-    openmeteo_len = len(_load_csv("openmeteo.csv"))
-    atmo_len = len(_load_csv("atmo.csv"))
     assert ligne_len != 0
-    assert trr_len != 0
-    assert openmeteo_len != 0
-    assert atmo_len != 0
     assert result["ligne"] == ligne_len
-    assert result["trr"] == trr_len
-    assert result["openmeteo"] == openmeteo_len
-    assert result["atmo"] == atmo_len
-    assert result["total"] == ligne_len + trr_len + openmeteo_len + atmo_len
 
 

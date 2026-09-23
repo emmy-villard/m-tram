@@ -40,7 +40,7 @@ def stream_csv(table):
         yield ",".join(columns) + "\n"
         with Session(engine) as session:
             # stream_results + yield_per avoid loading the whole table into memory
-            select_stmt = select(table).execution_options(stream_results=True, yield_per=1000)
+            select_stmt = select(table).execution_options(stream_results=True, yield_per=50000)
             for row in session.execute(select_stmt).scalars():
                 yield ",".join(str(getattr(row, column)) for column in columns) + "\n"
 

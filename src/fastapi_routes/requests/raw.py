@@ -39,9 +39,12 @@ def stream_csv(table):
     def row_generator():
         yield ",".join(columns) + "\n"
         with Session(engine) as session:
-            select_stmt = select(table)
-            rows = session.execute(select_stmt).scalars().all()
-            for row in rows:
+            # stream_results + yield_per avoid loading the whole table into memory
+            select_stmt = select(table).execution_options(stream_results=True, yield_per=1000)
+            for row in session.execute(select_stmt).scalars():
                 yield ",".join(str(getattr(row, column)) for column in columns) + "\n"
 
-    return StreamingResponse(row_generator(), media_type="text/csv")
+    # Disable nginx proxy buffering, otherwise the reverse proxy accumulates the
+    # whole body before forwarding it, so the client sees an empty file until timeout.
+    headers = {"X-Accel-Buffering": "no"}
+    return StreamingResponse(row_generator(), media_type="text/csv", headers=headers)

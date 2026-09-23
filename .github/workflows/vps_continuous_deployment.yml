@@ -55,5 +55,8 @@ jobs:
             cd ~/projects/m-tram
             git checkout main
             git pull --ff-only origin main
+            df -h /
+            free -h
+            docker system prune -af
             ./scripts/generate_env.sh
             ./scripts/docker-compose.sh

@@ -83,5 +83,14 @@ The dashboard uses two consolidated materialized tables. The `traffic_type` valu
 - `average_wind_speed`: FLOAT
 - Primary key: (`hour_start`, `time_block`, `traffic_type`)
 
+## Dashboard Materialization Refreshes
+
+The dashboard materializations are maintained by two Airflow DAGs:
+
+- The **manual full-refresh DAG** rebuilds both materialized tables for the complete available history. It is used for initial population, historical backfills, source corrections, and aggregation-logic changes.
+- The **daily incremental-refresh DAG** runs at 13:00, after the daily weather and air-quality loads scheduled at 12:00. It refreshes the previous 24-hour window and updates both the hourly and affected two-hour aggregates.
+
+Both refresh modes validate their output and publish it atomically. The daily refresh replaces the affected time window, making reruns idempotent and allowing corrections to source data to be reflected without rebuilding the full history.
+
 ## Notes
 The main analytical tables are the time-series tables (`trr`, `ligne`, `openmeteo`, `atmo`). They are designed around a timestamp-based primary key so that historical comparison and joins are straightforward across all sources.

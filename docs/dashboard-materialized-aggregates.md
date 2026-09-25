@@ -37,24 +37,29 @@ The hourly aggregate must provide the congestion value together with the environ
 
 The source tables are `trr`, `ligne`, `openmeteo`, and `atmo`.
 
-## Full Daily Rematerialization
+## Refresh Strategies
 
-The hourly materialized table is fully rebuilt every day. Historical records are not assumed to be immutable: each refresh recalculates all hourly aggregates from the current raw source data.
+The materialized tables are refreshed through two separate Airflow DAGs:
 
-This policy ensures that source corrections, backfills, and transformation changes are reflected in the dashboard without requiring a separate maintenance operation.
+- A **manual full-refresh DAG** rebuilds the complete hourly and two-hour materializations from all available raw source data. It is intended for initial population, source corrections, backfills, and changes to the aggregation logic.
+- A **daily incremental-refresh DAG** runs at 13:00, after the weather and air-quality DAGs have fetched the previous day's data at 12:00. It rebuilds only the previous 24-hour window and updates the corresponding hourly and two-hour records.
 
-## Daily Refresh Policy
+The daily refresh must be idempotent: rerunning it for the same date window must produce the same result from the same source data. The full-refresh DAG remains available to reflect corrections or backfills outside the daily window.
 
-The weather and air-quality ETL DAGs fetch the previous day's data every day at 12:00. The aggregate refresh must run only after these loads, and after the traffic-source loads for the same day have completed successfully.
+## Daily Incremental Refresh Policy
 
-The refresh workflow must:
+The weather and air-quality ETL DAGs fetch the previous day's data every day at 12:00. The daily materialization DAG runs at 13:00, after these loads and after the traffic-source loads covering the same period have completed successfully.
 
-1. Validate that the required congestion, weather, and pollution source data is available.
-2. Rebuild the complete hourly materialized table from the raw source tables.
-3. Validate the resulting hourly aggregates before making the refreshed table available to the API.
-4. Rebuild the two-hour aggregate table from the freshly refreshed hourly table.
+The daily refresh workflow must:
 
-The rebuild should be atomic: the API must continue reading the previous valid table until the complete refreshed version is ready. Rerunning the workflow must safely produce the same result from the same source data.
+1. Validate that the required congestion, weather, and pollution source data is available for the previous 24-hour window (and fail otherwise).
+2. Rebuild the hourly aggregates for that window from the raw source tables, aggregating each source before joining them.
+3. Validate the resulting hourly aggregates before making the refreshed hourly records available to the API.
+4. Rebuild the affected two-hour aggregates from the refreshed hourly records.
+
+Both DAGs should publish their changes atomically: the API must continue reading the previous valid records until the complete refresh is ready. The incremental refresh should replace the affected time window rather than append blindly, so source corrections within that window are reflected safely.
+
+The manual full refresh follows the same validation and atomic-publication rules, but applies them to the complete available history.
 
 ## Querying Strategy
 

@@ -42,9 +42,9 @@ This document provides the current relational schema used by the project. Schema
 - `SO2_index`: INTEGER, valid range is 1 to 6
 - Primary key: `time`
 
-## Dashboard Materialized Aggregates
+## Dashboard Aggregate Tables
 
-The dashboard uses two consolidated materialized tables. The `traffic_type` value is `tram` for values derived from `ligne` and `road` for values derived from `trr`. `average_congestion_level` is the average source `nsv_id`, where `1` represents fluid traffic and `4` represents a blocked or closed situation.
+The dashboard uses two consolidated aggregate tables populated by Airflow. The `traffic_type` value is `tram` for values derived from `ligne` and `road` for values derived from `trr`. `average_congestion_level` is the average source `nsv_id`, where `1` represents fluid traffic and `4` represents a blocked or closed situation.
 
 ### dashboard_hourly_aggregates
 - `hour_start`: TIMESTAMP, start of the aggregated hour
@@ -83,14 +83,16 @@ The dashboard uses two consolidated materialized tables. The `traffic_type` valu
 - `average_wind_speed`: FLOAT
 - Primary key: (`hour_start`, `time_block`, `traffic_type`)
 
-## Dashboard Materialization Refreshes
+## Dashboard Aggregate Refreshes
 
-The dashboard materializations are maintained by two Airflow DAGs:
+The dashboard aggregate tables are maintained by two Airflow DAGs:
 
-- The **manual full-refresh DAG** rebuilds both materialized tables for the complete available history. It is used for initial population, historical backfills, source corrections, and aggregation-logic changes.
+- The **manual full-refresh DAG** rebuilds both aggregate tables for the complete available history. It is used for initial population, historical backfills, source corrections, and aggregation-logic changes.
 - The **daily incremental-refresh DAG** runs at 13:00, after the daily weather and air-quality loads scheduled at 12:00. It refreshes the previous 24-hour window and updates both the hourly and affected two-hour aggregates.
 
-Both refresh modes validate their output and publish it atomically. The daily refresh replaces the affected time window, making reruns idempotent and allowing corrections to source data to be reflected without rebuilding the full history.
+Both refresh modes validate their output before writing it. The daily refresh replaces the affected time window, making reruns idempotent and allowing corrections to source data to be reflected without rebuilding the full history. The full refresh replaces the contents of both aggregate tables with the complete rebuilt history.
+
+The daily refresh assumes that already processed source history is unchanged, that the aggregation logic has not changed, and that all source loads for the refreshed period have completed. Any correction, backfill, deletion, or reprocessing affecting an older period requires the manual full-refresh DAG.
 
 ## Notes
 The main analytical tables are the time-series tables (`trr`, `ligne`, `openmeteo`, `atmo`). They are designed around a timestamp-based primary key so that historical comparison and joins are straightforward across all sources.

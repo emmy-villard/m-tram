@@ -42,5 +42,46 @@ This document provides the current relational schema used by the project. Schema
 - `SO2_index`: INTEGER, valid range is 1 to 6
 - Primary key: `time`
 
+## Dashboard Materialized Aggregates
+
+The dashboard uses two consolidated materialized tables. The `traffic_type` value is `tram` for values derived from `ligne` and `road` for values derived from `trr`. `average_congestion_level` is the average source `nsv_id`, where `1` represents fluid traffic and `4` represents a blocked or closed situation.
+
+### dashboard_hourly_aggregates
+- `hour_start`: TIMESTAMP, start of the aggregated hour
+- `traffic_type`: TEXT, `tram` or `road`
+- `average_congestion_level`: FLOAT
+- `pollution_index`: FLOAT
+- `pm10_index`: FLOAT
+- `pm2_5_index`: FLOAT
+- `o3_index`: FLOAT
+- `no2_index`: FLOAT
+- `so2_index`: FLOAT
+- `precipitation_total`: FLOAT
+- `rainfall_total`: FLOAT
+- `average_temperature`: FLOAT
+- `average_relative_humidity`: FLOAT
+- `average_cloud_cover`: FLOAT
+- `average_wind_speed`: FLOAT
+- Primary key: (`hour_start`, `traffic_type`)
+
+### dashboard_two_hour_aggregates
+- `hour_start`: TIMESTAMP, start timestamp of the two-hour period
+- `time_block`: TEXT, predefined two-hour block identifier
+- `traffic_type`: TEXT, `tram` or `road`
+- `average_congestion_level`: FLOAT
+- `pollution_index`: FLOAT
+- `pm10_index`: FLOAT
+- `pm2_5_index`: FLOAT
+- `o3_index`: FLOAT
+- `no2_index`: FLOAT
+- `so2_index`: FLOAT
+- `precipitation_total`: FLOAT
+- `rainfall_total`: FLOAT
+- `average_temperature`: FLOAT
+- `average_relative_humidity`: FLOAT
+- `average_cloud_cover`: FLOAT
+- `average_wind_speed`: FLOAT
+- Primary key: (`hour_start`, `time_block`, `traffic_type`)
+
 ## Notes
 The main analytical tables are the time-series tables (`trr`, `ligne`, `openmeteo`, `atmo`). They are designed around a timestamp-based primary key so that historical comparison and joins are straightforward across all sources.

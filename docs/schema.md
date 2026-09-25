@@ -64,31 +64,12 @@ The dashboard uses two consolidated aggregate tables populated by Airflow. The `
 - `average_wind_speed`: FLOAT
 - Primary key: (`hour_start`, `traffic_type`)
 
-### dashboard_two_hour_aggregates
-- `hour_start`: TIMESTAMP, start timestamp of the two-hour period
-- `time_block`: TEXT, predefined two-hour block identifier
-- `traffic_type`: TEXT, `tram` or `road`
-- `average_congestion_level`: FLOAT
-- `pollution_index`: FLOAT
-- `pm10_index`: FLOAT
-- `pm2_5_index`: FLOAT
-- `o3_index`: FLOAT
-- `no2_index`: FLOAT
-- `so2_index`: FLOAT
-- `precipitation_total`: FLOAT
-- `rainfall_total`: FLOAT
-- `average_temperature`: FLOAT
-- `average_relative_humidity`: FLOAT
-- `average_cloud_cover`: FLOAT
-- `average_wind_speed`: FLOAT
-- Primary key: (`hour_start`, `time_block`, `traffic_type`)
-
 ## Dashboard Aggregate Refreshes
 
-The dashboard aggregate tables are maintained by two Airflow DAGs:
+The dashboard aggregate table is maintained by two Airflow DAGs:
 
-- The **manual full-refresh DAG** rebuilds both aggregate tables for the complete available history. It is used for initial population, historical backfills, source corrections, and aggregation-logic changes.
-- The **daily incremental-refresh DAG** runs at 13:00, after the daily weather and air-quality loads scheduled at 12:00. It refreshes the previous 24-hour window and updates both the hourly and affected two-hour aggregates.
+- The **manual full-refresh DAG** rebuilds the aggregate table for the complete available history. It is used for initial population, historical backfills, source corrections, and aggregation-logic changes.
+- The **daily incremental-refresh DAG** runs at 13:00, after the daily weather and air-quality loads scheduled at 12:00. It refreshes the previous 24-hour window and updates the affected hourly aggregates.
 
 Both refresh modes validate their output before writing it. The daily refresh replaces the affected time window, making reruns idempotent and allowing corrections to source data to be reflected without rebuilding the full history. The full refresh replaces the contents of both aggregate tables with the complete rebuilt history.
 

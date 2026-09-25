@@ -1,11 +1,15 @@
+from datetime import datetime
+
 from etl.classes.Ligne import Ligne
 from etl.classes.Trr import Trr
 from etl.classes.OpenMeteo import OpenMeteo
 from etl.classes.Atmo import Atmo
 
-from fastapi_routes.requests import raw, count
+from fastapi_routes.requests import aggregate, raw, count
 from orm.base import Base
+from orm.hourlyagg import HourlyAggregate
 from db_connection.test_engine import engine
+from sqlalchemy.orm import Session
 import pytest
 import pandas as pd
 import os
@@ -145,5 +149,83 @@ def test_get_count():
     ligne_len = len(_load_csv("ligne.csv"))
     assert ligne_len != 0
     assert result["ligne"] == ligne_len
+
+
+def test_get_start_end_date_last_month():
+    start_date, end_date = aggregate._get_start_end_date("last_month")
+
+    assert start_date.hour == 0
+    assert start_date.minute == 0
+    assert start_date.second == 0
+    assert end_date.hour == 23
+    assert end_date.minute == 59
+    assert end_date.second == 59
+    assert start_date >= aggregate.db_starting_date
+    assert end_date.date() == datetime.now().date().fromordinal(
+        datetime.now().date().toordinal() - 1
+    )
+
+
+def test_get_start_end_date_rejects_unknown_period():
+    with pytest.raises(ValueError, match="Unvalid aggregate period"):
+        aggregate._get_start_end_date("unknown")
+
+
+def test_get_data_returns_hourly_aggregate_rows():
+    aggregate.engine = engine
+    expected_rows = [
+        HourlyAggregate(
+            hour_start=datetime(2026, 9, 24, 10),
+            traffic_type="tram",
+            average_congestion_level=2.0,
+            pollution_index=3.0,
+            pm10_index=2.0,
+            pm2_5_index=3.0,
+            o3_index=2.0,
+            no2_index=4.0,
+            so2_index=1.0,
+            precipitation_total=0.0,
+            rainfall_total=0.0,
+            average_temperature=18.0,
+            average_relative_humidity=60.0,
+            average_cloud_cover=30.0,
+            average_wind_speed=10.0,
+        ),
+        HourlyAggregate(
+            hour_start=datetime(2026, 9, 24, 11),
+            traffic_type="road",
+            average_congestion_level=3.0,
+            pollution_index=4.0,
+            pm10_index=3.0,
+            pm2_5_index=4.0,
+            o3_index=3.0,
+            no2_index=5.0,
+            so2_index=2.0,
+            precipitation_total=1.0,
+            rainfall_total=1.0,
+            average_temperature=17.0,
+            average_relative_humidity=65.0,
+            average_cloud_cover=40.0,
+            average_wind_speed=12.0,
+        ),
+    ]
+    expected_keys = {
+        (row.hour_start, row.traffic_type) for row in expected_rows
+    }
+
+    with Session(engine) as session:
+        session.add_all(expected_rows)
+        session.commit()
+
+    try:
+        result = aggregate.get_data("last_week")
+
+        assert {(row.hour_start, row.traffic_type) for row in result} == expected_keys
+    finally:
+        with Session(engine) as session:
+            for hour_start, traffic_type in expected_keys:
+                row = session.get(HourlyAggregate, (hour_start, traffic_type))
+                session.delete(row)
+            session.commit()
 
 

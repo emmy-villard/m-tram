@@ -44,7 +44,7 @@ This document provides the current relational schema used by the project. Schema
 
 ## Dashboard Aggregate Tables
 
-The dashboard uses two consolidated aggregate tables populated by Airflow. The `traffic_type` value is `tram` for values derived from `ligne` and `road` for values derived from `trr`. `average_congestion_level` is the average source `nsv_id`, where `1` represents fluid traffic and `4` represents a blocked or closed situation.
+The dashboard uses two consolidated aggregate tables populated by Airflow. The `traffic_type` value is `tram` for values derived from `ligne` and `road` for values derived from `trr`. `average_congestion_level` is the average source `nsv_id`, where `1` represents fluid traffic and `4` represents a blocked or closed situation. The dashboard is intended to offer tram-line congestion, road congestion, and tram occupancy rate; occupancy is not yet defined and is not present in the current schema.
 
 ### dashboard_hourly_aggregates
 - `hour_start`: TIMESTAMP, start of the aggregated hour
@@ -63,6 +63,8 @@ The dashboard uses two consolidated aggregate tables populated by Airflow. The `
 - `average_cloud_cover`: FLOAT
 - `average_wind_speed`: FLOAT
 - Primary key: (`hour_start`, `traffic_type`)
+
+**TODO:** Define the tram occupancy rate and its source data, then determine how to represent and aggregate it before adding it to the dashboard schema.
 
 ## Dashboard Aggregate Refreshes
 

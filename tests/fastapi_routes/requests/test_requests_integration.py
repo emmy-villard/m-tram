@@ -216,16 +216,14 @@ def test_get_data_returns_hourly_aggregate_rows():
     with Session(engine) as session:
         session.add_all(expected_rows)
         session.commit()
-
-    try:
         result = aggregate.get_data("last_week")
+        result_keys = {
+            (row.hour_start, row.traffic_type) for row in result
+        }
+        assert result_keys == expected_keys
 
-        assert {(row.hour_start, row.traffic_type) for row in result} == expected_keys
-    finally:
-        with Session(engine) as session:
-            for hour_start, traffic_type in expected_keys:
-                row = session.get(HourlyAggregate, (hour_start, traffic_type))
-                session.delete(row)
-            session.commit()
+        for row in expected_rows:
+            session.delete(row)
+        session.commit()
 
 

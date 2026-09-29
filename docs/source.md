@@ -16,6 +16,9 @@ The response is JSON-formatted. The JSON object is keyed by a unique identifier 
 - `3`: congestion / traffic jam
 - `4`: closed
 
+### Tram occupancy data limitation
+Actual tram occupancy rates would have been valuable for the analysis. However, the available occupancy data are average predictive models that evolve as new data are collected, rather than observed daily occupancy figures. The MData feed used by this project provides traffic levels, not actual passenger counts or daily occupancy rates.
+
 ### Refresh frequency
 The data is refreshed every few minutes and is not retained by the upstream provider unless it is harvested into the project database.
 

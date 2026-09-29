@@ -16,8 +16,6 @@ The response is JSON-formatted. The JSON object is keyed by a unique identifier 
 - `3`: congestion / traffic jam
 - `4`: closed
 
-For tram lines, `nsv_id` is the current congestion indicator. It does not provide a defined tram occupancy rate. **TODO:** identify and document the occupancy source and metric definition before treating tram occupancy as an available dashboard indicator.
-
 ### Refresh frequency
 The data is refreshed every few minutes and is not retained by the upstream provider unless it is harvested into the project database.
 

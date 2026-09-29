@@ -17,7 +17,7 @@ The hourly timestamp is the common join key for congestion, weather, and air-qua
 
 ## Aggregate Measurements
 
-The hourly aggregate currently provides congestion values together with the environmental variables that can be selected in the dashboard:
+The hourly aggregate must provide the congestion value together with the environmental variables that can be selected in the dashboard:
 
 - Congestion for tram traffic.
 - Congestion for road traffic.
@@ -28,8 +28,6 @@ The hourly aggregate currently provides congestion values together with the envi
 - Average relative humidity.
 - Average cloud cover.
 - Average wind speed.
-
-The dashboard is intended to offer three traffic indicators: tram-line congestion, road congestion, and tram occupancy rate. Tram occupancy is not yet defined or represented in the aggregate schema. **TODO:** define the occupancy rate and its source data, then specify and implement its hourly aggregation before exposing it as a selectable indicator.
 
 The source tables are `trr`, `ligne`, `openmeteo`, and `atmo`.
 
@@ -69,6 +67,6 @@ If historical source data outside the 24-hour window is corrected, backfilled, d
 
 ## Querying Strategy
 
-FastAPI endpoints query the hourly aggregate dataset using the requested date range, traffic indicator, weekday, environmental metric, and optional pollutant subtype. Until tram occupancy is defined and integrated, only tram-line congestion and road congestion can be served from the current aggregate data.
+FastAPI endpoints query the hourly aggregate dataset using the requested date range, traffic type, weekday, environmental metric, and optional pollutant subtype.
 
 Indexes should support the main filter path, especially the hourly timestamp and traffic type. Additional indexes should only be added after examining real endpoint query plans with `EXPLAIN ANALYZE`.

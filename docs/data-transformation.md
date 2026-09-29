@@ -12,10 +12,8 @@ This document explains the cleansing and transformation rules applied across the
 2. Each payload contains a dictionary keyed by a location identifier, with values including a timestamp and a traffic level (`nsv_id`). The project keeps only the fields needed for historical analysis: the entity identifier, the observation time, and the traffic level.
 3. Rows whose `nsv_id` equals `0` are excluded because they indicate that no usable information is available for that reading. The valid range is `1` to `4`, where `1` is fluid traffic and `4` is a fully blocked or closed situation.
 4. The assumptions are that the identifier is present, the timestamp is valid, and the traffic level is represented consistently across samples. This is enforced by the ETL validation layer before insertion.
-5. The data is stored as a historical time series per road section or tram line. For trams, the current `nsv_id` data represents congestion; it does not define or provide an occupancy rate. This enables analyses of congestion over time and makes the database the central archive for these indicators, which are not preserved elsewhere at this granularity.
+5. The data is stored as a historical time series per road section or tram line. This enables analyses of congestion over time and makes the database the central archive for these indicators, which are not preserved elsewhere at this granularity.
 6. The rule is validated in the transform tests under the ETL test suite and by the Pydantic schema checks before persistence.
-
-**TODO:** Define tram occupancy and identify a source and transformation for it before adding the occupancy rate to stored or dashboard aggregates.
 
 ## OpenMeteo
 1. The source is the Open-Meteo API for the Grenoble location, accessed via a latitude/longitude endpoint configured in the ETL extract layer.

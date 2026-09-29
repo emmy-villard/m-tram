@@ -1,10 +1,10 @@
-# Dashboard Aggregate Tables
+# Dashboard Aggregate Table
 
 ## Purpose
 
-The dashboard requires fast access to historical congestion and environmental data. To avoid repeatedly aggregating raw time-series tables for every API request, the database will store precomputed hourly aggregates for the measurements displayed by the dashboard.
+The dashboard requires fast access to historical congestion and environmental data. To avoid repeatedly aggregating raw time-series tables for every API request, the database stores precomputed hourly aggregates for the measurements displayed by the dashboard.
 
-These aggregate tables are intended for read-only historical analysis. FastAPI endpoints will query the precomputed data and apply dashboard filters, rather than recomputing the underlying averages from the raw tables.
+The aggregate table is intended for read-only historical analysis. FastAPI endpoints query the precomputed data and apply dashboard filters, rather than recomputing the underlying averages from the raw tables.
 
 ## Aggregate Granularity
 
@@ -33,7 +33,7 @@ The source tables are `trr`, `ligne`, `openmeteo`, and `atmo`.
 
 ## Refresh Strategies
 
-The aggregate tables are refreshed through two separate Airflow DAGs:
+The aggregate table is refreshed through two separate Airflow DAGs:
 
 - A **manual full-refresh DAG** rebuilds the complete hourly aggregate from all available raw source data. It is intended for initial population, source corrections, backfills, and changes to the aggregation logic.
 - A **daily incremental-refresh DAG** runs at 13:00, after the weather and air-quality DAGs have fetched the previous day's data at 12:00. It rebuilds only the previous 24-hour window and updates the corresponding hourly records.

@@ -42,9 +42,9 @@ This document provides the current relational schema used by the project. Schema
 - `SO2_index`: INTEGER, valid range is 1 to 6
 - Primary key: `time`
 
-## Dashboard Aggregate Tables
+## Dashboard Aggregate Table
 
-The dashboard uses two consolidated aggregate tables populated by Airflow. The `traffic_type` value is `tram` for values derived from `ligne` and `road` for values derived from `trr`. `average_congestion_level` is the average source `nsv_id`, where `1` represents fluid traffic and `4` represents a blocked or closed situation.
+The dashboard uses one consolidated aggregate table populated by Airflow. The `traffic_type` value is `tram` for values derived from `ligne` and `road` for values derived from `trr`. `average_congestion_level` is the average source `nsv_id`, where `1` represents fluid traffic and `4` represents a blocked or closed situation.
 
 ### dashboard_hourly_aggregates
 - `hour_start`: TIMESTAMP, start of the aggregated hour
@@ -71,7 +71,7 @@ The dashboard aggregate table is maintained by two Airflow DAGs:
 - The **manual full-refresh DAG** rebuilds the aggregate table for the complete available history. It is used for initial population, historical backfills, source corrections, and aggregation-logic changes.
 - The **daily incremental-refresh DAG** runs at 13:00, after the daily weather and air-quality loads scheduled at 12:00. It refreshes the previous 24-hour window and updates the affected hourly aggregates.
 
-Both refresh modes validate their output before writing it. The daily refresh replaces the affected time window, making reruns idempotent and allowing corrections to source data to be reflected without rebuilding the full history. The full refresh replaces the contents of both aggregate tables with the complete rebuilt history.
+Both refresh modes validate their output before writing it. The daily refresh changes the affected time window, making reruns idempotent and allowing corrections to source data to be reflected without rebuilding the full history. The full refresh replaces the contents of the aggregate table with the complete rebuilt history.
 
 The daily refresh assumes that already processed source history is unchanged, that the aggregation logic has not changed, and that all source loads for the refreshed period have completed. Any correction, backfill, deletion, or reprocessing affecting an older period requires the manual full-refresh DAG.
 

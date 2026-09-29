@@ -18,7 +18,7 @@ The main view is a scatter plot that shows congestion in relation to one selecte
 - Cloud cover: deep gray
 - Wind: light gray
 
-Each plotted point represents an aggregated observation based on the active date, weekday, and time-grouping filters.
+Each plotted point represents the hourly aggregate for one timestamp that matches the active date-range, weekday, and time-of-day filters.
 
 ## Controls
 
@@ -31,7 +31,7 @@ Each plotted point represents an aggregated observation based on the active date
 ### Filters
 
 - **Date range:** Last week, last month, last three months, last year, or all available data.
-- **Time aggregation:** Display observations aggregated by hour across the selected dataset. Each point corresponds to one hourly observation, irrespective of the specific date.
+- **Time aggregation:** Display one point for each hourly observation in the selected dataset. Each point represents a specific `hour_start` timestamp; observations from the same hour of the day on different dates are not combined.
 
 ## Interaction
 

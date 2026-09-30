@@ -18,7 +18,7 @@ The main view is a scatter plot that shows congestion in relation to one selecte
 - Cloud cover: deep gray
 - Wind: light gray
 
-Each plotted point represents the hourly aggregate for one timestamp that matches the active date-range, weekday, and time-of-day filters.
+Each plotted point represents the hourly aggregate for one timestamp that matches the active date-range and weekday filters. The time-of-day filter applies to hourly metrics and is disabled when air pollution is selected, because ATMO data is daily.
 
 ## Controls
 
@@ -31,6 +31,7 @@ Each plotted point represents the hourly aggregate for one timestamp that matche
 ### Filters
 
 - **Date range:** Last week, last month, last three months, last year, or all available data.
+- **Time of day:** Disabled when air pollution is selected, because ATMO provides daily observations. The date-range and day-of-week filters remain available.
 - **Time aggregation:** Display one point for each hourly observation in the selected dataset. Each point represents a specific `hour_start` timestamp; observations from the same hour of the day on different dates are not combined.
 
 ## Interaction

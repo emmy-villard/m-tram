@@ -20,7 +20,6 @@ def load_table(dataframe, engine, orm_class, data_validator):
     Returns
     -------
     """
-    table = orm_class.__table__
     validated_rows = data_validator(dataframe)
     print(f"ROWS: {validated_rows}")
     rows_to_insert = [row.model_dump() for row in validated_rows]
@@ -30,7 +29,7 @@ def load_table(dataframe, engine, orm_class, data_validator):
         return
 
     with Session(engine) as session:
-        insert_new_lines = insert(table).values(rows_to_insert)
+        insert_new_lines = insert(orm_class).values(rows_to_insert)
         upsert_new_lines = insert_new_lines.on_conflict_do_nothing()
         result_proxy = session.execute(upsert_new_lines)
         session.commit()

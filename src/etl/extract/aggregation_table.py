@@ -40,6 +40,8 @@ def get_select_stmt(date: datetime|None):
     ligne_agg = select(
         ligne_hours_col,
         func.avg(ligne_traffic_level_col).label('mean_tram_traffic')
+    ).select_from(
+        ligne_table
     ).where(
         between(
             ligne_time_col,
@@ -60,6 +62,8 @@ def get_select_stmt(date: datetime|None):
     trr_agg = select(
         trr_hours_col,
         func.avg(trr_traffic_level_col).label('mean_road_traffic')
+    ).select_from(
+        trr_table
     ).where(
         between(
             trr_time_col,
@@ -79,6 +83,8 @@ def get_select_stmt(date: datetime|None):
         func.avg(atmo_cols.O3_index).label('mean_O3_pollution_index'),
         func.avg(atmo_cols.NO2_index).label('mean_NO2_pollution_index'),
         func.avg(atmo_cols.SO2_index).label('mean_SO2_pollution_index')
+    ).select_from(
+        atmo_table
     ).where(
         between(
             atmo_cols.time,
@@ -102,6 +108,8 @@ def get_select_stmt(date: datetime|None):
         func.avg(meteo_cols.relativehumidity_2m).label('relative_humidity'),
         func.avg(meteo_cols.cloudcover).label('mean_cloud_cover'),
         func.avg(meteo_cols.windspeed_10m).label('mean_wind_speed')
+    ).select_from(
+        openmeteo_table
     ).where(
         between(
             meteo_cols.time,
@@ -111,8 +119,7 @@ def get_select_stmt(date: datetime|None):
     ).group_by(meteo_hours_col
     ).cte('openmeteo_agg')
 
-    # Joins
-    #TODO
+    # Joins #TOD
     joins = ligne_agg
     joins = trr_agg
     return joins

@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from sqlalchemy import select, func, between
+from sqlalchemy import select, func, between, true
 
 from etl.classes.Trr import Trr
 from etl.classes.Ligne import Ligne
@@ -119,10 +119,46 @@ def get_select_stmt(date: datetime|None):
     ).group_by(meteo_hours_col
     ).cte('openmeteo_agg')
 
-    # Joins #TOD
-    joins = ligne_agg
-    joins = trr_agg
-    return joins
+    # Joins
+    join_clause = (
+        openmeteo_agg
+        .outerjoin(
+            ligne_agg,
+            openmeteo_agg.c.hour == ligne_agg.c.hour
+        )
+        .outerjoin(
+            trr_agg,
+            openmeteo_agg.c.hour == trr_agg.c.hour
+        )
+        .join(
+            atmo_agg,
+            true() # No conditions (cross join)
+        )
+    )
+
+    stmt = select(
+        openmeteo_agg.c.hour,
+        ligne_agg.c.mean_tram_traffic,
+        trr_agg.c.mean_road_traffic,
+        atmo_agg.c.mean_pollution_index,
+        atmo_agg.c.mean_PM10_pollution_index,
+        atmo_agg.c.mean_PM2_5_pollution_index,
+        atmo_agg.c.mean_O3_pollution_index,
+        atmo_agg.c.mean_NO2_pollution_index,
+        atmo_agg.c.mean_SO2_pollution_index,
+        openmeteo_agg.c.mean_temperature,
+        openmeteo_agg.c.precipitation_1h,
+        openmeteo_agg.c.rain_1h,
+        openmeteo_agg.c.relative_humidity,
+        openmeteo_agg.c.mean_cloud_cover,
+        openmeteo_agg.c.mean_wind_speed,
+    ).select_from(
+        join_clause
+    ).order_by(
+        openmeteo_agg.c.hour
+    )
+
+    return stmt
 
 def get_columns():
     return [
@@ -142,93 +178,3 @@ def get_columns():
         "average_cloud_cover",
         "average_wind_speed",
     ]
-
-"""
-SELECT
-    openmeteo_agg.hour,
-    ligne_agg.mean_tram_traffic,
-    trr_agg.mean_road_traffic,
-    atmo_agg.mean_pollution_index,
-    atmo_agg.pm10_index,
-    atmo_agg.pm2_5_index,
-    atmo_agg.o3_index,
-    atmo_agg.no2_index,
-    atmo_agg.so2_index,
-    openmeteo_agg.mean_temperature,
-    openmeteo_agg.precipitation_total,
-    openmeteo_agg.rainfall_total,
-    openmeteo_agg.average_relative_humidity,
-    openmeteo_agg.average_cloud_cover,
-    openmeteo_agg.average_wind_speed
-FROM openmeteo_agg
-LEFT JOIN ligne_agg
-    ON openmeteo_agg.hour = ligne_agg.hour
-LEFT JOIN trr_agg
-    ON openmeteo_agg.hour = trr_agg.hour
-CROSS JOIN atmo_agg
-ORDER BY openmeteo_agg.hour;
-"""
-
-
-
-"""
-WITH ligne_agg AS (
-    SELECT DATE_TRUNC('hour', ligne_time) as hour, AVG(ligne_nsv_id) as mean_tram_traffic
-    FROM ligne
-    WHERE ligne_time BETWEEN '2026-09-24' AND '2026-09-24 23:59:59'
-    GROUP BY DATE_TRUNC('hour', ligne_time)
-),
-trr_agg AS (
-    SELECT DATE_TRUNC('hour', trr_time) as hour, AVG(trr_nsv_id) as mean_road_traffic
-    FROM trr
-    WHERE trr_time BETWEEN '2026-09-24' AND '2026-09-24 23:59:59'
-    GROUP BY DATE_TRUNC('hour', trr_time)
-),
-atmo_agg AS (
-    SELECT
-        AVG(pollution_index) as mean_pollution_index,
-        AVG("PM10_index") as pm10_index,
-        AVG("PM2_5_index") as pm2_5_index,
-        AVG("O3_index") as o3_index,
-        AVG("NO2_index") as no2_index,
-        AVG("SO2_index") as so2_index
-    FROM atmo
-    WHERE time BETWEEN '2026-09-24' AND '2026-09-24 23:59:59'
-),
-openmeteo_agg AS (
-    SELECT
-        DATE_TRUNC('hour', time) as hour,
-        AVG(temperature_2m) as mean_temperature,
-        SUM(precipitation) as precipitation_total,
-        SUM(rain) as rainfall_total,
-        AVG(relativehumidity_2m) as average_relative_humidity,
-        AVG(cloudcover) as average_cloud_cover,
-        AVG(windspeed_10m) as average_wind_speed
-    FROM openmeteo
-    WHERE time BETWEEN '2026-09-24' AND '2026-09-24 23:59:59'
-    GROUP BY DATE_TRUNC('hour', time)
-)
-SELECT
-    openmeteo_agg.hour,
-    ligne_agg.mean_tram_traffic,
-    trr_agg.mean_road_traffic,
-    atmo_agg.mean_pollution_index,
-    atmo_agg.pm10_index,
-    atmo_agg.pm2_5_index,
-    atmo_agg.o3_index,
-    atmo_agg.no2_index,
-    atmo_agg.so2_index,
-    openmeteo_agg.mean_temperature,
-    openmeteo_agg.precipitation_total,
-    openmeteo_agg.rainfall_total,
-    openmeteo_agg.average_relative_humidity,
-    openmeteo_agg.average_cloud_cover,
-    openmeteo_agg.average_wind_speed
-FROM openmeteo_agg
-LEFT JOIN ligne_agg
-    ON openmeteo_agg.hour = ligne_agg.hour
-LEFT JOIN trr_agg
-    ON openmeteo_agg.hour = trr_agg.hour
-CROSS JOIN atmo_agg
-ORDER BY openmeteo_agg.hour;
-"""

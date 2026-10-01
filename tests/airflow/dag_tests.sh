@@ -4,14 +4,18 @@ docker exec $AIRFLOW_API airflow dags test etl_trr
 docker exec $AIRFLOW_API airflow dags test etl_ligne
 docker exec $AIRFLOW_API airflow dags test etl_meteo
 docker exec $AIRFLOW_API airflow dags test etl_atmo
+docker exec $AIRFLOW_API airflow dags test increment_aggregate_table
+docker exec $AIRFLOW_API airflow dags test remake_aggregate_table
 export request_trr="SELECT EXISTS (SELECT 1 FROM trr LIMIT 1);"
 export request_ligne="SELECT EXISTS (SELECT 1 FROM ligne LIMIT 1);"
 export request_openmeteo="SELECT EXISTS (SELECT 1 FROM openmeteo LIMIT 1);"
 export request_atmo="SELECT EXISTS (SELECT 1 FROM atmo LIMIT 1);"
+export request_hourlyagg="SELECT EXISTS (SELECT 1 FROM hourlyagg LIMIT 1);"
 trr_exists=$(docker exec $APP_DB psql -U app -d api_db -c "$request_trr" -A -t)
 ligne_exists=$(docker exec $APP_DB psql -U app -d api_db -c "$request_ligne" -A -t)
 openmeteo_exists=$(docker exec $APP_DB psql -U app -d api_db -c "$request_openmeteo" -A -t)
 atmo_exists=$(docker exec $APP_DB psql -U app -d api_db -c "$request_atmo" -A -t)
+hourlyagg_exists=$(docker exec $APP_DB psql -U app -d api_db -c "$request_hourlyagg" -A -t)
 
 if [ "$trr_exists" != "t" ]; then
     exit 1
@@ -23,5 +27,8 @@ if [ "$openmeteo_exists" != "t" ]; then
     exit 1
 fi
 if [ "$atmo_exists" != "t" ]; then
+    exit 1
+fi
+if [ "$hourlyagg_exists" != "t" ]; then
     exit 1
 fi

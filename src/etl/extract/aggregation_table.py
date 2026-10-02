@@ -147,7 +147,7 @@ def get_select_stmt(date: datetime|None):
         *common_env_cols,
     ).select_from(
         openmeteo_agg
-        .outerjoin(
+        .join(
             ligne_agg,
             openmeteo_agg.c.hour == ligne_agg.c.hour
         )
@@ -164,7 +164,7 @@ def get_select_stmt(date: datetime|None):
         *common_env_cols,
     ).select_from(
         openmeteo_agg
-        .outerjoin(
+        .join(
             trr_agg,
             openmeteo_agg.c.hour == trr_agg.c.hour
         )

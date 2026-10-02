@@ -67,6 +67,12 @@ def test_get_select_stmt_aggregates_hour():
 def test_get_columns_matches_select_stmt_fields():
     hour = datetime(2026, 1, 1, 10, 0, 0)
     with Session(engine) as session:
+        session.add(Ligne(
+            ligne_id="1", ligne_time=hour, ligne_nsv_id=2
+        ))
+        session.add(Trr(
+            trr_id="1", trr_time=hour, trr_nsv_id=1
+        ))
         session.add(OpenMeto(
             time=hour, temperature_2m=10.0, apparent_temperature=9.0,
             relativehumidity_2m=50, precipitation=1.0, rain=1.0,

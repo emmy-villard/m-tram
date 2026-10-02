@@ -44,15 +44,25 @@ def test_get_select_stmt_aggregates_hour():
         session.commit()
 
         stmt = get_select_stmt(hour)
-        result = session.execute(stmt).mappings().one()
+        results = session.execute(stmt).mappings().all()
 
-    assert result["hour"] == hour
-    assert result["mean_tram_traffic"] == 3
-    assert result["mean_road_traffic"] == 1
-    assert result["mean_pollution_index"] == 10
-    assert result["mean_temperature"] == 10.0
-    assert result["precipitation_1h"] == 1.0
-    assert result["rain_1h"] == 1.0
+    # One row per (hour, traffic_type): "road" sorts before "tram".
+    assert len(results) == 2
+    road_result, tram_result = results
+
+    assert road_result["hour_start"] == hour
+    assert road_result["traffic_type"] == "road"
+    assert road_result["average_congestion_level"] == 1
+
+    assert tram_result["hour_start"] == hour
+    assert tram_result["traffic_type"] == "tram"
+    assert tram_result["average_congestion_level"] == 3
+
+    for result in results:
+        assert result["pollution_index"] == 10
+        assert result["average_temperature"] == 10.0
+        assert result["precipitation_total"] == 1.0
+        assert result["rainfall_total"] == 1.0
 
 def test_get_columns_matches_select_stmt_fields():
     hour = datetime(2026, 1, 1, 10, 0, 0)
@@ -71,6 +81,8 @@ def test_get_columns_matches_select_stmt_fields():
         session.commit()
 
         stmt = get_select_stmt(hour)
-        result = session.execute(stmt).mappings().one()
+        result = session.execute(stmt).mappings().first()
 
+    assert result is not None
     assert len(get_columns()) == len(result.keys())
+    assert set(get_columns()) == set(result.keys())

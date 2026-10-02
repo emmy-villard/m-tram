@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from sqlalchemy import select, func, between, true
+from sqlalchemy import select, func, between, true, literal, union_all
 
 from etl.classes.Trr import Trr
 from etl.classes.Ligne import Ligne
@@ -10,7 +10,9 @@ from etl.extract.util_queries import get_earliest_date_in_db
 
 def get_select_stmt(date: datetime|None):
     """
-    Returns a select statement for a given day
+    Returns a select statement for a given day for the aggregation table
+
+    If the given day is none, returns the statement for the whole database
     """
     # Setup dates
     start_date: datetime
@@ -119,13 +121,49 @@ def get_select_stmt(date: datetime|None):
     ).group_by(meteo_hours_col
     ).cte('openmeteo_agg')
 
-    # Joins
-    join_clause = (
+    # "dashboard_hourly_aggregates" stores one row per (hour, traffic_type),
+    # so the tram and road congestion levels are emitted as two separate
+    # rows (UNION ALL) sharing the same environmental aggregates, instead
+    # of two columns on a single row.
+    common_env_cols = (
+        atmo_agg.c.mean_pollution_index.label('pollution_index'),
+        atmo_agg.c.mean_PM10_pollution_index.label('pm10_index'),
+        atmo_agg.c.mean_PM2_5_pollution_index.label('pm2_5_index'),
+        atmo_agg.c.mean_O3_pollution_index.label('o3_index'),
+        atmo_agg.c.mean_NO2_pollution_index.label('no2_index'),
+        atmo_agg.c.mean_SO2_pollution_index.label('so2_index'),
+        openmeteo_agg.c.precipitation_1h.label('precipitation_total'),
+        openmeteo_agg.c.rain_1h.label('rainfall_total'),
+        openmeteo_agg.c.mean_temperature.label('average_temperature'),
+        openmeteo_agg.c.relative_humidity.label('average_relative_humidity'),
+        openmeteo_agg.c.mean_cloud_cover.label('average_cloud_cover'),
+        openmeteo_agg.c.mean_wind_speed.label('average_wind_speed'),
+    )
+
+    tram_select = select(
+        openmeteo_agg.c.hour.label('hour_start'),
+        literal('tram').label('traffic_type'),
+        ligne_agg.c.mean_tram_traffic.label('average_congestion_level'),
+        *common_env_cols,
+    ).select_from(
         openmeteo_agg
         .outerjoin(
             ligne_agg,
             openmeteo_agg.c.hour == ligne_agg.c.hour
         )
+        .join(
+            atmo_agg,
+            true() # No conditions (cross join)
+        )
+    )
+
+    road_select = select(
+        openmeteo_agg.c.hour.label('hour_start'),
+        literal('road').label('traffic_type'),
+        trr_agg.c.mean_road_traffic.label('average_congestion_level'),
+        *common_env_cols,
+    ).select_from(
+        openmeteo_agg
         .outerjoin(
             trr_agg,
             openmeteo_agg.c.hour == trr_agg.c.hour
@@ -136,44 +174,28 @@ def get_select_stmt(date: datetime|None):
         )
     )
 
-    stmt = select(
-        openmeteo_agg.c.hour,
-        ligne_agg.c.mean_tram_traffic,
-        trr_agg.c.mean_road_traffic,
-        atmo_agg.c.mean_pollution_index,
-        atmo_agg.c.mean_PM10_pollution_index,
-        atmo_agg.c.mean_PM2_5_pollution_index,
-        atmo_agg.c.mean_O3_pollution_index,
-        atmo_agg.c.mean_NO2_pollution_index,
-        atmo_agg.c.mean_SO2_pollution_index,
-        openmeteo_agg.c.mean_temperature,
-        openmeteo_agg.c.precipitation_1h,
-        openmeteo_agg.c.rain_1h,
-        openmeteo_agg.c.relative_humidity,
-        openmeteo_agg.c.mean_cloud_cover,
-        openmeteo_agg.c.mean_wind_speed,
-    ).select_from(
-        join_clause
-    ).order_by(
-        openmeteo_agg.c.hour
+    union_stmt = union_all(tram_select, road_select)
+    stmt = union_stmt.order_by(
+        union_stmt.selected_columns.hour_start,
+        union_stmt.selected_columns.traffic_type,
     )
 
     return stmt
 
 def get_columns():
     return [
-        "hour",
-        "mean_tram_traffic",
-        "mean_road_traffic",
-        "mean_pollution_index",
+        "hour_start",
+        "traffic_type",
+        "average_congestion_level",
+        "pollution_index",
         "pm10_index",
         "pm2_5_index",
         "o3_index",
         "no2_index",
         "so2_index",
-        "mean_temperature",
         "precipitation_total",
         "rainfall_total",
+        "average_temperature",
         "average_relative_humidity",
         "average_cloud_cover",
         "average_wind_speed",

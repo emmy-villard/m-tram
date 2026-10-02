@@ -4,6 +4,8 @@ docker exec $AIRFLOW_API airflow dags test etl_trr
 docker exec $AIRFLOW_API airflow dags test etl_ligne
 docker exec $AIRFLOW_API airflow dags test etl_meteo
 docker exec $AIRFLOW_API airflow dags test etl_atmo
+docker exec $APP_DB psql -U app -d api_db -c "UPDATE trr SET trr_time = trr_time - interval '1 day';"
+docker exec $APP_DB psql -U app -d api_db -c "UPDATE ligne SET ligne_time = ligne_time - interval '1 day';"
 docker exec $AIRFLOW_API airflow dags test increment_aggregate_table
 docker exec $AIRFLOW_API airflow dags test remake_aggregate_table
 export request_trr="SELECT EXISTS (SELECT 1 FROM trr LIMIT 1);"

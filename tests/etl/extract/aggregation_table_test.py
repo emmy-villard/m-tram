@@ -95,6 +95,60 @@ def test_get_columns_matches_select_stmt_fields():
     assert len(get_columns()) == len(result.keys())
     assert set(get_columns()) == set(result.keys())
 
+
+def test_get_select_stmt_uses_atmo_index_for_matching_day(monkeypatch):
+    first_hour = datetime(2026, 1, 1, 10, 0, 0)
+    second_hour = datetime(2026, 1, 2, 10, 0, 0)
+    monkeypatch.setattr(
+        "etl.extract.aggregation_table.get_earliest_date_in_db",
+        lambda: first_hour.replace(hour=0)
+    )
+
+    with Session(engine) as session:
+        session.add_all([
+            Ligne(ligne_id="1", ligne_time=first_hour, ligne_nsv_id=2),
+            Ligne(ligne_id="2", ligne_time=second_hour, ligne_nsv_id=4),
+            Trr(trr_id="1", trr_time=first_hour, trr_nsv_id=1),
+            Trr(trr_id="2", trr_time=second_hour, trr_nsv_id=3),
+            Atmo(
+                time=first_hour, pollution_index=2, is_value_mesured=True,
+                PM10_index=1, PM2_5_index=2, O3_index=3, NO2_index=4,
+                SO2_index=5
+            ),
+            Atmo(
+                time=second_hour, pollution_index=5, is_value_mesured=True,
+                PM10_index=2, PM2_5_index=3, O3_index=4, NO2_index=5,
+                SO2_index=6
+            ),
+            OpenMeto(
+                time=first_hour, temperature_2m=10.0, apparent_temperature=9.0,
+                relativehumidity_2m=50, precipitation=1.0, rain=1.0,
+                snowfall=0.0, weathercode=0, pressure_msl=1000.0,
+                cloudcover=20, windspeed_10m=5.0, windgusts_10m=8.0
+            ),
+            OpenMeto(
+                time=second_hour, temperature_2m=10.0, apparent_temperature=9.0,
+                relativehumidity_2m=50, precipitation=1.0, rain=1.0,
+                snowfall=0.0, weathercode=0, pressure_msl=1000.0,
+                cloudcover=20, windspeed_10m=5.0, windgusts_10m=8.0
+            ),
+        ])
+        session.commit()
+
+        results = session.execute(get_select_stmt(None)).mappings().all()
+
+    pollution_by_hour = {
+        (result["hour_start"], result["traffic_type"]): result["pollution_index"]
+        for result in results
+    }
+    assert pollution_by_hour == {
+        (first_hour, "tram"): 2,
+        (first_hour, "road"): 2,
+        (second_hour, "tram"): 5,
+        (second_hour, "road"): 5,
+    }
+
+
 def test_get_select_stmt_only_emits_row_for_traffic_source_with_data():
     """
     An hour with only tram data (no road data) should only produce a

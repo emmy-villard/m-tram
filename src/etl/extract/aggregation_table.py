@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from sqlalchemy import select, func, between, true, literal, union_all
+from sqlalchemy import select, func, between, literal, union_all
 
 from etl.classes.Trr import Trr
 from etl.classes.Ligne import Ligne
@@ -78,7 +78,9 @@ def get_select_stmt(date: datetime|None):
     # Table "atmo"
     atmo_table = Atmo.orm_class().__table__
     atmo_cols = atmo_table.c
+    atmo_day_col = func.date_trunc('day', atmo_cols.time).label('day')
     atmo_agg = select(
+        atmo_day_col,
         func.avg(atmo_cols.pollution_index).label('mean_pollution_index'),
         func.avg(atmo_cols.PM10_index).label('mean_PM10_pollution_index'),
         func.avg(atmo_cols.PM2_5_index).label('mean_PM2_5_pollution_index'),
@@ -93,6 +95,8 @@ def get_select_stmt(date: datetime|None):
             start_date,
             end_date
         )
+    ).group_by(
+        atmo_day_col
     ).cte('atmo_agg')
 
     # Table "openmeteo"
@@ -153,7 +157,7 @@ def get_select_stmt(date: datetime|None):
         )
         .join(
             atmo_agg,
-            true() # No conditions (cross join)
+            func.date_trunc('day', openmeteo_agg.c.hour) == atmo_agg.c.day
         )
     )
 
@@ -170,7 +174,7 @@ def get_select_stmt(date: datetime|None):
         )
         .join(
             atmo_agg,
-            true() # No conditions (cross join)
+            func.date_trunc('day', openmeteo_agg.c.hour) == atmo_agg.c.day
         )
     )
 

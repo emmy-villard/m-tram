@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from etl.classes.Ligne import Ligne
 from etl.classes.Trr import Trr
@@ -173,9 +173,12 @@ def test_get_start_end_date_rejects_unknown_period():
 
 def test_get_data_returns_hourly_aggregate_rows():
     aggregate.engine = engine
+    two_days_ago = datetime.now().replace(
+        minute=0, second=0, microsecond=0
+    ) - timedelta(days=2)
     expected_rows = [
         HourlyAggregate(
-            hour_start=datetime(2026, 9, 24, 10),
+            hour_start=two_days_ago.replace(hour=10),
             traffic_type="tram",
             average_congestion_level=2.0,
             pollution_index=3.0,
@@ -192,7 +195,7 @@ def test_get_data_returns_hourly_aggregate_rows():
             average_wind_speed=10.0,
         ),
         HourlyAggregate(
-            hour_start=datetime(2026, 9, 24, 11),
+            hour_start=two_days_ago.replace(hour=11),
             traffic_type="road",
             average_congestion_level=3.0,
             pollution_index=4.0,

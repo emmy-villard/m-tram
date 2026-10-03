@@ -60,7 +60,7 @@ services:
     image: ${DASHBOARD_IMAGE}
     depends_on:
       fastapi-server:
-        condition: service_healthy
+        condition: service_started
 
   fastapi-server:
     networks:

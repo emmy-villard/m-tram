@@ -8,6 +8,9 @@ required_variables=(
     _AIRFLOW_WWW_USER_PASSWORD
     ATMO_API_KEY
     PROXY_NET_EXTERNAL
+    DASHBOARD_PROD_URL
+    AIRFLOW_APISERVER_PROD_URL
+    API_PROD_URL
 )
 
 find_missing_variables() {
@@ -61,6 +64,12 @@ write_variables() {
     FASTAPI_IMAGE="mtram-fastapi:latest"
     echo_variable FASTAPI_IMAGE >> .env
 
+    #Dashboard
+    DASHBOARD_IMAGE="mtram-streamlit-dashboard:latest"
+    DASHBOARD_DEV_PORT=8082
+    echo_variable DASHBOARD_IMAGE >> .env
+    echo_variable DASHBOARD_DEV_PORT >> .env
+
     # Secrets
     echo_variable POSTGRES_PASSWORD >> .env
     echo_variable AIRFLOW_PASSWORD >> .env
@@ -69,6 +78,9 @@ write_variables() {
     echo_variable AIRFLOW__API_AUTH__JWT_ISSUER >> .env
     echo_variable _AIRFLOW_WWW_USER_USERNAME >> .env
     echo_variable _AIRFLOW_WWW_USER_PASSWORD >> .env
+    echo_variable API_PROD_URL >> .env
+    echo_variable AIRFLOW_APISERVER_PROD_URL >> .env
+    echo_variable DASHBOARD_PROD_URL >> .env
     echo_variable ATMO_API_KEY >> .env
 
     # Dev/Prod distinct variables

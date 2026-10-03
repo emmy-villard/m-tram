@@ -39,6 +39,26 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+  streamlit-dashboard:
+    networks:
+      - proxy_net
+    ports:
+      - ${DASHBOARD_DEV_PORT}:80
+    environment:
+      <<: *airflow-common-env
+      VIRTUAL_HOST: ${DASHBOARD_PROD_URL}
+      VIRTUAL_PORT: 80
+      ACME_HOST: ${DASHBOARD_PROD_URL}
+    env_file:
+      - ${ENV_FILE_PATH}
+    build:
+      context: .
+      target: streamlit-dashboard
+    image: ${DASHBOARD_IMAGE}
+    depends_on:
+      fastapi-server:
+        condition: service_healthy
+
   fastapi-server:
     networks:
       - proxy_net
@@ -47,9 +67,9 @@ services:
       - ${FASTAPI_DEV_PORT}:80
     environment:
       <<: *airflow-common-env
-      VIRTUAL_HOST: api.m-tram.emmyvillard.fr
+      VIRTUAL_HOST: ${API_PROD_URL}
       VIRTUAL_PORT: 80
-      ACME_HOST: api.m-tram.emmyvillard.fr
+      ACME_HOST: ${API_PROD_URL}
     env_file:
       - ${ENV_FILE_PATH}
     build:
@@ -130,9 +150,9 @@ services:
       - "${AIRFLOW_WEBUI_DEV_PORT}:8080"
     environment:
       <<: *airflow-common-env
-      VIRTUAL_HOST: m-tram.emmyvillard.fr
+      VIRTUAL_HOST: ${AIRFLOW_APISERVER_PROD_URL}
       VIRTUAL_PORT: 8080
-      ACME_HOST: m-tram.emmyvillard.fr
+      ACME_HOST: ${AIRFLOW_APISERVER_PROD_URL}
     healthcheck:
       test: ["CMD", "curl", "--fail",
         "http://localhost:8080/api/v2/monitor/health"

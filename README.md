@@ -53,23 +53,24 @@ See the [API guide](docs/api.md) and [dashboard guide](docs/dashboard.md) for en
 
 This is a portfolio project for collecting, validating and exploring public time-series data, not a production-grade monitoring platform: it does not promise service-level guarantees, operational alerting or complete data-coverage checks. Source and aggregate DAGs run on independent schedules, so the aggregate refresh assumes that source loads have completed; that ordering is not enforced by DAG dependencies. The dashboard is exploratory, and the analysis so far has not shown a significant correlation between congestion and the environmental measures studied.
 
-## Run locally
+## Local demo
 
-The Docker Compose setup is intended for Linux and requires Docker Engine with the Compose plugin. Get a free [ATMO API key](https://api.atmo-aura.fr/register), then generate a complete `.env` file (random passwords and secrets, local defaults) and start the services:
-
-```bash
-ATMO_API_KEY=<your key> ./scripts/generate_env_full.sh
-./scripts/docker-compose.sh
-```
-
-Existing values in `.env` are kept when the script is re-run, and the generated Airflow login is printed. Without an ATMO key, a placeholder is used and only the ATMO DAG will fail. To control every value yourself (for example for a deployment), export the variables listed in [`scripts/generate_env.sh`](scripts/generate_env.sh) and run that script instead.
-
-The API, dashboard and Airflow UI use the development ports configured by the script. For local tests, install the development dependencies and initialize the test environment:
+The demo starts PostgreSQL, the API and the dashboard in Docker, filled with **generated sample hourly aggregates** (60 days of synthetic data). It does not run Airflow or call the public APIs, so no API key is needed. Requirements: Linux, Docker with the Compose plugin, Python 3.11+.
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install '.[dev]'
+source scripts/tests/run_streamlit.sh
+```
+
+Then open the dashboard at <http://localhost:8501>; the API is available at <http://localhost:8081>. The sample data is synthetic: the dashboard's correlations are only meant to show how it works, not real findings.
+
+To stop the demo: `docker compose -f scripts/tests/docker-compose-test.yml --env-file .env.test down -v`.
+
+## Tests
+
+```bash
+source .venv/bin/activate
 source scripts/tests/setup-test-env.sh
 pytest
 ```

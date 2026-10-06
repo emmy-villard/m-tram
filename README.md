@@ -6,6 +6,8 @@ M-Tram collects and archives more than 139,000 source records per day from publi
 
 [Live API](https://api.m-tram.emmyvillard.fr) · [API documentation](docs/api.md) · [Dashboard documentation](docs/dashboard.md) · [Database schema](docs/schema.md) · [Data sources](docs/source.md)
 
+![M-Tram dashboard](docs/img/dashboard_screenshot.webp)
+
 ## At a glance
 
 | Area | Tools |

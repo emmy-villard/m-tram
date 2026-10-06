@@ -64,7 +64,7 @@ Available values:
 - `all_time`
 
 The start date is never earlier than the first collected day (2026-08-26).
-An unknown period is not accepted and results in a server error.
+An unknown period (for example a date) returns a `404` with an explanatory message.
 
 The response is a JSON array with one item per hour and per traffic type
 (`tram` and `road`), both sharing the same environmental values:

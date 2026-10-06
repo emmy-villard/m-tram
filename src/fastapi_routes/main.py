@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi_routes.requests import raw, count, markdown, aggregate
 
@@ -22,8 +22,14 @@ def get_count():
 
 @app.get("/raw/{table_name}")
 def get_raw_data(table_name: str):
-    return raw.get_data(table_name)
+    try:
+        return raw.get_data(table_name)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 @app.get("/aggregate/{aggregate_period}")
 def get_aggregate(aggregate_period: str):
-    return aggregate.get_data(aggregate_period)
+    try:
+        return aggregate.get_data(aggregate_period)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=" ".join(str(e).split()))

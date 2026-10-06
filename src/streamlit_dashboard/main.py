@@ -56,7 +56,7 @@ def load_data(period: str) -> pd.DataFrame:
 
 # Controls
 col1, col2, col3 = st.columns(3)
-traffic = col1.segmented_control("Traffic type", list(TRAFFIC), default="Tram")
+traffic = col1.segmented_control("Traffic type", list(TRAFFIC), default="Road")
 period = col2.segmented_control("Period", list(PERIODS), default="Last month")
 day = col3.selectbox("Day of week", ["All days"] + DAYS)
 

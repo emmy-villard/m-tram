@@ -55,12 +55,14 @@ This is a portfolio project for collecting, validating and exploring public time
 
 ## Run locally
 
-The Docker Compose setup is intended for Linux and requires Docker Engine with the Compose plugin. An ATMO API key is required. Configure the variables listed in [`scripts/generate_env.sh`](scripts/generate_env.sh) in your shell or an existing `.env` file, then generate the Compose environment and start the services:
+The Docker Compose setup is intended for Linux and requires Docker Engine with the Compose plugin. Get a free [ATMO API key](https://api.atmo-aura.fr/register), then generate a complete `.env` file (random passwords and secrets, local defaults) and start the services:
 
 ```bash
-./scripts/generate_env.sh
+ATMO_API_KEY=<your key> ./scripts/generate_env_full.sh
 ./scripts/docker-compose.sh
 ```
+
+Existing values in `.env` are kept when the script is re-run, and the generated Airflow login is printed. Without an ATMO key, a placeholder is used and only the ATMO DAG will fail. To control every value yourself (for example for a deployment), export the variables listed in [`scripts/generate_env.sh`](scripts/generate_env.sh) and run that script instead.
 
 The API, dashboard and Airflow UI use the development ports configured by the script. For local tests, install the development dependencies and initialize the test environment:
 

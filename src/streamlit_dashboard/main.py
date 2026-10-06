@@ -114,7 +114,7 @@ chart = (
     .mark_circle(size=60, color=color, opacity=0.7)
     .encode(
         x=alt.X(f"{column}:Q", title=pollutant or metric, scale=alt.Scale(zero=False)),
-        y=alt.Y("average_congestion_level:Q", title=f"{traffic} congestion"),
+        y=alt.Y("average_congestion_level:Q", title=f"{traffic} congestion", scale=alt.Scale(domainMin=1)),
         tooltip=["hour_start", "average_congestion_level", column],
     )
     .add_params(point)

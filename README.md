@@ -30,11 +30,15 @@ Deployment uses the GitHub Actions `production` environment and encrypted secret
 The project includes a functional FastAPI V1 that provides simple read-only access to the stored data:
 - `/count` returns the number of records for each dataset.
 - `/raw/ligne`, `/raw/trr`, `/raw/atmo`, and `/raw/openmeteo` return the raw records for each dataset.
+- `/aggregate/{period}` returns the hourly tram and road congestion aggregates used by the dashboard.
 
 More advanced data-access features and complex API functions are planned for the next PR.
 
 ## Scope
 This portfolio project collects, validates, and archives Grenoble traffic, weather, and air-quality data through a daily ETL pipeline. It includes a read-only FastAPI V1 and an exploratory dashboard for analyzing congestion alongside environmental data, as described in the [dashboard documentation](docs/dashboard.md). It is not designed as a production-grade monitoring platform with full operational guarantees or alerting.
+
+## Conclusion
+Using the dashboard, we did not observe any significant correlation between congestion (tram or road) and the other parameters studied (air pollution, rainfall, temperature, humidity, cloud cover and wind speed).
 
 ## Config
 The script [``scripts/generate_export.env.sh``](scripts/generate_export.env.sh) provides a basic configuration for your .env file, including random passwords. If you want to configure it further, feel free to modify the corresponding variables in the .env file.

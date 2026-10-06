@@ -49,6 +49,9 @@ jobs:
             ATMO_API_KEY,
             PROXY_NET_EXTERNAL,
             SSH_FILE_PATH,
+            DASHBOARD_PROD_URL,
+            AIRFLOW_APISERVER_PROD_URL,
+            API_PROD_URL,
           script_stop: true
           script: |
             if [ -z "$SSH_AUTH_SOCK" ]; then

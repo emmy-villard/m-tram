@@ -97,6 +97,12 @@ if df.empty:
     st.warning("No data for these filters.")
     st.stop()
 
+# Summary
+m1, m2, m3 = st.columns(3)
+m1.metric("Points", len(df))
+m2.metric("Average congestion", f"{df['average_congestion_level'].mean():.2f}")
+m3.metric("Correlation", f"{df['average_congestion_level'].corr(df[column]):.2f}")
+
 # Scatterplot
 point = alt.selection_point(name="point", fields=["hour_start"], on="click")
 chart = (

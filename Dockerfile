@@ -14,3 +14,13 @@ RUN mkdir -p src \
 COPY ./src/fastapi_routes /app
 COPY . .
 RUN pip3 install --no-cache-dir --no-deps .
+
+
+FROM python:3.12-slim AS streamlit-dashboard
+WORKDIR /app
+COPY pyproject.toml README.md ./
+RUN mkdir -p src \
+    && pip3 install --no-cache-dir .[dashboard-frond-prod]
+COPY ./src/streamlit_dashboard /app
+COPY . .
+RUN pip3 install --no-cache-dir --no-deps .

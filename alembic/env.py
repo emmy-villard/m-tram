@@ -26,6 +26,7 @@ from orm.ligne import Ligne
 from orm.trr import Trr
 from orm.atmo import Atmo
 from orm.openmeteo import OpenMeto
+from orm.hourlyagg import HourlyAggregate
 target_metadata = Base.metadata
 # alembic revision --autogenerate
 

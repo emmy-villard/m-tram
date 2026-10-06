@@ -4,7 +4,7 @@ Daily ETL pipeline that collects, validates and stores **139k+ rows/day** from t
 **Stack:** Airflow with Celery · Python · PostgreSQL · SQLAlchemy · Alembic · Pydantic · Docker Compose · GitHub Actions · pytest
 
 ## Live demo
-- [API requests](https://api.m-tram.emmyvillard.fr/count)
+- [API requests](https://api.m-tram.emmyvillard.fr)
 
 ## Architecture
 ![Schéma d’architecture](docs/img/architecture_schema.svg)
@@ -17,7 +17,7 @@ The ETL layer normalizes each API payload into pandas DataFrames, validates the 
 - Pydantic schemas check required fields, Python types, allowed values, realistic ranges, empty inputs, and duplicate primary keys for each dataset.
 - The transform layer removes unusable source records, such as traffic observations with an `nsv_id` of `0`, and skips structurally incomplete records while processing API payloads.
 - A validation error raises an exception and fails the Airflow task before anything is inserted into PostgreSQL.
-- Inserts use PostgreSQL conflict handling so records already present for the same primary key are not duplicated. Transform and task errors are available in the Airflow task logs under `airflow/logs/` and in the Airflow UI.
+- Validated rows are inserted into PostgreSQL. Transform and task errors are available in the Airflow task logs under `airflow/logs/` and in the Airflow UI.
 
 ## Deployment
 GitHub Actions runs the unit/integration tests and Airflow DAG tests on every push and pull request. Each push to `main` that passes the checks is automatically deployed to the VPS, providing continuous deployment for the application.
@@ -34,7 +34,7 @@ The project includes a functional FastAPI V1 that provides simple read-only acce
 More advanced data-access features and complex API functions are planned for the next PR.
 
 ## Scope
-This portfolio project is a first working version of a daily ETL pipeline that collects, validates, and archives Grenoble traffic, weather, and air-quality data. It demonstrates a complete workflow from API ingestion to validated database storage through a simple FastAPI V1. It is not designed as a production-grade monitoring platform with full operational guarantees and does not yet provide alerting, data analysis, or a dashboard.
+This portfolio project collects, validates, and archives Grenoble traffic, weather, and air-quality data through a daily ETL pipeline. It includes a read-only FastAPI V1 and an exploratory dashboard for analyzing congestion alongside environmental data, as described in the [dashboard documentation](docs/dashboard.md). It is not designed as a production-grade monitoring platform with full operational guarantees or alerting.
 
 ## Config
 The script [``scripts/generate_export.env.sh``](scripts/generate_export.env.sh) provides a basic configuration for your .env file, including random passwords. If you want to configure it further, feel free to modify the corresponding variables in the .env file.

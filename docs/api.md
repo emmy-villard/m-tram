@@ -4,8 +4,13 @@ The API exposes the data collected by the ETL pipeline in read-only mode.
 
 # Routes
 
-## [`Get /`](#)
-Returns this document
+## [`GET /`](/)
+
+Returns this API documentation, including the available read-only endpoints.
+
+## [`GET /source.md`](source.md)
+
+Returns the documentation for the ETL data sources and ATMO pollution levels.
 
 ## [`GET /count`](count)
 
@@ -22,7 +27,7 @@ Response example:
 }
 ```
 
-## [`GET /raw/{data}`](raw/ligne)
+## [`GET /raw/{data}`](raw/atmo)
 
 Returns the raw rows from the requested table.
 

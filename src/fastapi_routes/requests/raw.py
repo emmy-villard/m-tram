@@ -7,6 +7,8 @@ from orm.trr import Trr
 from orm.openmeteo import OpenMeto
 from orm.atmo import Atmo
 
+import io, csv
+
 from fastapi.responses import StreamingResponse
 
 MODEL_REGISTRY = {
@@ -34,17 +36,39 @@ def get_data(table_name: str):
         return session.execute(select_stmt).scalars().all()
 
 def stream_csv(table):
-    columns = list(table.__table__.columns.keys())
-
-    def row_generator():
-        yield ",".join(columns) + "\n"
-        with Session(engine) as session:
-            # stream_results + yield_per avoid loading the whole table into memory
-            select_stmt = select(table).execution_options(stream_results=True, yield_per=1000)
-            for row in session.execute(select_stmt).scalars():
-                yield ",".join(str(getattr(row, column)) for column in columns) + "\n"
-
     # Disable nginx proxy buffering, otherwise the reverse proxy accumulates the
     # whole body before forwarding it, so the client sees an empty file until timeout.
     headers = {"X-Accel-Buffering": "no"}
-    return StreamingResponse(row_generator(), media_type="text/csv", headers=headers)
+    return StreamingResponse(_row_generator(table), media_type="text/csv", headers=headers)
+
+
+
+def _row_generator(table):
+    columns = list(table.__table__.columns.keys())
+    header_buf = io.StringIO()
+    writer = csv.writer(header_buf)
+
+    writer.writerow(columns)
+    yield header_buf.getvalue()
+
+    with Session(engine) as session:
+        TARGET_CHUNK_BYTES = 512 * 1024  # 512 kB
+        YIELD_PER = 50_000
+
+        select_stmt = select(table).execution_options(
+            stream_results=True, yield_per=YIELD_PER
+        )
+        buffer = io.StringIO()
+        writer = csv.writer(buffer)
+
+        for row in session.execute(select_stmt).scalars():
+            writer.writerow([getattr(row, c) for c in columns])
+
+            if buffer.tell() >= TARGET_CHUNK_BYTES:
+                yield buffer.getvalue()
+                buffer.seek(0)
+                buffer.truncate(0)
+
+        if buffer.tell():  # Last lines not returned
+            yield buffer.getvalue()
+        buffer.close()

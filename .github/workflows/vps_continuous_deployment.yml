@@ -27,6 +27,9 @@ jobs:
       ATMO_API_KEY: ${{ secrets.ATMO_API_KEY }}
       PROXY_NET_EXTERNAL: "true"
       SSH_FILE_PATH: ${{ secrets.SSH_FILE_PATH }}
+      DASHBOARD_PROD_URL: ${{ secrets.DASHBOARD_PROD_URL }}
+      AIRFLOW_APISERVER_PROD_URL: ${{ secrets.AIRFLOW_APISERVER_PROD_URL }}
+      API_PROD_URL: ${{ secrets.API_PROD_URL }}
     steps:
       - name: Deploy on VPS
         uses: appleboy/ssh-action@v1.2.2
@@ -45,7 +48,7 @@ jobs:
             _AIRFLOW_WWW_USER_PASSWORD,
             ATMO_API_KEY,
             PROXY_NET_EXTERNAL,
-            SSH_FILE_PATH
+            SSH_FILE_PATH,
           script_stop: true
           script: |
             if [ -z "$SSH_AUTH_SOCK" ]; then
@@ -55,5 +58,8 @@ jobs:
             cd ~/projects/m-tram
             git checkout main
             git pull --ff-only origin main
+            df -h /
+            free -h
+            docker system prune -af
             ./scripts/generate_env.sh
             ./scripts/docker-compose.sh

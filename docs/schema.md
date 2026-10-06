@@ -42,5 +42,42 @@ This document provides the current relational schema used by the project. Schema
 - `SO2_index`: INTEGER, valid range is 1 to 6
 - Primary key: `time`
 
+## Dashboard Aggregate Table
+
+The dashboard uses one consolidated aggregate table populated by Airflow. The `traffic_type` value is `tram` for values derived from `ligne` and `road` for values derived from `trr`. `average_congestion_level` is the average source `nsv_id`, where `1` represents fluid traffic and `4` represents a blocked or closed situation.
+
+### dashboard_hourly_aggregates
+- `hour_start`: TIMESTAMP, start of the aggregated hour
+- `traffic_type`: TEXT, `tram` or `road`
+- `average_congestion_level`: FLOAT
+- `pollution_index`: FLOAT
+- `pm10_index`: FLOAT
+- `pm2_5_index`: FLOAT
+- `o3_index`: FLOAT
+- `no2_index`: FLOAT
+- `so2_index`: FLOAT
+- `precipitation_total`: FLOAT
+- `rainfall_total`: FLOAT
+- `average_temperature`: FLOAT
+- `average_relative_humidity`: FLOAT
+- `average_cloud_cover`: FLOAT
+- `average_wind_speed`: FLOAT
+- Primary key: (`hour_start`, `traffic_type`)
+
+The Atmo source provides daily indices. Each daily index is associated with every aggregate hour on the same calendar date; it is not an independently measured hourly value.
+
+## Dashboard Aggregate Refreshes
+
+The dashboard aggregate table is maintained by two Airflow DAGs:
+
+- The **manual full-refresh DAG** recalculates the aggregate table from the complete available history. It is used for initial population, historical backfills, source corrections, and aggregation-logic changes.
+- The **daily incremental-refresh DAG** runs at 13:00, after the daily weather and air-quality loads scheduled at 12:00. It calculates and inserts hourly aggregates for the previous 24-hour window.
+
+Neither refresh mode performs a separate source-coverage or aggregate-result validation before insertion. The query starts from weather hours and requires matching traffic for the hour and an Atmo record for that date. Hours missing any of those sources are omitted from the result. The daily refresh uses the raw source data available for the previous 24-hour window, while the manual full refresh recalculates the rows returned for the complete available history.
+
+The daily refresh uses `ON CONFLICT DO NOTHING`, so reruns do not update existing aggregate keys. Source corrections for already-aggregated periods therefore require the manual full-refresh DAG.
+
+The daily refresh assumes that already processed source history is unchanged, that the aggregation logic has not changed, and that all source loads for the refreshed period have completed before the aggregate DAG runs. Airflow schedules the source and aggregate DAGs independently, so that ordering is not guaranteed by a DAG dependency. Any correction, backfill, deletion, or reprocessing affecting an older period must first be applied to the raw tables, then incorporated with the manual full-refresh DAG.
+
 ## Notes
 The main analytical tables are the time-series tables (`trr`, `ligne`, `openmeteo`, `atmo`). They are designed around a timestamp-based primary key so that historical comparison and joins are straightforward across all sources.

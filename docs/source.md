@@ -16,6 +16,9 @@ The response is JSON-formatted. The JSON object is keyed by a unique identifier 
 - `3`: congestion / traffic jam
 - `4`: closed
 
+### Tram occupancy data limitation
+Actual tram occupancy rates would have been valuable for the analysis. However, the available occupancy data are average predictive models that evolve as new data are collected, rather than observed daily occupancy figures. The MData feed used by this project provides traffic levels, not actual passenger counts or daily occupancy rates.
+
 ### Refresh frequency
 The data is refreshed every few minutes and is not retained by the upstream provider unless it is harvested into the project database.
 
@@ -46,6 +49,16 @@ The project reads the ATMO API endpoint using the commune-specific location and 
 
 ### Data description
 The returned JSON includes a global pollution score and pollutant sub-indices for the main atmospheric indicators such as PM10, PM2.5, O3, NO2, and SO2. A boolean field distinguishes measured values from forecast values.
+
+### Pollution levels
+The global pollution score and each pollutant sub-index range from `1` to `6`:
+
+- `1`: good
+- `2`: fair
+- `3`: degraded
+- `4`: poor
+- `5`: very poor
+- `6`: extremely poor
 
 ### Reuse conditions
 ATMO data is retrieved through the public API and stored as a daily time series for analysis, with the project validating the response structure before inserting the rows into the database.

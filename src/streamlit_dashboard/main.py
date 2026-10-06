@@ -84,6 +84,10 @@ except Exception as e:
     st.error(f"Could not load data from the API: {e}")
     st.stop()
 
+if df.empty:
+    st.warning("No data available yet from the API.")
+    st.stop()
+
 df = df[df["traffic_type"] == TRAFFIC[traffic]]
 if day != "All days":
     df = df[df["hour_start"].dt.dayofweek == DAYS.index(day)]

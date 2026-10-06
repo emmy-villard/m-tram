@@ -56,6 +56,6 @@ where = ["src"]
 
 
 [project.urls]
-"Live Demo" = "https://github.com/emmy-villard/m-tram"
+"Live Demo" = "https://m-tram.emmyvillard.fr/"
 Repository = "https://github.com/emmy-villard/m-tram"
 

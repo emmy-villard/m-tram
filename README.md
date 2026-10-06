@@ -1,65 +1,80 @@
 # M-Tram
-Daily ETL pipeline that collects, validates and stores **139k+ rows/day** from three Grenoble public APIs: traffic from Mobilités M, air quality from Atmo Auvergne-Rhône-Alpes, and weather from Open-Meteo. The pipeline is orchestrated by Airflow and stores historical time series in PostgreSQL.
 
-**Stack:** Airflow with Celery · Python · PostgreSQL · SQLAlchemy · Alembic · Pydantic · Docker Compose · GitHub Actions · pytest
+**An end-to-end data engineering project for exploring Grenoble traffic alongside weather and air quality.**
 
-## Live demo
-- [API requests](https://api.m-tram.emmyvillard.fr)
+M-Tram collects and archives more than 139,000 source records per day from public APIs, validates and stores them as historical time series, and exposes the data through a read-only API and an exploratory dashboard.
 
-## Architecture
-![Schéma d’architecture](docs/img/architecture_schema.svg)
+[Live API](https://api.m-tram.emmyvillard.fr) · [API documentation](docs/api.md) · [Dashboard documentation](docs/dashboard.md) · [Database schema](docs/schema.md) · [Data sources](docs/source.md)
 
-MData / Open-Meteo / ATMO AuRA → Airflow DAGs → extract → transform → validate → load → PostgreSQL → [FastAPI](docs/api.md)
+## At a glance
 
-The ETL layer normalizes each API payload into pandas DataFrames, validates the resulting records with Pydantic schemas, and persists them through SQLAlchemy. The current workflows cover traffic (`trr` and `ligne`), weather (`openmeteo`), and air quality (`atmo`).
+| Area | Tools |
+| --- | --- |
+| Orchestration | Apache Airflow with CeleryExecutor |
+| Ingestion and transformation | Python, pandas, Pydantic |
+| Storage and migrations | PostgreSQL, SQLAlchemy, Alembic |
+| Data access and exploration | FastAPI, Streamlit |
+| Packaging and delivery | Docker Compose, GitHub Actions, pytest |
 
-## Data validation
-- Pydantic schemas check required fields, Python types, allowed values, realistic ranges, empty inputs, and duplicate primary keys for each dataset.
-- The transform layer removes unusable source records, such as traffic observations with an `nsv_id` of `0`, and skips structurally incomplete records while processing API payloads.
-- A validation error raises an exception and fails the Airflow task before anything is inserted into PostgreSQL.
-- Validated rows are inserted into PostgreSQL. Transform and task errors are available in the Airflow task logs under `airflow/logs/` and in the Airflow UI.
+## Data pipeline
 
-## Deployment
-GitHub Actions runs the unit/integration tests and Airflow DAG tests on every push and pull request. Each push to `main` that passes the checks is automatically deployed to the VPS, providing continuous deployment for the application.
+The pipeline combines three public sources:
 
-The project is packaged and run with Docker Compose, which orchestrates PostgreSQL, Redis, the Airflow API server, scheduler, DAG processor, workers, and triggerer. The deployment workflow connects to the VPS and updates the running services with the latest `main` revision.
+- **MData**: Grenoble road (`trr`) and tram-line (`ligne`) traffic snapshots, collected every five minutes.
+- **Open-Meteo**: hourly weather observations, loaded daily.
+- **ATMO Auvergne-Rhône-Alpes**: daily air-quality and pollutant indices, loaded daily.
 
-Deployment uses the GitHub Actions `production` environment and encrypted secrets for SSH access and application configuration. On each deployment, GitHub Actions connects to the VPS, pulls the latest `main` revision, regenerates the environment file, and restarts the Docker Compose services.
+Each source follows an extract → transform → validate → load workflow. Airflow DAGs orchestrate the source-specific schedules and retry failed tasks. The pipeline converts API payloads into tabular records, validates them before persistence, and stores the source time series in PostgreSQL. A separate daily job prepares hourly aggregates for the API and dashboard.
 
-## API
-The project includes a functional FastAPI V1 that provides simple read-only access to the stored data:
-- `/count` returns the number of records for each dataset.
-- `/raw/ligne`, `/raw/trr`, `/raw/atmo`, and `/raw/openmeteo` return the raw records for each dataset.
-- `/aggregate/{period}` returns the hourly tram and road congestion aggregates used by the dashboard.
+![M-Tram data architecture](docs/img/architecture_schema.svg)
 
-More advanced data-access features and complex API functions are planned for the next PR.
 
-## Scope
-This portfolio project collects, validates, and archives Grenoble traffic, weather, and air-quality data through a daily ETL pipeline. It includes a read-only FastAPI V1 and an exploratory dashboard for analyzing congestion alongside environmental data, as described in the [dashboard documentation](docs/dashboard.md). It is not designed as a production-grade monitoring platform with full operational guarantees or alerting.
+## Engineering highlights
 
-## Conclusion
-Using the dashboard, we did not observe any significant correlation between congestion (tram or road) and the other parameters studied (air pollution, rainfall, temperature, humidity, cloud cover and wind speed).
+- **Data quality:** Pydantic schemas validate required fields, types, allowed values and realistic ranges. Transformations explicitly filter unusable or incomplete source records; validation failures stop the load rather than persisting invalid rows.
+- **Relational modeling:** source-specific tables use timestamp-based primary keys; SQLAlchemy defines the models and Alembic tracks schema changes.
+- **Orchestration:** separate Airflow DAGs handle traffic, weather, air quality and aggregate refreshes. Source DAGs retry failed tasks, and the aggregate table supports both incremental daily updates and a manual full refresh.
+- **Data serving:** the FastAPI API provides record counts, read-only access to source tables and precomputed hourly aggregates. The Streamlit dashboard fetches those aggregates from the API and filters them in memory.
+- **Testing and delivery:** GitHub Actions runs unit/integration tests and Airflow DAG tests on pushes. A separate workflow deploys pushes to `main` to a VPS using Docker Compose.
 
-## Config
-The script [``scripts/generate_export.env.sh``](scripts/generate_export.env.sh) provides a basic configuration for your .env file, including random passwords. If you want to configure it further, feel free to modify the corresponding variables in the .env file.
+## API and dashboard
 
-Otherwise, the script is all you need to launch a preconfigured project. Refer to the Airflow and PostgreSQL documentation for the variables. 
+The API is read-only and currently provides:
 
-## Installation
-### Requirements
-- 8GB RAM
-- On a linux machine
+- `GET /count` — row counts by dataset.
+- `GET /raw/{table_name}` — raw rows from `ligne`, `trr`, `openmeteo` or `atmo`.
+- `GET /aggregate/{period}` — hourly traffic and environmental aggregates for a supported period.
 
-### Get api keys
-- Register to obtain an api-atmo key (free and without delays): https://api.atmo-aura.fr/register
-- Assign this key to the `ATMO_API_KEY` variable in the `.env` file
-- Paste the API key in a file named "atmo_apikey.txt" in the api_keys folder
-### Launch the app (airflow)
-- ``source scripts/generate_export.env.sh`` (won't overwrite an existing .env file)
-- ``./scripts/docker-compose.sh``
+The dashboard compares tram or road congestion with air-quality indices and weather metrics. It supports date-range, weekday and time-of-day filters. Air-quality indices are daily values associated with the corresponding hours; the dashboard is intended for exploration, not causal inference.
 
-### Local tests:
-- ``python3 -m venv .venv``
-- ``source .venv/bin/activate``
-- ``pytest``
-- ``./scripts/docker-compose.sh``
+See the [API guide](docs/api.md) and [dashboard guide](docs/dashboard.md) for endpoint details and behavior.
+
+## Scope and limitations
+
+This is a portfolio project for collecting, validating and exploring public time-series data, not a production-grade monitoring platform: it does not promise service-level guarantees, operational alerting or complete data-coverage checks. Source and aggregate DAGs run on independent schedules, so the aggregate refresh assumes that source loads have completed; that ordering is not enforced by DAG dependencies. The dashboard is exploratory, and the analysis so far has not shown a significant correlation between congestion and the environmental measures studied.
+
+## Run locally
+
+The Docker Compose setup is intended for Linux and requires Docker Engine with the Compose plugin. An ATMO API key is required. Configure the variables listed in [`scripts/generate_env.sh`](scripts/generate_env.sh) in your shell or an existing `.env` file, then generate the Compose environment and start the services:
+
+```bash
+./scripts/generate_env.sh
+./scripts/docker-compose.sh
+```
+
+The API, dashboard and Airflow UI use the development ports configured by the script. For local tests, install the development dependencies and initialize the test environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install '.[dev]'
+source scripts/tests/setup-test-env.sh
+pytest
+```
+
+## Further documentation
+
+- [Data transformation and validation](docs/data-transformation.md)
+- [Hourly aggregate design and refresh behavior](docs/dashboard-aggregate-table.md)
+- [Project modules](docs/modules.md)
+- [Implementation challenges](docs/challenges.md)

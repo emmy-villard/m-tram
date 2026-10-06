@@ -37,3 +37,13 @@ Each plotted point represents the hourly aggregate for one timestamp that matche
 ## Interaction
 
 Selecting a point in the scatter plot opens a detail view containing the underlying fetched values for that observation. This allows users to inspect the congestion and environmental data represented by the point more precisely.
+
+## Implementation
+
+The dashboard is a single Streamlit page ([`src/streamlit_dashboard/main.py`](../src/streamlit_dashboard/main.py)). It has no database access: it fetches the hourly aggregates from the FastAPI route `GET /aggregate/{period}` and filters them in memory.
+
+- **Configuration:** the API address is read from the `API_PROD_URL` environment variable (missing value raises an error). `https://` is prepended if no scheme is given.
+- **Defaults:** road traffic, last month, temperature, all days, all hours.
+- **Summary:** above the plot, the number of displayed points, the average congestion and the correlation between congestion and the selected metric.
+- **Caching:** API responses are cached for 10 minutes per period.
+- **Rainfall:** the plot shows the hourly rainfall, not the cumulative value over the period.

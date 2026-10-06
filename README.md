@@ -4,7 +4,7 @@
 
 M-Tram collects and archives more than 139,000 source records per day from public APIs, validates and stores them as historical time series, and exposes the data through a read-only API and an exploratory dashboard.
 
-[Live API](https://api.m-tram.emmyvillard.fr) · [API documentation](docs/api.md) · [Dashboard documentation](docs/dashboard.md) · [Database schema](docs/schema.md) · [Data sources](docs/source.md)
+[Live Demo](https://m-tram.emmyvillard.fr) · [Live API](https://api.m-tram.emmyvillard.fr) · [API documentation](docs/api.md) · [Dashboard documentation](docs/dashboard.md) · [Database schema](docs/schema.md) · [Data sources](docs/source.md)
 
 ![M-Tram dashboard](docs/img/dashboard_screenshot.webp)
 
